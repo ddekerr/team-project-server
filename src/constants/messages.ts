@@ -37,6 +37,7 @@ export const successMessages = {
 };
 
 export const validationMessages = {
+  VALIDATION_ERROR: 'Validation error',
   // user fields validation
   USER_NAME_STRING_MSG: 'User name must be a string',
   USER_NAME_LENGTH_MSG: 'User name must be at least 3 characters',
