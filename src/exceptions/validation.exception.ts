@@ -5,9 +5,9 @@ import { ValidationError } from 'src/types';
 export class ValidationException extends BadRequestException {
   public errors: ValidationError[];
 
-  constructor(response: ValidationError[]) {
+  constructor(errors: ValidationError[]) {
     super(validationMessages.VALIDATION_ERROR);
 
-    this.errors = response;
+    this.errors = errors;
   }
 }
