@@ -1,12 +1,13 @@
 import { BadRequestException } from '@nestjs/common';
-import { validationMessages } from 'src/constants/messages';
+import { validationMessages } from 'constants/messages';
+import { ValidationError } from 'types';
 
 export class ValidationException extends BadRequestException {
-  public errors: string[];
+  public errors: ValidationError[];
 
-  constructor(response: string[]) {
+  constructor(errors: ValidationError[]) {
     super(validationMessages.VALIDATION_ERROR);
 
-    this.errors = response;
+    this.errors = errors;
   }
 }
