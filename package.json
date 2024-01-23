@@ -36,6 +36,7 @@
     "class-validator": "^0.14.0",
     "cookie-parser": "^1.4.6",
     "mongoose": "^8.0.2",
+    "mongoose-sequence": "^6.0.0",
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1"

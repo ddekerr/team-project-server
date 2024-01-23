@@ -19,7 +19,9 @@ async function bootstrap() {
     .setVersion('0.0.1')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('docs', app, document);
+  SwaggerModule.setup('docs', app, document, {
+    swaggerOptions: { defaultModelsExpandDepth: -1 },
+  });
 
   // run server
   await app.listen(PORT, () => console.log(`Server starts on ${PORT} port`));

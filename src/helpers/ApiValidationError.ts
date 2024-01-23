@@ -3,7 +3,7 @@ import { ApiError } from './ApiError';
 import { ValidationError } from 'types';
 
 export class ApiValidationError extends ApiError {
-  @ApiProperty({ type: { errorField: [String] } })
+  @ApiProperty()
   public errors: ValidationError[];
 
   constructor(status: number, message: string, errors: ValidationError[]) {
