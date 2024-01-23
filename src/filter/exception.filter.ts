@@ -4,7 +4,7 @@ import {
   ArgumentsHost,
   HttpException,
 } from '@nestjs/common';
-import { validationMessages } from 'constants/messages';
+import validationMessages from 'constants/validationMessage';
 import { ValidationException } from 'exceptions/validation.exception';
 import { Response } from 'express';
 import { ApiError } from 'helpers/ApiError';

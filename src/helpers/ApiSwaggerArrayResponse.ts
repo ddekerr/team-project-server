@@ -6,7 +6,7 @@ import {
 } from '@nestjs/swagger';
 import { ApiResponse } from './ApiResponse';
 
-export const ApiSwaggerResponse = <TModel extends Type<any>>(
+export const ApiSwaggerArrayResponse = <TModel extends Type<any>>(
   status: number,
   model: TModel,
   description?: string,
@@ -18,7 +18,11 @@ export const ApiSwaggerResponse = <TModel extends Type<any>>(
       schema: {
         allOf: [
           { $ref: getSchemaPath(ApiResponse) },
-          { properties: { data: { $ref: getSchemaPath(model) } } },
+          {
+            properties: {
+              data: { type: 'array', items: { $ref: getSchemaPath(model) } },
+            },
+          },
         ],
       },
       description,

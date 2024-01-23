@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
-import { validationMessages } from 'constants/messages';
+import validationMessages from 'constants/validationMessage';
 import { ValidationError } from 'types';
 
 export class ValidationException extends BadRequestException {
