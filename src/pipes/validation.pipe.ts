@@ -12,7 +12,6 @@ export class GlobalValidationPipe implements PipeTransform<any> {
 
     if (err.length) {
       const errors: ValidationError[] = err.map((e) => {
-        // return `${e.property}: ${Object.values(e.constraints).join(', ')}`;
         return {
           [e.property]: Object.values(e.constraints),
         };
