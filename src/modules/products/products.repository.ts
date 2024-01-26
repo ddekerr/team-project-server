@@ -7,6 +7,7 @@ import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class ProductsRepository {
+  private selectedFields = ['id', 'title', 'price', 'inStock', 'poster'];
   constructor(
     @InjectModel(Product.name) private productModel: Model<ProductDocument>,
   ) {}
@@ -25,7 +26,7 @@ export class ProductsRepository {
     return await this.productModel.findOneAndUpdate(
       entityFilterQuery,
       updateEntityData,
-      { new: true },
+      { new: true, fields: this.selectedFields },
     );
   }
 
@@ -42,7 +43,7 @@ export class ProductsRepository {
   ): Promise<ProductDocument> {
     return await this.productModel
       .findOne(entityFilterQuery)
-      .select(['id', 'title', 'price', 'inStock']);
+      .select(this.selectedFields);
   }
 
   // ########## SELECT PRODUCTS LIST FROM PRODUCT TABLE WITH FILTER AND LIMIT ##########
@@ -52,6 +53,6 @@ export class ProductsRepository {
     return await this.productModel
       .find(entityFilterQuery)
       .limit(DEFAULT_LIMIT)
-      .select(['id', 'title', 'price', 'inStock']);
+      .select(this.selectedFields);
   }
 }

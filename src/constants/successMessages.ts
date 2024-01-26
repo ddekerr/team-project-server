@@ -11,6 +11,8 @@ export default {
   PRODUCT_UPDATED_MSG: 'Product has been successfully updated',
   PRODUCT_DELETED_MSG: 'Product has been successfully deleted',
 
+  PRODUCT_POSTER_ADD_MSG: 'Product poster has been successfully added',
+
   // category success messages
   CATEGORY_CREATED_MSG: 'Category has been successfully created',
   CATEGORY_UPDATED_MSG: 'Category has been successfully updated',

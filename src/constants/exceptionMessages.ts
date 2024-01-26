@@ -14,8 +14,12 @@ export default {
   BAD_REQUEST_MSG: 'Wrong data',
 
   // not found messages
-  NOT_FOUND_MSG: 'Resource noy found',
+  NOT_FOUND_PRODUCT_MSG: 'Product not found',
+  NOT_FOUND_CATEGORY_MSG: 'Category not found',
 
   // unprocessable entity status code (422)
   VALIDATION_MESSAGE: 'The data has not been validated',
+
+  // file problem messages
+  FILE_ERROR_MSG: 'Something went wrong working with file',
 };
