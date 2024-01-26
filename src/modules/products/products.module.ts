@@ -8,6 +8,7 @@ import { ProductsService } from './products.service';
 import { ProductsRepository } from './products.repository';
 
 import { Product, ProductSchema } from './schemas/product.schema';
+import { FilesModule } from 'modules/files/files.module';
 
 @Module({
   controllers: [ProductsController],
@@ -25,6 +26,7 @@ import { Product, ProductSchema } from './schemas/product.schema';
         inject: [getConnectionToken()],
       },
     ]),
+    FilesModule,
   ],
   exports: [ProductsService],
 })

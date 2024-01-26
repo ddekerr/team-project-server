@@ -21,6 +21,8 @@ export default {
   PRODUCT_IN_STOCK_EMPTY_MSG: 'Products inStock must be not empty',
   PRODUCT_IN_STOCK_BOOLEAN_MSG: 'Products inStock must be boolean value',
 
+  PRODUCT_POSTER_EMTY_MSG: 'Products poster must be not empty',
+
   // category fields validation
   CATEGORY_TITLE_EMPTY_MSG: 'Category title must be not empty',
   CATEGORY_TITLE_STRING_MSG: 'Category title must be a string',
