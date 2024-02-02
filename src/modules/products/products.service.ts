@@ -1,4 +1,5 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { CategoriesService } from './../categories/categories.service';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { ProductsRepository } from './products.repository';
 import { ProductDocument } from './schemas/product.schema';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -10,6 +11,7 @@ import exceptionMessages from 'constants/exceptionMessages';
 export class ProductsService {
   constructor(
     private productsRepository: ProductsRepository,
+    private categoriesService: CategoriesService,
     private filesService: FilesService,
   ) {}
 
@@ -29,8 +31,13 @@ export class ProductsService {
   }
 
   // #################### GET ONE PRODUCT BY ID ####################
-  async getOne(id: number): Promise<ProductDocument> {
-    return await this.productsRepository.getOne({ id });
+  async getOneById(id: number): Promise<ProductDocument> {
+    const product = await this.productsRepository.getOne({ id });
+    if (!product) {
+      throw new NotFoundException(exceptionMessages.NOT_FOUND_PRODUCT_MSG);
+    }
+
+    return product;
   }
 
   // #################### GET PRODUCT LIST ####################
@@ -39,10 +46,7 @@ export class ProductsService {
   }
 
   // #################### UPLOAD POSTER TO PRODUCT ####################
-  async uploadPoster(
-    id: number,
-    poster: Express.Multer.File,
-  ): Promise<ProductDocument> {
+  async uploadPoster(id: number, poster: Express.Multer.File): Promise<ProductDocument> {
     // check product exist
     const candidate = await this.productsRepository.getOne({ id });
     if (!candidate) {
@@ -56,13 +60,19 @@ export class ProductsService {
     }
 
     // upload new posetr to cloud service
-    const filePath = await this.filesService.uploadFile(
-      FileType.POSTERS,
-      poster,
-    );
+    const filePath = await this.filesService.uploadFile(FileType.POSTERS, poster);
 
     // save path to poster in DB
     candidate.poster = filePath;
     return await candidate.save();
+  }
+
+  // #################### ADD CATEGORIES TO PRODUCT ####################
+  async addCategories(id: number, categorySlug: string): Promise<ProductDocument> {
+    const product = await this.getOneById(id);
+    const category = await this.categoriesService.getOneBySlug(categorySlug);
+
+    product.category = category;
+    return await product.save();
   }
 }
