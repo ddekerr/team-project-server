@@ -1,9 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import * as slugify from 'slug';
+
 import { CategoriesRepository } from './categories.repository';
 import { CategoryDocument } from './schemas/category.schema';
+
 import { CreateCategoryDto } from './dto/create-category.dto';
-import * as slugify from 'slug';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+
 import exceptionMessages from 'constants/exceptionMessages';
 
 @Injectable()
@@ -47,6 +50,11 @@ export class CategoriesService {
 
   // #################### GET CAREGORY LIST ####################
   async getList(): Promise<CategoryDocument[]> {
-    return await this.categoriesRepository.getList({});
+    const categories = await this.categoriesRepository.getList({});
+    if (!categories.length) {
+      throw new NotFoundException(exceptionMessages.NOT_FOUND_CATEGORY_MSG);
+    }
+
+    return categories;
   }
 }
