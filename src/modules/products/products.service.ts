@@ -1,5 +1,5 @@
 import { CategoriesService } from './../categories/categories.service';
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ProductsRepository } from './products.repository';
 import { ProductDocument } from './schemas/product.schema';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -48,23 +48,20 @@ export class ProductsService {
   // #################### UPLOAD POSTER TO PRODUCT ####################
   async uploadPoster(id: number, poster: Express.Multer.File): Promise<ProductDocument> {
     // check product exist
-    const candidate = await this.productsRepository.getOne({ id });
-    if (!candidate) {
-      throw new ConflictException(exceptionMessages.NOT_FOUND_PRODUCT_MSG);
-    }
+    const product = await this.getOneById(id);
 
     // check product already have poster
-    if (candidate.poster) {
+    if (product.poster) {
       // remove old poster from cloud service
-      await this.filesService.removeFile(candidate.poster);
+      await this.filesService.removeFile(product.poster);
     }
 
     // upload new posetr to cloud service
     const filePath = await this.filesService.uploadFile(FileType.POSTERS, poster);
 
     // save path to poster in DB
-    candidate.poster = filePath;
-    return await candidate.save();
+    product.poster = filePath;
+    return await product.save();
   }
 
   // #################### ADD CATEGORIES TO PRODUCT ####################
