@@ -12,19 +12,15 @@ export class Category {
 
   @ApiProperty({
     description: 'Mutated title field in latin without spaces and uppercese characters',
-    uniqueItems: true,
     default: 'category-title',
+    uniqueItems: true,
   })
   @Prop({ unique: true, required: true })
   slug: string;
 
-  @ApiProperty({ default: 1, required: false, type: mongoose.Schema.Types.ObjectId, description: 'Parent category' })
+  @ApiProperty({ required: false, type: String, description: 'Parent category', default: '65bb5b57dc3002eb99d080fb' })
   @Prop({ default: null, required: false, type: mongoose.Schema.Types.ObjectId, ref: 'Category' })
   parent?: string;
-
-  @ApiProperty({ required: false, type: [mongoose.Schema.Types.ObjectId] })
-  @Prop({ required: false, type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }] })
-  childrens?: Category[];
 }
 
 export const CategorySchema = SchemaFactory.createForClass(Category);
