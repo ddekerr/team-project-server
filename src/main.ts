@@ -14,10 +14,7 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
 
   // setup swagger
-  const config = new DocumentBuilder()
-    .setTitle('Docs')
-    .setVersion('0.0.1')
-    .build();
+  const config = new DocumentBuilder().setTitle('Docs').setVersion('0.0.1').build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document, {
     swaggerOptions: { defaultModelsExpandDepth: -1 },

@@ -9,6 +9,7 @@ import { ProductsRepository } from './products.repository';
 
 import { Product, ProductSchema } from './schemas/product.schema';
 import { FilesModule } from 'modules/files/files.module';
+import { CategoriesModule } from 'modules/categories/categories.module';
 
 @Module({
   controllers: [ProductsController],
@@ -27,6 +28,7 @@ import { FilesModule } from 'modules/files/files.module';
       },
     ]),
     FilesModule,
+    CategoriesModule,
   ],
   exports: [ProductsService],
 })

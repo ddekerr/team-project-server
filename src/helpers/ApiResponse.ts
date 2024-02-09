@@ -1,18 +1,32 @@
 import { ApiProperty } from '@nestjs/swagger';
+import successMessages from 'constants/successMessages';
+import { Actions, EntityType } from 'types';
 
 export class ApiResponse<T> {
-  @ApiProperty()
-  status: number;
+  @ApiProperty({ enum: [200, 201] })
+  private status: number;
 
   @ApiProperty()
-  data?: T;
+  private data?: T;
 
-  @ApiProperty()
-  message?: string;
+  @ApiProperty({ type: String })
+  private message?: string;
 
-  constructor(status: number, data?: T, message?: string) {
-    this.status = status;
+  constructor(action: Actions, entityType: EntityType, data?: T) {
+    this.status = this.setStatus(action);
     this.data = data;
-    this.message = message;
+    this.message = this.setMessage(action, entityType);
+  }
+
+  private setStatus(action: Actions): 200 | 201 {
+    return action === Actions.CREATE ? 201 : 200;
+  }
+
+  private setMessage(action: Actions, entityType: EntityType): string {
+    if (action !== Actions.GET) {
+      return successMessages[`${entityType}_${action}_MSG`];
+    }
+
+    return 'OK';
   }
 }
