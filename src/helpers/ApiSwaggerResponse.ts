@@ -1,25 +1,36 @@
 import { applyDecorators, Type } from '@nestjs/common';
-import {
-  ApiExtraModels,
-  getSchemaPath,
-  ApiResponse as SwaggerResponse,
-} from '@nestjs/swagger';
+import { ApiExtraModels, getSchemaPath, ApiResponse as SwaggerResponse } from '@nestjs/swagger';
 import { ApiResponse } from './ApiResponse';
+import { Actions, EntityType } from 'types';
+import apiMessages from 'constants/apiMessages';
+
+// export const ApiSwaggerResponse = <TModel extends Type<any>>(status: number, model: TModel, description?: string) => {
+//   return applyDecorators(
+//     ApiExtraModels(ApiResponse, model),
+//     SwaggerResponse({
+//       status,
+//       schema: {
+//         allOf: [{ $ref: getSchemaPath(ApiResponse) }, { properties: { data: { $ref: getSchemaPath(model) } } }],
+//       },
+//       description,
+//     }),
+//   );
+// };
 
 export const ApiSwaggerResponse = <TModel extends Type<any>>(
-  status: number,
+  action: Actions,
+  entityType: EntityType,
   model: TModel,
-  description?: string,
 ) => {
+  const status: 200 | 201 = action === Actions.CREATE ? 201 : 200;
+  const description: string = apiMessages[`${entityType}_${action}_DESCRIPTION`];
+
   return applyDecorators(
     ApiExtraModels(ApiResponse, model),
     SwaggerResponse({
       status,
       schema: {
-        allOf: [
-          { $ref: getSchemaPath(ApiResponse) },
-          { properties: { data: { $ref: getSchemaPath(model) } } },
-        ],
+        allOf: [{ $ref: getSchemaPath(ApiResponse) }, { properties: { data: { $ref: getSchemaPath(model) } } }],
       },
       description,
     }),

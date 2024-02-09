@@ -17,6 +17,10 @@ export class ProductsService {
 
   // #################### CREATE NEW PRODUCT ####################
   async create(dto: CreateProductDto): Promise<ProductDocument> {
+    if (dto.category) {
+      const category = await this.categoriesService.getOneBySlug(dto.category);
+      return await this.productsRepository.create({ ...dto, category });
+    }
     return await this.productsRepository.create(dto);
   }
 

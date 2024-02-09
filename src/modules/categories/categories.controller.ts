@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiBody, ApiNotFoundResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
 import { CategoriesService } from './categories.service';
@@ -6,7 +6,6 @@ import { Category, CategoryDocument } from './schemas/category.schema';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 
-import successMessages from 'constants/successMessages';
 import exceptionMessages from 'constants/exceptionMessages';
 import validationMessage from 'constants/validationMessage';
 import { Actions, EntityType } from 'types';
@@ -26,7 +25,7 @@ export class CategoriesController {
   @Post()
   @ApiOperation({ summary: 'Create new category' })
   @ApiBody({ type: CreateCategoryDto })
-  @ApiSwaggerResponse(HttpStatus.CREATED, Category, successMessages.CATEGORY_CREATE_MSG)
+  @ApiSwaggerResponse(Actions.CREATE, EntityType.CATEGORY, Category)
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_CATEGORY_MSG })
   @ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR })
   async create(@Body() dto: CreateCategoryDto): Promise<ApiResponse<CategoryDocument>> {
@@ -39,7 +38,7 @@ export class CategoriesController {
   @ApiOperation({ summary: 'Update one category by slug' })
   @ApiParam({ name: 'slug', type: String })
   @ApiBody({ type: UpdateCategoryDto })
-  @ApiSwaggerResponse(HttpStatus.OK, Category, successMessages.CATEGORY_UPDATE_MSG)
+  @ApiSwaggerResponse(Actions.UPDATE, EntityType.CATEGORY, Category)
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_CATEGORY_MSG })
   @ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR })
   async update(
@@ -54,7 +53,7 @@ export class CategoriesController {
   @Delete(':slug')
   @ApiOperation({ summary: 'Delete one category by slug' })
   @ApiParam({ name: 'slug', type: String })
-  @ApiSwaggerResponse(HttpStatus.OK, Category, successMessages.CATEGORY_DELETE_MSG)
+  @ApiSwaggerResponse(Actions.DELETE, EntityType.CATEGORY, Category)
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_CATEGORY_MSG })
   async delete(@Param() { slug }: { slug: string }): Promise<ApiResponse<CategoryDocument>> {
     const category = await this.categoriesService.delete(slug);
@@ -65,7 +64,7 @@ export class CategoriesController {
   @Get(':slug')
   @ApiOperation({ summary: 'Get one category by slug' })
   @ApiParam({ name: 'slug', type: String })
-  @ApiSwaggerResponse(HttpStatus.OK, Category)
+  @ApiSwaggerResponse(Actions.GET, EntityType.CATEGORY, Category)
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_CATEGORY_MSG })
   async getOne(@Param() { slug }: { slug: string }): Promise<ApiResponse<CategoryDocument>> {
     const category = await this.categoriesService.getOneBySlug(slug);
@@ -75,7 +74,7 @@ export class CategoriesController {
   // #################### GET CATEGORIES LIST ####################
   @Get()
   @ApiOperation({ summary: 'Get list of all categories' })
-  @ApiSwaggerArrayResponse(HttpStatus.OK, Category)
+  @ApiSwaggerArrayResponse(Actions.GET_LIST, EntityType.CATEGORY, Category)
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_CATEGORY_MSG })
   async getList(): Promise<ApiResponse<CategoryDocument[]>> {
     const categories = await this.categoriesService.getList();

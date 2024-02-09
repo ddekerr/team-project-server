@@ -1,17 +1,6 @@
 import { Express } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Param,
-  Patch,
-  Delete,
-  HttpStatus,
-  UseInterceptors,
-  UploadedFile,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Param, Patch, Delete, UseInterceptors, UploadedFile } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -28,9 +17,7 @@ import { AddCategoryDto, CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { FileUploadDto } from './dto/file-upload.dto';
 
-import success from 'constants/successMessages';
 import exceptionMessages from 'constants/exceptionMessages';
-import successMessages from 'constants/successMessages';
 import validationMessage from 'constants/validationMessage';
 import { Actions, EntityType } from 'types';
 
@@ -49,7 +36,8 @@ export class ProductsController {
   @Post()
   @ApiOperation({ summary: 'Create new product' })
   @ApiBody({ type: CreateProductDto })
-  @ApiSwaggerResponse(HttpStatus.CREATED, Product, success.PRODUCT_CREATE_MSG)
+  @ApiSwaggerResponse(Actions.CREATE, EntityType.PRODUCT, Product)
+  @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_CATEGORY_MSG })
   @ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR })
   async create(@Body() dto: CreateProductDto): Promise<ApiResponse<ProductDocument>> {
     const product = await this.productsService.create(dto);
@@ -61,7 +49,7 @@ export class ProductsController {
   @ApiOperation({ summary: 'Update product by ID' })
   @ApiParam({ name: 'id', type: Number })
   @ApiBody({ type: CreateProductDto })
-  @ApiSwaggerResponse(HttpStatus.OK, Product, success.PRODUCT_UPDATE_MSG)
+  @ApiSwaggerResponse(Actions.UPDATE, EntityType.PRODUCT, Product)
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_PRODUCT_MSG })
   @ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR })
   async update(@Param('id') id: number, @Body() dto: UpdateProductDto) {
@@ -73,7 +61,7 @@ export class ProductsController {
   @Delete(':id')
   @ApiParam({ name: 'id', type: Number })
   @ApiOperation({ summary: 'Delete product by ID' })
-  @ApiSwaggerResponse(HttpStatus.OK, Product, success.PRODUCT_DELETE_MSG)
+  @ApiSwaggerResponse(Actions.DELETE, EntityType.PRODUCT, Product)
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_PRODUCT_MSG })
   async delete(@Param('id') id: number): Promise<ApiResponse<ProductDocument>> {
     const product = await this.productsService.delete(id);
@@ -83,7 +71,7 @@ export class ProductsController {
   // #################### GET ONE PRODUCT BY ID ####################
   @Get(':id')
   @ApiOperation({ summary: 'Get one product by ID' })
-  @ApiSwaggerResponse(HttpStatus.OK, Product)
+  @ApiSwaggerResponse(Actions.GET, EntityType.PRODUCT, Product)
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_PRODUCT_MSG })
   async getOne(@Param('id') id: number): Promise<ApiResponse<ProductDocument>> {
     const product = await this.productsService.getOneById(id);
@@ -93,7 +81,7 @@ export class ProductsController {
   // #################### GET PRODUCTS LIST ####################
   @Get()
   @ApiOperation({ summary: 'Get Product list' })
-  @ApiSwaggerArrayResponse(HttpStatus.OK, Product)
+  @ApiSwaggerArrayResponse(Actions.GET_LIST, EntityType.PRODUCT, Product)
   async getList(): Promise<ApiResponse<ProductDocument[]>> {
     const products = await this.productsService.getList();
     return new ApiResponse(Actions.GET, EntityType.PRODUCT, products);
@@ -102,7 +90,7 @@ export class ProductsController {
   // #################### ADD POSTER TO PRODUCT ####################
   @Patch(':id/upload-poster')
   @ApiOperation({ summary: 'Upload poster to product by ID' })
-  @ApiSwaggerResponse(HttpStatus.OK, Product, successMessages.PRODUCT_ADD_POSTER_MSG)
+  @ApiSwaggerResponse(Actions.ADD_POSTER, EntityType.PRODUCT, Product)
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_PRODUCT_MSG })
   @UseInterceptors(FileInterceptor('poster'))
   @ApiConsumes('multipart/form-data')
@@ -118,7 +106,7 @@ export class ProductsController {
   // #################### ADD CATEGORY TO PRODUCT ####################
   @Patch(':id/add-category')
   @ApiOperation({ summary: 'Add category to product by ID' })
-  @ApiSwaggerResponse(HttpStatus.OK, Product, successMessages.PRODUCT_ADD_CATEGORY_MSG)
+  @ApiSwaggerResponse(Actions.ADD_CATEGORY, EntityType.PRODUCT, Product)
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_PRODUCT_MSG })
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_CATEGORY_MSG })
   @ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR })

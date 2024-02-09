@@ -4,7 +4,7 @@ import { Actions, EntityType } from 'types';
 
 export class ApiResponse<T> {
   @ApiProperty({ enum: [200, 201] })
-  private status: 200 | 201;
+  private status: number;
 
   @ApiProperty()
   private data?: T;

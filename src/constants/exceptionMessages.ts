@@ -14,8 +14,8 @@ export default {
   BAD_REQUEST_MSG: 'Wrong data',
 
   // not found messages
-  NOT_FOUND_PRODUCT_MSG: 'Product not found, invalid id param',
-  NOT_FOUND_CATEGORY_MSG: 'Category not found, invalid slug param',
+  NOT_FOUND_PRODUCT_MSG: 'Product not found, invalid id ',
+  NOT_FOUND_CATEGORY_MSG: 'Category not found, invalid slug',
 
   // file problem messages
   FILE_ERROR_MSG: 'Something went wrong working with file',

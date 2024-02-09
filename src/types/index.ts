@@ -7,6 +7,7 @@ export enum Actions {
   UPDATE = 'UPDATE',
   DELETE = 'DELETE',
   GET = 'GET',
+  GET_LIST = 'GET_LIST',
   ADD_POSTER = 'ADD_POSTER',
   ADD_CATEGORY = 'ADD_CATEGORY',
 }
