@@ -1,9 +1,4 @@
-import {
-  ExceptionFilter,
-  Catch,
-  ArgumentsHost,
-  HttpException,
-} from '@nestjs/common';
+import { ExceptionFilter, Catch, ArgumentsHost, HttpException } from '@nestjs/common';
 import validationMessages from 'constants/validationMessage';
 import { ValidationException } from 'exceptions/validation.exception';
 import { Response } from 'express';
@@ -19,11 +14,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     let res = null;
     if (exception instanceof ValidationException) {
-      res = new ApiValidationError(
-        status,
-        validationMessages.VALIDATION_ERROR,
-        exception.errors,
-      );
+      res = new ApiValidationError(status, validationMessages.VALIDATION_ERROR, exception.errors);
     } else {
       res = new ApiError(status, exception.message);
     }

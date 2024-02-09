@@ -1,11 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
-import {
-  PutObjectCommand,
-  S3Client,
-  HeadObjectCommand,
-  DeleteObjectCommand,
-} from '@aws-sdk/client-s3';
+import { PutObjectCommand, S3Client, HeadObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { ConfigService } from '@nestjs/config';
 
 export enum FileType {
@@ -65,10 +60,7 @@ export class FilesService {
   }
 
   // create new folder in S3 bucket if its not exist
-  private async createFolderIfNotExist(
-    Bucket: string,
-    Key: string,
-  ): Promise<void> {
+  private async createFolderIfNotExist(Bucket: string, Key: string): Promise<void> {
     const isFolderExist = await this.isFolderExist(Bucket, Key);
     if (!isFolderExist) {
       await this.createFolder(Bucket, Key);
