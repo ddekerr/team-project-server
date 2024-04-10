@@ -1,10 +1,13 @@
-import { CategoriesService } from './../categories/categories.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
+
 import { ProductsRepository } from './products.repository';
+import { CategoriesService } from './../categories/categories.service';
+import { FileType, FilesService } from 'modules/files/files.service';
+
 import { ProductDocument } from './schemas/product.schema';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { FileType, FilesService } from 'modules/files/files.service';
+
 import exceptionMessages from 'constants/exceptionMessages';
 
 @Injectable()
@@ -75,5 +78,16 @@ export class ProductsService {
 
     product.category = category;
     return await product.save();
+  }
+
+  // #################### RATE PRODUCT ####################
+  async updateRating(id: number, value: number): Promise<number> {
+    const product = await this.getOneById(id);
+    product.rating[value] += 1;
+    const result = Object.values(product.rating).reduce((sum, item) => sum + item, 0) / 5;
+
+    await product.save();
+
+    return result;
   }
 }

@@ -13,6 +13,7 @@ export default {
 
   PRODUCT_ADD_POSTER_MSG: 'Product poster has been successfully changed',
   PRODUCT_ADD_CATEGORY_MSG: 'Product category has been successfully changed',
+  PRODUCT_RATE_MSG: 'Product rate has been successfully updated',
 
   // category success messages
   CATEGORY_CREATE_MSG: 'Category has been successfully created',
