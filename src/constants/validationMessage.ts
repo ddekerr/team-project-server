@@ -30,6 +30,9 @@ export default {
   PRODUCT_CATEGORY_EMPTY_MSG: 'Products category must not be empty',
   PRODUCT_CATEGORY_STRING_MSG: 'Products categories must be a string',
 
+  PRODUCT_RATE_VALUE_EMPTY_MSG: 'Products rate value must not be empty',
+  PRODUCT_RATE_VALUE_NUMBER_MSG: 'Products rate value must be one of $constraint1',
+
   // category fields validation
   CATEGORY_TITLE_EMPTY_MSG: 'Category title mustnot not be empty',
   CATEGORY_TITLE_STRING_MSG: 'Category title must be a string',

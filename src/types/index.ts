@@ -10,6 +10,7 @@ export enum Actions {
   GET_LIST = 'GET_LIST',
   ADD_POSTER = 'ADD_POSTER',
   ADD_CATEGORY = 'ADD_CATEGORY',
+  RATE = 'RATE',
 }
 
 export enum EntityType {
