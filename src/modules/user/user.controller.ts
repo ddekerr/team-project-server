@@ -1,4 +1,4 @@
-import { Body, Controller, HttpStatus, Param, Post, Put, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -44,5 +44,38 @@ export class UserController {
                 error: 'Bad Request'
             });;
         }
+    }
+    
+    @Get('/:id')
+    async getUser(@Res() response, @Param('id') userId: string) {
+        try {
+            const existingUser = await this.userService.getUser(userId);
+            return response.status(HttpStatus.OK).json({
+                message: 'User found successfully', existingUser,
+            });
+        } catch (err) {
+            return response.status(HttpStatus.BAD_REQUEST).json({
+                statusCode: 400,
+                message: 'Error: User not found!',
+                error: 'Bad Request'
+            });
+        }
+    }
+
+    @Delete('/:id')
+    async deleteUser(@Res() response, @Param('id') userId: string) {
+        try {
+            const deletedUser = await this.userService.deleteUser(userId);
+            return response.status(HttpStatus.OK).json({
+                message: deletedUser
+            });
+        } catch (err) {
+            return response.status(HttpStatus.BAD_REQUEST).json({
+                statusCode: 400,
+                message: 'Error: User not found!',
+                error: 'Bad Request'
+            });
+        }
+
     }
 }
