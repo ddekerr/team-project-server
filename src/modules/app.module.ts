@@ -15,7 +15,6 @@ import { UserModule } from './user/user.module';
     FilesModule,
     CategoriesModule,
     UserModule,
-  ],
-  providers: [UserService],
+  ]
 })
 export class AppModule {}
