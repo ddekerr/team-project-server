@@ -3,7 +3,8 @@ export default {
 
   // user fields validation
   USER_NAME_STRING_MSG: 'User name must be a string',
-  USER_NAME_LENGTH_MSG: 'User name must be at least $constraint1 characters',
+  USER_NAME_LENGTH_MSG: 'User name must be between $constraint1-$constraint2 characters',
+  USER_NAME_EMPTY_MSG: 'User name must be not empty',
 
   USER_EMAIL_MSG: 'User e-mail must be in the correct format',
   USER_EMAIL_EMPTY_MSG: 'User e-mail must be not empty',
@@ -14,6 +15,23 @@ export default {
   USER_PASSWORD_EMPTY_MSG: 'User password must be not empty',
   USER_PASSWORD_STRING_MSG: 'User password must be a string',
   USER_PASSWORD_LENGTH_MSG: 'User password must be between $constraint1-$constraint2 characters',
+
+  USER_CITY_STRING_MSG: 'City must be a string',
+  USER_CITY_LENGTH_MSG: 'City must be between $constraint1-$constraint2 characters',
+  USER_CITY_EMPTY_MSG: 'City must be not empty',
+
+  USER_STREET_STRING_MSG: 'Street must be a string',
+  USER_STREET_LENGTH_MSG: 'Street must be between $constraint1-$constraint2 characters',
+  USER_STREET_EMPTY_MSG: 'Street must be not empty',
+
+  USER_HOUSE_STRING_MSG: 'House must be a string',
+  USER_HOUSE_LENGTH_MSG: 'House must be between $constraint1-$constraint2 characters',
+  USER_HOUSE_EMPTY_MSG: 'House must be not empty',
+
+  USER_APARTMENT_NUMBER_MSG: 'Apartment must be a number',
+  USER_APARTMENT_MIN_MSG: 'User apartment must be at least $constraint1',
+  USER_APARTMENT_MAX_MSG: 'User apartment cannot be bigger then $constraint1',
+  USER_APARTMENT_EMPTY_MSG: 'Apartment must be not empty',
 
   // product fields validation
   PRODUCT_TITLE_EMPTY_MSG: 'Products title must be not empty',

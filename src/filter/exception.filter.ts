@@ -19,8 +19,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
       res = new ApiError(status, exception.message);
     }
 
-    console.log(res);
-
     response.status(status).json(res);
   }
 }
