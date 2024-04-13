@@ -1,36 +1,45 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { ApiProperty } from '@nestjs/swagger';
+import { Document } from 'mongoose';
 
-export interface Address {
-    city: string;
-    address: string;
-}
+export type UserDocument = User & Document;
 
-@Schema()
+export type Address = {
+  city: string;
+  street: string;
+  house: string;
+  apartment: number;
+};
+
+@Schema({ timestamps: true, versionKey: false })
 export class User {
-    @Prop({ unique: true })
-    email: string;
+  @ApiProperty({ required: false })
+  @Prop({ required: false })
+  first_name: string;
 
-    @Prop()
-    password:string;
+  @ApiProperty({ required: false })
+  @Prop({ required: false })
+  last_name: string;
 
-    @Prop()
-    first_name: string;
+  @ApiProperty({ required: false })
+  @Prop({ unique: true, required: false })
+  phone_number: string;
 
-    @Prop()
-    last_name: string;
+  @ApiProperty()
+  @Prop({ unique: true })
+  email: string;
 
-    @Prop()
-    phone_number: string;
+  @ApiProperty({ required: false })
+  @Prop({ required: false })
+  b_day: Date;
 
-    @Prop({ type: [{ city: String, address: String }] })
-    addresses: Address[];
+  @ApiProperty()
+  @Prop()
+  password: string;
 
-    @Prop({ default: Date.now })
-    created_at: Date;
-
-    @Prop({ default: Date.now })
-    updated_at: Date;
-
+  @ApiProperty({ required: false })
+  @Prop({ type: { city: String, street: String, house: String, apartment: Number } })
+  addresses: Address;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User)
+export const UserSchema = SchemaFactory.createForClass(User);

@@ -16,4 +16,5 @@ export enum Actions {
 export enum EntityType {
   PRODUCT = 'PRODUCT',
   CATEGORY = 'CATEGORY',
+  USER = 'USER',
 }
