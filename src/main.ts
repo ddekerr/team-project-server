@@ -4,7 +4,7 @@ import { AppModule } from './modules/app.module';
 import { GlobalValidationPipe } from 'pipes/validation.pipe';
 import { HttpExceptionFilter } from 'filter/exception.filter';
 
-async function bootstrap() {
+async function start() {
   const PORT = process.env.PORT || 5000;
 
   // init application
@@ -25,4 +25,4 @@ async function bootstrap() {
 }
 
 // entry point
-bootstrap();
+start();
