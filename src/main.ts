@@ -20,6 +20,8 @@ async function start() {
     swaggerOptions: { defaultModelsExpandDepth: -1 },
   });
 
+  // test
+
   // run server
   await app.listen(PORT, () => console.log(`Server starts on ${PORT} port`));
 }
