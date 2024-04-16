@@ -15,11 +15,13 @@ import { ApiSwaggerResponse } from 'helpers/ApiSwaggerResponse';
 import { ApiError } from 'helpers/ApiError';
 import { ApiValidationError } from 'helpers/ApiValidationError';
 import { Response } from 'express';
+import { add } from 'date-fns';
+
 
 @ApiTags('Auth')
 @Controller('api/auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   // #################### REGISTER NEW USER ####################
   @Post('register')
@@ -29,30 +31,30 @@ export class AuthController {
   @ApiSwaggerResponse(Actions.CREATE, EntityType.USER, User)
   @ApiConflictResponse({ type: ApiError, description: exceptionMessages.CONFLICT_EMAIL_MSG })
   @ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR })
-  async register(@Body() createUserDto: CreateUserDto): Promise<ApiResponse<UserResponse>> {
+  async register(@Body() createUserDto: CreateUserDto){ //:Promise<ApiResponse<UserResponse>>
     const newUser = await this.authService.register(createUserDto);
     return new ApiResponse(Actions.CREATE, EntityType.USER, newUser);
   }
 
   @Post('login')
-  async login(@Body() dto:CreateUserDto, @Res() res:Response){
+  async login(@Body() dto: CreateUserDto, @Res() res: Response) {
     const tokens = await this.authService.login(dto)
-    this.serRefreshTokenToCookies(tokens,res)
+    this.serRefreshTokenToCookies(tokens, res)
   }
 
-  private serRefreshTokenToCookies(tokens:Tokens, res:Response){
+  private serRefreshTokenToCookies(tokens: Tokens, res: Response) {
     if (!tokens) {
-      throw new UnauthorizedException()       
+      throw new UnauthorizedException()
     }
-    res.cookie('refreshtoken', tokens.refreshToken,{
-      httpOnly:true,
-      sameSite:'lax',
-      //expires:
-      path:'/'
+    res.cookie('refreshtoken', tokens.refreshToken, {
+      httpOnly: true,
+      sameSite: 'lax',
+      expires: add(new Date(), { months: 1 }),
+      path: '/'
     })
-    res.status(HttpStatus.CREATED).json({accessToken: tokens.accessToken})
+    res.status(HttpStatus.CREATED).json({ accessToken: tokens.accessToken })
   }
-  
+
   // @Put('/:id')
   // async updateStudent(@Res() response, @Param('id') userId: string, @Body() updateuserDto: UpdateUserDto) {
   //   try {

@@ -13,7 +13,7 @@ export enum TokenType {
 }
 
 export type Payload = {
-  email: string;
+  userId: string;
 };
 
 export type UserResponse = {
