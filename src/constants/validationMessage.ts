@@ -59,4 +59,20 @@ export default {
 
   CATEGORY_PARENT_EMPTY_MSG: 'Category parent must not be empty',
   CATEGORY_PARENT_STRING_MSG: 'Category parent must be a string',
+
+  // orders fields validation
+  ORDER_CUSTOMER_EMAIL_MSG: 'Customer`s e-mail must be in the correct format',
+  ORDER_CUSTOMER_EMAIL_EMPTY_MSG: 'Customer`s e-mail must not be empty',
+
+  ORDER_TOTAL_NUMBER_MSG: 'Order`s total must be a number',
+  ORDER_TOTAL_MIN_MSG: 'Order`s total must be at least $constraint1',
+  ORDER_TOTAL_EMPTY_MSG: 'Order`s total must not be empty',
+
+  ORDER_PRODUCT_ID_NUMBER_MSG: 'Product Id must be a number',
+  ORDER_PRODUCT_ID_MIN_MSG: 'Product Id must be at least $constraint1',
+  ORDER_PRODUCT_ID_EMPTY_MSG: 'Product Id must not be empty',
+
+  ORDER_QUANTITY_NUMBER_MSG: 'Product quantity must be a number',
+  ORDER_QUANTITY_MIN_MSG: 'Product quantity must be at least $constraint1',
+  ORDER_QUANTITY_EMPTY_MSG: 'Product quantity must not be empty',
 };

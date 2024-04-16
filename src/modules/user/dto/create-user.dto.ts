@@ -14,7 +14,7 @@ import {
 } from 'class-validator';
 import validationMessage from 'constants/validationMessage';
 
-class AddressDto {
+export class AddressDto {
   @ApiProperty({ required: false })
   @IsString({ message: validationMessage.USER_CITY_STRING_MSG })
   @Length(3, 40, { message: validationMessage.USER_CITY_LENGTH_MSG })
