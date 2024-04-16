@@ -18,5 +18,5 @@ export type Payload = {
 
 export type UserResponse = {
   user: UserDocument;
-  token: string;
+  tokens: Tokens;
 };

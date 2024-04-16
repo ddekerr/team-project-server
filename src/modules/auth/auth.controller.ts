@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, Res, UnauthorizedException } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiBody, ApiConflictResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { AuthService } from './auth.service';
@@ -8,12 +8,13 @@ import { CreateUserDto } from '../user/dto/create-user.dto';
 import validationMessage from 'constants/validationMessage';
 import exceptionMessages from 'constants/exceptionMessages';
 import { Actions, EntityType } from 'types';
-import { UserResponse } from './types';
+import { Tokens, UserResponse } from './types';
 
 import { ApiResponse } from 'helpers/ApiResponse';
 import { ApiSwaggerResponse } from 'helpers/ApiSwaggerResponse';
 import { ApiError } from 'helpers/ApiError';
 import { ApiValidationError } from 'helpers/ApiValidationError';
+import { Response } from 'express';
 
 @ApiTags('Auth')
 @Controller('api/auth')
@@ -33,6 +34,25 @@ export class AuthController {
     return new ApiResponse(Actions.CREATE, EntityType.USER, newUser);
   }
 
+  @Post('login')
+  async login(@Body() dto:CreateUserDto, @Res() res:Response){
+    const tokens = await this.authService.login(dto)
+    this.serRefreshTokenToCookies(tokens,res)
+  }
+
+  private serRefreshTokenToCookies(tokens:Tokens, res:Response){
+    if (!tokens) {
+      throw new UnauthorizedException()       
+    }
+    res.cookie('refreshtoken', tokens.refreshToken,{
+      httpOnly:true,
+      sameSite:'lax',
+      //expires:
+      path:'/'
+    })
+    res.status(HttpStatus.CREATED).json({accessToken: tokens.accessToken})
+  }
+  
   // @Put('/:id')
   // async updateStudent(@Res() response, @Param('id') userId: string, @Body() updateuserDto: UpdateUserDto) {
   //   try {

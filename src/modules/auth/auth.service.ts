@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from 'modules/user/dto/create-user.dto';
 // import { UserDocument } from 'modules/user/schemas/user.schema';
@@ -6,13 +6,15 @@ import { UsersService } from 'modules/user/users.service';
 import { Payload, Token, TokenType, Tokens, UserResponse } from './types';
 
 import { ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN } from 'constants/tokens';
+import { UserDocument } from 'modules/user/schemas/user.schema';
+import { compareSync } from 'bcrypt';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   // #################### REGISTER NEW USER ####################
   async register(dto: CreateUserDto): Promise<UserResponse> {
@@ -21,7 +23,20 @@ export class AuthService {
     // generate tokens
     const tokens = this.generateTokens({ email: dto.email });
 
-    return { user, token: (await tokens).accessToken };
+    return { user, tokens: { accessToken: (await tokens).accessToken, refreshToken: (await tokens).refreshToken } };
+  }
+
+  // #################### LOGIN USER ####################
+  async login(dto: CreateUserDto) {
+    const user: UserDocument = await this.usersService.getUser(dto.email)
+
+    if (!user || !compareSync(dto.password, user.password)) {
+      throw new UnauthorizedException('Wrong login or password')
+    }
+
+    const tokens = this.generateTokens({ email: dto.email });
+
+    return { accessToken: (await tokens).accessToken, refreshToken: (await tokens).refreshToken };
   }
 
   // #################### GENERATE ACCESS AND REFRESH TOKENS ####################
