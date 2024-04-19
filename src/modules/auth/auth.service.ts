@@ -8,15 +8,13 @@ import { Payload, Token, TokenType, Tokens, UserResponse } from './types';
 import { ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN } from 'constants/tokens';
 import { UserDocument } from 'modules/user/schemas/user.schema';
 import { compareSync } from 'bcrypt';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   // #################### REGISTER NEW USER ####################
   async register(dto: CreateUserDto): Promise<UserDocument> {
@@ -31,7 +29,10 @@ export class AuthService {
       throw new UnauthorizedException('Wrong login or password');
     }
 
-    const { accessToken, refreshToken } = await this.generateTokens({ userId: user._id }, user);
+    const { accessToken, refreshToken } = await this.generateTokens({ email: user.email, userId: user._id });
+
+    console.log(accessToken);
+    
 
     return { accessToken, refreshToken };
   }

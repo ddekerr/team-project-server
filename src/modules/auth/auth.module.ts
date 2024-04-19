@@ -3,14 +3,14 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { UsersModule } from 'modules/user/users.module';
 import { JwtModule } from '@nestjs/jwt';
-import { TokenSchema } from './schema/token.schema';
-import { MongooseModule } from '@nestjs/mongoose';
+import { STRATEGY } from './strategies';
+//import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
-  providers: [AuthService],
+  providers: [AuthService, ...STRATEGY],
   controllers: [AuthController],
   imports: [UsersModule,
     JwtModule.register({}),
-    MongooseModule.forFeature([{ name: 'Token', schema: TokenSchema }])],
+  ],
 })
 export class AuthModule { }

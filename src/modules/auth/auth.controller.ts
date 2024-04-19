@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Res, UnauthorizedException } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiBody, ApiConflictResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { AuthService } from './auth.service';
@@ -15,13 +15,16 @@ import { ApiSwaggerResponse } from 'helpers/ApiSwaggerResponse';
 import { ApiError } from 'helpers/ApiError';
 import { ApiValidationError } from 'helpers/ApiValidationError';
 import { Response } from 'express';
-import { add } from 'date-fns';
 import { REFRESH_TOKEN_EXPIRES_IN } from 'constants/tokens';
+import { Cookie } from './decorator/cookies.decorator';
+//import { JwtAuthGuard } from './guards/jwt-auth.guard';
+
+const REFRESH_TOKEN = 'refreshtoken';
 
 @ApiTags('Auth')
 @Controller('api/auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   // #################### REGISTER NEW USER ####################
   @Post('register')
@@ -32,7 +35,6 @@ export class AuthController {
   @ApiConflictResponse({ type: ApiError, description: exceptionMessages.CONFLICT_EMAIL_MSG })
   @ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR })
   async register(@Body() createUserDto: CreateUserDto) {
-    //:Promise<ApiResponse<UserResponse>>
     const newUser = await this.authService.register(createUserDto);
     return new ApiResponse(Actions.CREATE, EntityType.USER, newUser);
   }
@@ -40,20 +42,25 @@ export class AuthController {
   @Post('login')
   async login(@Body() dto: CreateUserDto, @Res() res: Response) {
     const tokens = await this.authService.login(dto);
+    console.log(tokens);
+
     this.serRefreshTokenToCookies(tokens, res);
+  }
+
+  //@UseGuards(JwtAuthGuard)
+  @Post('test')
+  test(@Res() res: Response, @Cookie(REFRESH_TOKEN) refreshToken: string,) {
+
+    res.cookie(REFRESH_TOKEN, '');
+    res.json("Ok")
   }
 
   private serRefreshTokenToCookies(tokens: Tokens, res: Response) {
     if (!tokens) {
       throw new UnauthorizedException();
     }
-    res.cookie('refreshtoken', tokens.refreshToken, {
-      httpOnly: true,
-      sameSite: 'lax',
-      expires: REFRESH_TOKEN_EXPIRES_IN,
-      path: '/',
-    });
-    res.status(HttpStatus.CREATED).json({ accessToken: tokens.accessToken });
+    res.cookie('refreshtoken', tokens.refreshToken)
+    res.json({ access: tokens.accessToken }) // тимчасово
   }
 
   // @Put('/:id')
