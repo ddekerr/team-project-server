@@ -1,8 +1,10 @@
 export type Filter = {
   category?: string;
-  ids?: string;
+  id?: number[];
 };
 
-export type Params = Filter & {
+export type Params = {
   sort?: string;
+  category?: string;
+  id?: string;
 };

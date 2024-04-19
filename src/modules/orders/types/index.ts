@@ -1,11 +1,10 @@
 import { Address } from 'modules/user/schemas/user.schema';
 
 export type OrderedProduct = {
-  product: {
-    title: string;
-    price: number;
-    poster: string;
-  };
+  id: number;
+  title: string;
+  price: number;
+  poster: string;
   quantity: number;
 };
 

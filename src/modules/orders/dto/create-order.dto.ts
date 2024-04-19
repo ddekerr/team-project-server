@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsPhoneNumber, IsString, Min, ValidateNested } from 'class-validator';
+import { IsArray, IsNotEmpty, IsNumber, IsPhoneNumber, IsString, Min, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import validationMessage from 'constants/validationMessage';
@@ -53,6 +53,7 @@ export class CreateOrderDto {
   readonly paymentMethod: string;
 
   @ApiProperty()
+  @IsArray()
   @ValidateNested({ each: true })
   @Type(() => OrderedProductDto)
   readonly products: OrderedProductDto[];

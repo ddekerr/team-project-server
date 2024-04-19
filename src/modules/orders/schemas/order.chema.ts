@@ -9,9 +9,9 @@ export type OrderDocument = Order & Document;
 
 @Schema({ versionKey: false, timestamps: true })
 export class Order {
-  @ApiProperty({ uniqueItems: true, description: 'Unique code of order' })
-  @Prop({ type: String, unique: true, length: 7 })
-  orderСode: string;
+  @ApiProperty({ uniqueItems: true, required: true, description: 'Unique code of order' })
+  @Prop({ type: String, unique: true, required: true })
+  orderCode: string;
 
   @ApiProperty({ description: 'The current status of the order' })
   @Prop({ type: String })
@@ -25,7 +25,7 @@ export class Order {
     type: Date,
     description: 'The date when the order is confirmed (after payment) and submitted for delivery',
   })
-  @Prop({ type: Date })
+  @Prop({ type: Date, default: null })
   executionAt: Date;
 
   @ApiProperty({ description: 'Total amount to be paid' })
@@ -46,15 +46,16 @@ export class Order {
 
   @ApiProperty({ description: 'List and quantity of acquired products' })
   @Prop({
+    _id: false,
     type: [
       {
+        _id: false,
         type: {
-          product: {
-            title: String,
-            price: Number,
-            poster: String,
-          },
+          title: String,
+          price: Number,
+          poster: String,
           quantity: Number,
+          id: Number,
         },
       },
     ],
@@ -62,16 +63,12 @@ export class Order {
   products: OrderedProduct[];
 
   @ApiProperty({ description: 'The person who will receive the order' })
-  @Prop({ type: { name: String, phone: String } })
-  recipient: Recepient;
+  @Prop({ _id: false, type: { name: String, phone: String } })
+  recepient: Recepient;
 
   @ApiProperty({ description: 'The address where the order will be delivered' })
-  @Prop({ type: { city: String, street: String, house: String, apartment: Number } })
+  @Prop({ _id: false, type: { city: String, street: String, house: String, apartment: Number } })
   deliveryAddress: Address;
-
-  constructor() {
-    this.executionAt = this.createdAt;
-  }
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
