@@ -31,7 +31,7 @@ export class AddressDto {
 
   @ApiProperty({ required: false })
   @IsString({ message: validationMessage.USER_HOUSE_STRING_MSG })
-  @Length(3, 5, { message: validationMessage.USER_HOUSE_LENGTH_MSG })
+  @Length(1, 5, { message: validationMessage.USER_HOUSE_LENGTH_MSG })
   @IsNotEmpty({ message: validationMessage.USER_HOUSE_EMPTY_MSG })
   @IsOptional()
   readonly house: string;
