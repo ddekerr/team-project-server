@@ -17,4 +17,5 @@ export enum EntityType {
   PRODUCT = 'PRODUCT',
   CATEGORY = 'CATEGORY',
   USER = 'USER',
+  ORDERS = 'ORDERS',
 }

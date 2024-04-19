@@ -42,6 +42,7 @@
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
     "slug": "^8.2.3",
+    "unique-string-generator": "^1.1.1",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

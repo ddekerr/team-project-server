@@ -59,4 +59,32 @@ export default {
 
   CATEGORY_PARENT_EMPTY_MSG: 'Category parent must not be empty',
   CATEGORY_PARENT_STRING_MSG: 'Category parent must be a string',
+
+  // orders fields validation
+  ORDER_CUSTOMER_PHONE_MSG: 'Customer`s phone must be in the correct format',
+  ORDER_CUSTOMER_PHONE_EMPTY_MSG: 'Customer`s e-mail must not be empty',
+
+  ORDER_TOTAL_PRICE_NUMBER_MSG: 'Order`s total must be a number',
+  ORDER_TOTAL_PRICE_MIN_MSG: 'Order`s total must be at least $constraint1',
+  ORDER_TOTAL_PRICE_EMPTY_MSG: 'Order`s total must not be empty',
+
+  ORDER_PRODUCT_ID_NUMBER_MSG: 'Product Id must be a number',
+  ORDER_PRODUCT_ID_MIN_MSG: 'Product Id must be at least $constraint1',
+  ORDER_PRODUCT_ID_EMPTY_MSG: 'Product Id must not be empty',
+
+  ORDER_QUANTITY_NUMBER_MSG: 'Product quantity must be a number',
+  ORDER_QUANTITY_MIN_MSG: 'Product quantity must be at least $constraint1',
+  ORDER_QUANTITY_EMPTY_MSG: 'Product quantity must not be empty',
+
+  ORDER_PAYMENT_STATUS_STRING_MSG: 'Order payment status must be a string',
+  ORDER_PAYMENT_STATUS_EMPTY_MSG: 'Order payment status must not be empty',
+
+  ORDER_PAYMENT_METHOD_STRING_MSG: 'Order payment method must be a string',
+  ORDER_PAYMENT_METHOD_EMPTY_MSG: 'Order payment method must not be empty',
+
+  ORDER_RECEPIENT_NAME_STRING_MSG: 'Recepient name must be a string',
+  ORDER_RECEPIENT_NAME_EMPTY_MSG: 'Recepient name must not be empty',
+
+  ORDER_RECEPIENT_PHONE_MSG: 'Recepint phone must be in the correct format',
+  ORDER_RECEPIENT_PHONE_EMPTY_MSG: 'Recepint e-mail must not be empty',
 };

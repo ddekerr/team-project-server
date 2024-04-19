@@ -45,7 +45,7 @@ export class Product {
   rating: Rating;
 
   @ApiProperty({ type: mongoose.Schema.Types.ObjectId, description: 'Categories list of product' })
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Category' })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Category', default: null })
   category: Category;
 }
 
