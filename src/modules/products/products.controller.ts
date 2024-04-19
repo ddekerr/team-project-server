@@ -11,6 +11,7 @@ import {
   UseInterceptors,
   UploadedFile,
   HttpCode,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -95,7 +96,7 @@ export class ProductsController {
   }
 
   // #################### GET PRODUCTS LIST ####################
-  @Get()
+  @Get(@Query() queryParams: )
   @HttpCode(200)
   @ApiOperation({ summary: 'Get Product list' })
   @ApiSwaggerArrayResponse(Actions.GET_LIST, EntityType.PRODUCT, Product)

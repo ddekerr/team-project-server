@@ -18,7 +18,7 @@ export class OrdersService {
   async create(dto: CreateOrderDto): Promise<IOrder> {
     const orderCode = await this.generateUniqueOrderCode();
 
-    // const newOrder = await this.ordersRepository.create({ ...dto, orderCode });
+    const newOrder = await this.ordersRepository.create({ ...dto, orderCode });
     // return newOrder;
   }
 
