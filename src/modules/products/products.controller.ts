@@ -39,6 +39,7 @@ import { ApiResponse } from 'helpers/ApiResponse';
 import { ApiValidationError } from 'helpers/ApiValidationError';
 import { ApiSwaggerResponse } from 'helpers/ApiSwaggerResponse';
 import { ApiSwaggerArrayResponse } from 'helpers/ApiSwaggerArrayResponse';
+import { Params } from './types';
 
 @ApiTags('Products')
 @Controller('api/products')
@@ -100,8 +101,9 @@ export class ProductsController {
   @HttpCode(200)
   @ApiOperation({ summary: 'Get Product list' })
   @ApiSwaggerArrayResponse(Actions.GET_LIST, EntityType.PRODUCT, Product)
-  async getList(): Promise<ApiResponse<ProductDocument[]>> {
-    const products = await this.productsService.getList();
+  async getList(@Query() params: Params): Promise<ApiResponse<ProductDocument[]>> {
+    const filter = this.productsService.setFilter(params);
+    const products = await this.productsService.getList(filter);
     return new ApiResponse(Actions.GET, EntityType.PRODUCT, products);
   }
 

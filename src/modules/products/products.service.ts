@@ -9,6 +9,8 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
 import exceptionMessages from 'constants/exceptionMessages';
+import { Filter, Params } from './types';
+import { FilterQuery } from 'mongoose';
 
 @Injectable()
 export class ProductsService {
@@ -48,8 +50,27 @@ export class ProductsService {
   }
 
   // #################### GET PRODUCT LIST ####################
-  async getList(): Promise<ProductDocument[]> {
-    return await this.productsRepository.getList({});
+  async getList(filter?: Filter): Promise<ProductDocument[]> {
+    return await this.productsRepository.getList(filter);
+  }
+
+  // #################### SET FILTER ####################
+  setFilter(params: Params): Filter {
+    const filter = Object.entries(params).reduce((prev, [param, valueOfParam]) => {
+      switch (param) {
+        case 'id':
+          prev[param] = Number(valueOfParam);
+          break;
+
+        default:
+          prev[param] = valueOfParam;
+          break;
+      }
+
+      return prev;
+    }, {});
+
+    return filter;
   }
 
   // #################### UPLOAD POSTER TO PRODUCT ####################
