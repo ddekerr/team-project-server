@@ -11,6 +11,7 @@ export enum Actions {
   ADD_POSTER = 'ADD_POSTER',
   ADD_CATEGORY = 'ADD_CATEGORY',
   RATE = 'RATE',
+  LOGOUT = 'LOGOUT'
 }
 
 export enum EntityType {

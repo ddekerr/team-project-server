@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiBody, ApiConflictResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { AuthService } from './auth.service';
@@ -17,6 +17,7 @@ import { ApiValidationError } from 'helpers/ApiValidationError';
 import { Response } from 'express';
 import { REFRESH_TOKEN_EXPIRES_IN } from 'constants/tokens';
 import { Cookie } from './decorator/cookies.decorator';
+
 //import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 const REFRESH_TOKEN = 'refreshtoken';
@@ -42,18 +43,20 @@ export class AuthController {
   @Post('login')
   async login(@Body() dto: CreateUserDto, @Res() res: Response) {
     const tokens = await this.authService.login(dto);
-    console.log(tokens);
-
     this.serRefreshTokenToCookies(tokens, res);
   }
 
-  //@UseGuards(JwtAuthGuard)
-  @Post('test')
-  test(@Res() res: Response, @Cookie(REFRESH_TOKEN) refreshToken: string,) {
-
-    res.cookie(REFRESH_TOKEN, '');
-    res.json("Ok")
+  @Get('logout')
+  async logout(@Cookie(REFRESH_TOKEN) refreshToken: string, @Res() res: Response) {
+    if (!refreshToken) {
+      res.sendStatus(HttpStatus.OK);
+      return;
+    }
+    res.cookie(REFRESH_TOKEN, '')
+    res.sendStatus(HttpStatus.OK); // не до кінця зрозумів як працює ApiResponse, залишив тимчасовий варіаент
+    //return new ApiResponse(Actions.LOGOUT, null, null);
   }
+
 
   private serRefreshTokenToCookies(tokens: Tokens, res: Response) {
     if (!tokens) {
