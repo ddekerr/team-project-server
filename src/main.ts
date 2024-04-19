@@ -10,7 +10,7 @@ async function start() {
 
   // init application
   const app = await NestFactory.create(AppModule);
-  app.use(cookieParser())
+  app.use(cookieParser());
   app.enableCors();
   app.useGlobalPipes(new GlobalValidationPipe());
   app.useGlobalFilters(new HttpExceptionFilter());
@@ -21,8 +21,6 @@ async function start() {
   SwaggerModule.setup('docs', app, document, {
     swaggerOptions: { defaultModelsExpandDepth: -1 },
   });
-
-  // test
 
   // run server
   await app.listen(PORT, () => console.log(`Server starts on ${PORT} port`));

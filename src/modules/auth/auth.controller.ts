@@ -1,4 +1,14 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Req,
+  Res,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBadRequestResponse, ApiBody, ApiConflictResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { AuthService } from './auth.service';
@@ -16,15 +26,13 @@ import { ApiError } from 'helpers/ApiError';
 import { ApiValidationError } from 'helpers/ApiValidationError';
 import { Response } from 'express';
 import { REFRESH_TOKEN_EXPIRES_IN } from 'constants/tokens';
-import { Cookie } from './decorator/cookies.decorator';
 //import { JwtAuthGuard } from './guards/jwt-auth.guard';
-
-const REFRESH_TOKEN = 'refreshtoken';
 
 @ApiTags('Auth')
 @Controller('api/auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  private REFRESH_TOKEN_KEY = 'refreshToken';
+  constructor(private readonly authService: AuthService) {}
 
   // #################### REGISTER NEW USER ####################
   @Post('register')
@@ -34,9 +42,13 @@ export class AuthController {
   @ApiSwaggerResponse(Actions.CREATE, EntityType.USER, User)
   @ApiConflictResponse({ type: ApiError, description: exceptionMessages.CONFLICT_EMAIL_MSG })
   @ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR })
-  async register(@Body() createUserDto: CreateUserDto) {
-    const newUser = await this.authService.register(createUserDto);
-    return new ApiResponse(Actions.CREATE, EntityType.USER, newUser);
+  async register(
+    @Body() createUserDto: CreateUserDto,
+    @Res({ passthrough: true }) response: Response,
+  ): Promise<ApiResponse<UserResponse>> {
+    const { userResponse, refreshToken } = await this.authService.register(createUserDto);
+    this.setRefreshTokenToCookies(response, refreshToken);
+    return new ApiResponse(Actions.CREATE, EntityType.USER, userResponse);
   }
 
   @Post('login')
@@ -44,23 +56,14 @@ export class AuthController {
     const tokens = await this.authService.login(dto);
     console.log(tokens);
 
-    this.serRefreshTokenToCookies(tokens, res);
+    this.setRefreshTokenToCookies(res, tokens.refreshToken);
   }
-
-  //@UseGuards(JwtAuthGuard)
-  @Post('test')
-  test(@Res() res: Response, @Cookie(REFRESH_TOKEN) refreshToken: string,) {
-
-    res.cookie(REFRESH_TOKEN, '');
-    res.json("Ok")
-  }
-
-  private serRefreshTokenToCookies(tokens: Tokens, res: Response) {
-    if (!tokens) {
-      throw new UnauthorizedException();
-    }
-    res.cookie('refreshtoken', tokens.refreshToken)
-    res.json({ access: tokens.accessToken }) // тимчасово
+  // #################### ADD COOKIE WITH REFRESH TOKEN IN RESPONSE ####################
+  private setRefreshTokenToCookies(response: Response, token: string) {
+    response.cookie(this.REFRESH_TOKEN_KEY, token, {
+      httpOnly: true,
+      expires: new Date(Date.now() + REFRESH_TOKEN_EXPIRES_IN * 1000),
+    });
   }
 
   // @Put('/:id')

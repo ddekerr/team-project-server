@@ -13,11 +13,16 @@ export enum TokenType {
 }
 
 export type Payload = {
-  email:string;
+  email: string;
   userId: string;
 };
 
 export type UserResponse = {
   user: UserDocument;
-  tokens: string;
+  token: Token;
+};
+
+export type UserResponseWithRefresh = {
+  userResponse: UserResponse;
+  refreshToken: Token;
 };

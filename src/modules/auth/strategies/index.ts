@@ -1,4 +1,3 @@
-import { JwtStrategy } from "./jwt.strategy";
+import { JwtStrategy } from './jwt.strategy';
 
-
-export const STRATEGY = [JwtStrategy]
+export const STRATEGY = [JwtStrategy];
