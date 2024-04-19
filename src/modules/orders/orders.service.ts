@@ -15,11 +15,13 @@ export class OrdersService {
     private productsService: ProductsService,
   ) {}
 
-  async create(dto: CreateOrderDto): Promise<IOrder> {
+  // #################### CREATE NEW ORDER ####################
+  async create(dto: CreateOrderDto): Promise<OrderDocument> {
     const orderCode = await this.generateUniqueOrderCode();
 
-    const newOrder = await this.ordersRepository.create({ ...dto, orderCode });
-    // return newOrder;
+    const order = await this.ordersRepository.create({ ...dto, orderCode });
+    console.log(order);
+    return order;
   }
 
   private async generateUniqueOrderCode(): Promise<string> {

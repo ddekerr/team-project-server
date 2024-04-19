@@ -96,7 +96,7 @@ export class ProductsController {
   }
 
   // #################### GET PRODUCTS LIST ####################
-  @Get(@Query() queryParams: )
+  @Get()
   @HttpCode(200)
   @ApiOperation({ summary: 'Get Product list' })
   @ApiSwaggerArrayResponse(Actions.GET_LIST, EntityType.PRODUCT, Product)
