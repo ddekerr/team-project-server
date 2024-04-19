@@ -59,7 +59,7 @@ export class ProductsService {
     const filter = Object.entries(params).reduce((prev, [param, valueOfParam]) => {
       switch (param) {
         case 'id':
-          prev[param] = Number(valueOfParam);
+          prev[param] = { $in: valueOfParam.split(',').map((i) => Number(i)) };
           break;
 
         default:

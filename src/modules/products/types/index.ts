@@ -1,6 +1,6 @@
 export type Filter = {
   category?: string;
-  id?: number;
+  ids?: string;
 };
 
 export type Params = Filter & {
