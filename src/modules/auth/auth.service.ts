@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from 'modules/user/dto/create-user.dto';
 // import { UserDocument } from 'modules/user/schemas/user.schema';
 import { UsersService } from 'modules/user/users.service';
-import { Payload, Token, TokenType, Tokens, UserResponse } from './types';
+import { Payload, Token, TokenType, Tokens, UserResponse, UserResponseWithRefresh } from './types';
 
 import { ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN } from 'constants/tokens';
 import { UserDocument } from 'modules/user/schemas/user.schema';
@@ -14,11 +14,16 @@ export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
-  ) { }
+  ) {}
 
   // #################### REGISTER NEW USER ####################
-  async register(dto: CreateUserDto): Promise<UserDocument> {
-    return await this.usersService.createUser(dto);
+  async register(dto: CreateUserDto): Promise<UserResponseWithRefresh> {
+    const user = await this.usersService.createUser(dto);
+
+    const { accessToken, refreshToken } = await this.generateTokens(user._id);
+
+    const userResponse = { user, token: accessToken };
+    return { userResponse, refreshToken };
   }
 
   // #################### LOGIN USER ####################
@@ -32,7 +37,6 @@ export class AuthService {
     const { accessToken, refreshToken } = await this.generateTokens({ email: user.email, userId: user._id });
 
     console.log(accessToken);
-    
 
     return { accessToken, refreshToken };
   }

@@ -9,7 +9,8 @@ export class UsersRepository {
 
   // ########## INSERT NEW USER INTO USERS TABLE ##########
   async create(createEntityData: unknown): Promise<UserDocument> {
-    return await this.usersModel.create(createEntityData);
+    const newUser = await this.usersModel.create(createEntityData);
+    return newUser;
   }
 
   // ########## UPDATE USER FROM USERS TABLE ##########

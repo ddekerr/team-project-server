@@ -1,3 +1,14 @@
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Req,
+  Res,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiBody, ApiConflictResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
@@ -20,12 +31,11 @@ import { Cookie } from './decorator/cookies.decorator';
 
 //import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
-const REFRESH_TOKEN = 'refreshtoken';
-
 @ApiTags('Auth')
 @Controller('api/auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  private REFRESH_TOKEN_KEY = 'refreshToken';
+  constructor(private readonly authService: AuthService) {}
 
   // #################### REGISTER NEW USER ####################
   @Post('register')
@@ -35,16 +45,29 @@ export class AuthController {
   @ApiSwaggerResponse(Actions.CREATE, EntityType.USER, User)
   @ApiConflictResponse({ type: ApiError, description: exceptionMessages.CONFLICT_EMAIL_MSG })
   @ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR })
-  async register(@Body() createUserDto: CreateUserDto) {
-    const newUser = await this.authService.register(createUserDto);
-    return new ApiResponse(Actions.CREATE, EntityType.USER, newUser);
+  async register(
+    @Body() createUserDto: CreateUserDto,
+    @Res({ passthrough: true }) response: Response,
+  ): Promise<ApiResponse<UserResponse>> {
+    const { userResponse, refreshToken } = await this.authService.register(createUserDto);
+    this.setRefreshTokenToCookies(response, refreshToken);
+    return new ApiResponse(Actions.CREATE, EntityType.USER, userResponse);
   }
 
   @Post('login')
   async login(@Body() dto: CreateUserDto, @Res() res: Response) {
     const tokens = await this.authService.login(dto);
+    console.log(tokens);
+
+    this.setRefreshTokenToCookies(res, tokens.refreshToken);
     this.serRefreshTokenToCookies(tokens, res);
   }
+  // #################### ADD COOKIE WITH REFRESH TOKEN IN RESPONSE ####################
+  private setRefreshTokenToCookies(response: Response, token: string) {
+    response.cookie(this.REFRESH_TOKEN_KEY, token, {
+      httpOnly: true,
+      expires: new Date(Date.now() + REFRESH_TOKEN_EXPIRES_IN * 1000),
+    });
 
   @Get('logout')
   async logout(@Cookie(REFRESH_TOKEN) refreshToken: string, @Res() res: Response) {
