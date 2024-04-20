@@ -1,16 +1,14 @@
+import { Body, Controller, HttpCode, Post, Req, Res, UseGuards } from '@nestjs/common';
 import {
-  Body,
-  Controller,
-  HttpCode,
-  HttpStatus,
-  Post,
-  Req,
-  Res,
-  UnauthorizedException,
-  UseGuards,
-} from '@nestjs/common';
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiBody, ApiConflictResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiConflictResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
+import { Response } from 'express';
 
 import { AuthService } from './auth.service';
 import { User } from './../user/schemas/user.schema';
@@ -18,18 +16,14 @@ import { CreateUserDto } from '../user/dto/create-user.dto';
 
 import validationMessage from 'constants/validationMessage';
 import exceptionMessages from 'constants/exceptionMessages';
+import { REFRESH_TOKEN_EXPIRES_IN } from 'constants/tokens';
 import { Actions, EntityType } from 'types';
-import { Tokens, UserResponse } from './types';
+import { Token, UserResponse } from './types';
 
 import { ApiResponse } from 'helpers/ApiResponse';
 import { ApiSwaggerResponse } from 'helpers/ApiSwaggerResponse';
 import { ApiError } from 'helpers/ApiError';
 import { ApiValidationError } from 'helpers/ApiValidationError';
-import { Response } from 'express';
-import { REFRESH_TOKEN_EXPIRES_IN } from 'constants/tokens';
-import { Cookie } from './decorator/cookies.decorator';
-
-//import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @ApiTags('Auth')
 @Controller('api/auth')
@@ -40,7 +34,7 @@ export class AuthController {
   // #################### REGISTER NEW USER ####################
   @Post('register')
   @HttpCode(201)
-  @ApiOperation({ summary: 'Register new user' })
+  @ApiOperation({ summary: 'Register new user, send the access token and set cookie with refresh token' })
   @ApiBody({ type: CreateUserDto })
   @ApiSwaggerResponse(Actions.CREATE, EntityType.USER, User)
   @ApiConflictResponse({ type: ApiError, description: exceptionMessages.CONFLICT_EMAIL_MSG })
@@ -54,89 +48,63 @@ export class AuthController {
     return new ApiResponse(Actions.CREATE, EntityType.USER, userResponse);
   }
 
+  // #################### LOGIN USER ####################
   @Post('login')
-  async login(@Body() dto: CreateUserDto, @Res() res: Response) {
-    const tokens = await this.authService.login(dto);
-    console.log(tokens);
-
-    this.setRefreshTokenToCookies(res, tokens.refreshToken);
-    this.serRefreshTokenToCookies(tokens, res);
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Login user, send the access token and set cookie with refresh token' })
+  @ApiBody({ type: CreateUserDto })
+  @ApiSwaggerResponse(Actions.CREATE, EntityType.USER, User)
+  @ApiUnauthorizedResponse({ type: ApiError, description: exceptionMessages.UNAUTHORIZED_PASSWORD_MSG })
+  @ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR })
+  async login(@Body() dto: CreateUserDto, @Res() response: Response) {
+    const { userResponse, refreshToken } = await this.authService.login(dto);
+    this.setRefreshTokenToCookies(response, refreshToken);
+    return new ApiResponse(Actions.CREATE, EntityType.USER, userResponse);
   }
+
+  // #################### LOGOUT USER ####################
+  @Post('logout')
+  @HttpCode(200)
+  @UseGuards(AuthGuard('access-strategy'))
+  @ApiOperation({ summary: 'Logout user, clear cookies' })
+  @ApiSwaggerResponse(Actions.LOGOUT, EntityType.USER, String)
+  async logout(@Req() request: Request, @Res() response: Response) {
+    // ITS LOGIC HAVE TO BE IN DECORATORS OR OTHER FUNCTION (NEED REFACTOR)
+    // Access-stratege push Payload ro request and here we get email from there
+    const email: string = request['user']['payload']['email'];
+
+    // check the user is logged in
+    const message = await this.authService.logout(email);
+
+    // delete refreshToken from cookies (logged user out)
+    response.clearCookie(this.REFRESH_TOKEN_KEY);
+    return new ApiResponse(Actions.LOGOUT, EntityType.USER, message);
+  }
+
+  // #################### REFRESH USER ####################
+  @Post('refresh')
+  @HttpCode(200)
+  @UseGuards(AuthGuard('access-strategy'))
+  @ApiOperation({ summary: 'Refresh access token, refresh cookies' })
+  @ApiSwaggerResponse(Actions.REFRESH, EntityType.USER, String)
+  async refresh(@Req() request: Request, @Res() response: Response): Promise<ApiResponse<Token>> {
+    // ITS LOGIC HAVE TO BE IN DECORATORS OR OTHER FUNCTION (NEED REFACTOR)
+    // Access-stratege push Payload ro request and here we get email from there
+    const email: string = request['user']['payload']['email'];
+
+    // check the user is logged in
+    const { accessToken, refreshToken } = await this.authService.refresh(email);
+
+    // refresh cookies
+    this.setRefreshTokenToCookies(response, refreshToken);
+    return new ApiResponse(Actions.REFRESH, EntityType.USER, accessToken);
+  }
+
   // #################### ADD COOKIE WITH REFRESH TOKEN IN RESPONSE ####################
   private setRefreshTokenToCookies(response: Response, token: string) {
     response.cookie(this.REFRESH_TOKEN_KEY, token, {
       httpOnly: true,
       expires: new Date(Date.now() + REFRESH_TOKEN_EXPIRES_IN * 1000),
     });
-
-  @Get('logout')
-  async logout(@Cookie(REFRESH_TOKEN) refreshToken: string, @Res() res: Response) {
-    if (!refreshToken) {
-      res.sendStatus(HttpStatus.OK);
-      return;
-    }
-    res.cookie(REFRESH_TOKEN, '')
-    res.sendStatus(HttpStatus.OK); // не до кінця зрозумів як працює ApiResponse, залишив тимчасовий варіаент
-    //return new ApiResponse(Actions.LOGOUT, null, null);
   }
-
-
-  private serRefreshTokenToCookies(tokens: Tokens, res: Response) {
-    if (!tokens) {
-      throw new UnauthorizedException();
-    }
-    res.cookie('refreshtoken', tokens.refreshToken)
-    res.json({ access: tokens.accessToken }) // тимчасово
-  }
-
-  // @Put('/:id')
-  // async updateStudent(@Res() response, @Param('id') userId: string, @Body() updateuserDto: UpdateUserDto) {
-  //   try {
-  //     const existingStudent = await this.userService.updateUser(userId, updateuserDto);
-
-  //     return response.status(HttpStatus.OK).json({
-  //       message: 'User has been successfully updated',
-  //       existingStudent,
-  //     });
-  //   } catch (err) {
-  //     return response.status(HttpStatus.BAD_REQUEST).json({
-  //       statusCode: 400,
-  //       message: 'Error: User not find!',
-  //       error: 'Bad Request',
-  //     });
-  //   }
-  // }
-
-  // @Get('/:id')
-  // async getUser(@Res() response, @Param('id') userId: string) {
-  //   try {
-  //     const existingUser = await this.userService.getUser(userId);
-  //     return response.status(HttpStatus.OK).json({
-  //       message: 'User found successfully',
-  //       existingUser,
-  //     });
-  //   } catch (err) {
-  //     return response.status(HttpStatus.BAD_REQUEST).json({
-  //       statusCode: 400,
-  //       message: 'Error: User not found!',
-  //       error: 'Bad Request',
-  //     });
-  //   }
-  // }
-
-  // @Delete('/:id')
-  // async deleteUser(@Res() response, @Param('id') userId: string) {
-  //   try {
-  //     const deletedUser = await this.userService.deleteUser(userId);
-  //     return response.status(HttpStatus.OK).json({
-  //       message: deletedUser,
-  //     });
-  //   } catch (err) {
-  //     return response.status(HttpStatus.BAD_REQUEST).json({
-  //       statusCode: 400,
-  //       message: 'Error: User not found!',
-  //       error: 'Bad Request',
-  //     });
-  //   }
-  // }
 }

@@ -3,11 +3,13 @@ import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from 'modules/user/dto/create-user.dto';
 // import { UserDocument } from 'modules/user/schemas/user.schema';
 import { UsersService } from 'modules/user/users.service';
-import { Payload, Token, TokenType, Tokens, UserResponse, UserResponseWithRefresh } from './types';
+import { Payload, Token, TokenType, Tokens, UserResponseWithRefresh } from './types';
 
 import { ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN } from 'constants/tokens';
 import { UserDocument } from 'modules/user/schemas/user.schema';
 import { compareSync } from 'bcrypt';
+import exceptionMessages from 'constants/exceptionMessages';
+import successMessages from 'constants/successMessages';
 
 @Injectable()
 export class AuthService {
@@ -19,26 +21,26 @@ export class AuthService {
   // #################### REGISTER NEW USER ####################
   async register(dto: CreateUserDto): Promise<UserResponseWithRefresh> {
     const user = await this.usersService.createUser(dto);
-
-    const { accessToken, refreshToken } = await this.generateTokens(user._id);
-
-    const userResponse = { user, token: accessToken };
-    return { userResponse, refreshToken };
+    return await this.generateResponse(user);
   }
 
   // #################### LOGIN USER ####################
-  async login(dto: CreateUserDto) {
+  async login(dto: CreateUserDto): Promise<UserResponseWithRefresh> {
     const user = await this.usersService.getUser(dto.email);
+    this.checkPassword(dto.password, user.password);
+    return await this.generateResponse(user);
+  }
 
-    if (!user || !compareSync(dto.password, user.password)) {
-      throw new UnauthorizedException('Wrong login or password');
-    }
+  // #################### LOGOUT USER ####################
+  async logout(email: string): Promise<string> {
+    await this.usersService.getUser(email);
+    return successMessages.USER_LOGGED_IN_MSG;
+  }
 
-    const { accessToken, refreshToken } = await this.generateTokens({ email: user.email, userId: user._id });
-
-    console.log(accessToken);
-
-    return { accessToken, refreshToken };
+  // #################### REFRESH USER ####################
+  async refresh(email: string): Promise<Tokens> {
+    const user = await this.usersService.getUser(email);
+    return await this.generateTokens({ email: user.email, userId: user._id });
   }
 
   // #################### GENERATE ACCESS AND REFRESH TOKENS ####################
@@ -61,5 +63,21 @@ export class AuthService {
     const tokens = this.jwtService.sign({ payload }, { secret, expiresIn });
 
     return tokens;
+  }
+
+  // #################### COMPARE PASSWORD HASH ####################
+  private checkPassword(rawPassword: string, hashPassword: string): void {
+    const isPasswordValid = compareSync(rawPassword, hashPassword);
+
+    if (!isPasswordValid) {
+      throw new UnauthorizedException(exceptionMessages.UNAUTHORIZED_PASSWORD_MSG);
+    }
+  }
+
+  // #################### GENERATE THE SAME RESPONSE FOR REGISTER AND LOGIN ####################
+  private async generateResponse(user: UserDocument): Promise<UserResponseWithRefresh> {
+    const { accessToken, refreshToken } = await this.generateTokens({ email: user.email, userId: user._id });
+    const userResponse = { user, token: accessToken };
+    return { userResponse, refreshToken };
   }
 }

@@ -4,7 +4,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Payload } from '../types';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy, 'access-strategy') {
+export class ATStrategy extends PassportStrategy(Strategy, 'access-strategy') {
   constructor() {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
