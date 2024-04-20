@@ -14,9 +14,15 @@ export enum TokenType {
 
 export type Payload = {
   email: string;
+  userId: string;
 };
 
 export type UserResponse = {
   user: UserDocument;
-  token: string;
+  token: Token;
+};
+
+export type UserResponseWithRefresh = {
+  userResponse: UserResponse;
+  refreshToken: Token;
 };

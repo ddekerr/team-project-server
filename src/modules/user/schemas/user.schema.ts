@@ -22,7 +22,7 @@ export class User {
   last_name: string;
 
   @ApiProperty({ required: false })
-  @Prop({ unique: true, required: false })
+  @Prop({ required: false })
   phone_number: string;
 
   @ApiProperty()
