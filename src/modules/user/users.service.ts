@@ -42,6 +42,15 @@ export class UsersService {
     return await this.usersRepository.getList({});
   }
 
+  // #################### GET USER BY EMAIL ####################
+  async checkUserByEmail(email: string) {
+    const candidate = await this.usersRepository.getOne({ email })
+    if (!candidate) {
+      return false
+    }
+    return candidate
+  }
+
   // #################### CHECK USER IS NOT EXIST ####################
   private async checkUserNotExist(email: string): Promise<void> {
     const candidate = await this.usersRepository.getOne({ email });

@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -8,7 +8,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 
 import { AuthService } from './auth.service';
 import { User } from './../user/schemas/user.schema';
@@ -24,12 +24,14 @@ import { ApiResponse } from 'helpers/ApiResponse';
 import { ApiSwaggerResponse } from 'helpers/ApiSwaggerResponse';
 import { ApiError } from 'helpers/ApiError';
 import { ApiValidationError } from 'helpers/ApiValidationError';
+import { GoogleGuard } from './guards/google.guard';
+import { HttpService } from '@nestjs/axios';
 
 @ApiTags('Auth')
 @Controller('api/auth')
 export class AuthController {
   private REFRESH_TOKEN_KEY = 'refreshToken';
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService, private readonly httpService: HttpService) { }
 
   // #################### REGISTER NEW USER ####################
   @Post('register')
@@ -56,7 +58,7 @@ export class AuthController {
   @ApiSwaggerResponse(Actions.CREATE, EntityType.USER, User)
   @ApiUnauthorizedResponse({ type: ApiError, description: exceptionMessages.UNAUTHORIZED_PASSWORD_MSG })
   @ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR })
-  async login(@Body() dto: CreateUserDto, @Res() response: Response) {
+  async login(@Body() dto: CreateUserDto, @Res({ passthrough: true }) response: Response,) { 
     const { userResponse, refreshToken } = await this.authService.login(dto);
     this.setRefreshTokenToCookies(response, refreshToken);
     return new ApiResponse(Actions.CREATE, EntityType.USER, userResponse);
@@ -106,5 +108,25 @@ export class AuthController {
       httpOnly: true,
       expires: new Date(Date.now() + REFRESH_TOKEN_EXPIRES_IN * 1000),
     });
+  }
+
+//Направляє юзера на гугл аутентифікацію, після чого робить запит на "google/callback"
+  @HttpCode(200)
+  @UseGuards(GoogleGuard)
+  @Get('google')
+  googleAuth() {}
+
+  @Get('google/callback')
+  @UseGuards(GoogleGuard)
+  googleAuthCallback(@Req() req: Request, @Res() res: Response) {
+    const token = req.user['accessToken']
+    return res.redirect(`http://localhost:5000/api/auth/success-google?token=${token}`)
+  }
+
+  @Get('success-google')
+  async success(@Query('token') token: string, @Res({ passthrough: true }) response: Response) {
+    const { userResponse, refreshToken } = await this.authService.googleAuth(token, 'GOOGLE')
+    this.setRefreshTokenToCookies(response, refreshToken)
+    return new ApiResponse(Actions.CREATE, EntityType.USER, userResponse)
   }
 }

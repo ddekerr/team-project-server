@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from 'modules/user/dto/create-user.dto';
 // import { UserDocument } from 'modules/user/schemas/user.schema';
@@ -10,13 +10,15 @@ import { UserDocument } from 'modules/user/schemas/user.schema';
 import { compareSync } from 'bcrypt';
 import exceptionMessages from 'constants/exceptionMessages';
 import successMessages from 'constants/successMessages';
+import { HttpService } from '@nestjs/axios';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
-  ) {}
+    private httpService: HttpService
+  ) { }
 
   // #################### REGISTER NEW USER ####################
   async register(dto: CreateUserDto): Promise<UserResponseWithRefresh> {
@@ -79,5 +81,38 @@ export class AuthService {
     const { accessToken, refreshToken } = await this.generateTokens({ email: user.email, userId: user._id });
     const userResponse = { user, token: accessToken };
     return { userResponse, refreshToken };
+  }
+
+  private async verifuGoogleAccessToken(accessToken: string) {
+    try {
+      const response = await this.httpService.get(`https://oauth2.googleapis.com/tokeninfo?access_token=${accessToken}`).toPromise()
+
+      return response.data.email
+
+    } catch (err) {
+      throw new InternalServerErrorException(exceptionMessages.GOOGLE_ERROR_MSG)
+    }
+
+  }
+
+  async googleAuth(accessToken: string, provider: string) {
+
+    const email = await this.verifuGoogleAccessToken(accessToken)
+    const userExists = await this.usersService.checkUserByEmail(email)
+
+    if (userExists) {
+      return this.generateResponse(userExists)
+    }
+
+    return await this.register({
+      email,
+      provider,
+      first_name: undefined,
+      last_name: undefined,
+      password: undefined,
+      phone_number: undefined,
+      address: undefined,
+    });
+
   }
 }

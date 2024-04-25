@@ -20,4 +20,7 @@ export default {
 
   // file problem messages
   FILE_ERROR_MSG: 'Something went wrong working with file',
+
+  //google problem messages
+  GOOGLE_ERROR_MSG: 'The Google server cannot verify the Token'
 };

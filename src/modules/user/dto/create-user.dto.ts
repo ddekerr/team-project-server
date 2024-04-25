@@ -82,4 +82,7 @@ export class CreateUserDto {
   @Type(() => AddressDto)
   @IsOptional()
   readonly address: AddressDto;
+
+  @ApiProperty({required:false})
+  readonly provider:string
 }
