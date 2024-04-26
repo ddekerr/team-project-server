@@ -9,6 +9,7 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import exceptionMessages from 'constants/exceptionMessages';
 import validationMessage from 'constants/validationMessage';
 import { Actions, EntityType } from 'types';
+import { ResponseCategory } from './types';
 
 import { ApiSwaggerArrayResponse } from 'helpers/ApiSwaggerArrayResponse';
 import { ApiResponse } from 'helpers/ApiResponse';
@@ -23,12 +24,16 @@ export class CategoriesController {
 
   // #################### CREATE NEW CATEGORY ####################
   @Post()
-  @ApiOperation({ summary: 'Create new category' })
+  @ApiOperation({
+    summary: 'Create new category',
+    description:
+      'If there is a "parent" field in Request Body, then the created category is added to parent categoty in the "children" field',
+  })
   @ApiBody({ type: CreateCategoryDto })
   @ApiSwaggerResponse(Actions.CREATE, EntityType.CATEGORY, Category)
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_CATEGORY_MSG })
   @ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR })
-  async create(@Body() dto: CreateCategoryDto): Promise<ApiResponse<CategoryDocument>> {
+  async create(@Body() dto: CreateCategoryDto): Promise<ApiResponse<ResponseCategory>> {
     const category = await this.categoriesService.create(dto);
     return new ApiResponse(Actions.CREATE, EntityType.CATEGORY, category);
   }
@@ -55,25 +60,29 @@ export class CategoriesController {
   @ApiParam({ name: 'slug', type: String })
   @ApiSwaggerResponse(Actions.DELETE, EntityType.CATEGORY, Category)
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_CATEGORY_MSG })
-  async delete(@Param() { slug }: { slug: string }): Promise<ApiResponse<CategoryDocument>> {
-    const category = await this.categoriesService.delete(slug);
-    return new ApiResponse(Actions.DELETE, EntityType.CATEGORY, category);
+  async delete(@Param() { slug }: { slug: string }): Promise<ApiResponse<string>> {
+    const successMessage = await this.categoriesService.delete(slug);
+    return new ApiResponse(Actions.DELETE, EntityType.CATEGORY, successMessage);
   }
 
   // #################### GET ONE CATEGORY ####################
-  @Get(':slug')
-  @ApiOperation({ summary: 'Get one category by slug' })
-  @ApiParam({ name: 'slug', type: String })
-  @ApiSwaggerResponse(Actions.GET, EntityType.CATEGORY, Category)
-  @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_CATEGORY_MSG })
-  async getOne(@Param() { slug }: { slug: string }): Promise<ApiResponse<CategoryDocument>> {
-    const category = await this.categoriesService.getOneBySlug(slug);
-    return new ApiResponse(Actions.GET, EntityType.CATEGORY, category);
-  }
+  // @Get(':slug')
+  // @ApiOperation({ summary: 'Get one category by slug' })
+  // @ApiParam({ name: 'slug', type: String })
+  // @ApiSwaggerResponse(Actions.GET, EntityType.CATEGORY, Category)
+  // @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_CATEGORY_MSG })
+  // async getOne(@Param() { slug }: { slug: string }): Promise<ApiResponse<CategoryDocument>> {
+  //   const category = await this.categoriesService.getOneBySlug(slug);
+  //   return new ApiResponse(Actions.GET, EntityType.CATEGORY, category);
+  // }
 
   // #################### GET CATEGORIES LIST ####################
   @Get()
-  @ApiOperation({ summary: 'Get list of all categories' })
+  @ApiOperation({
+    summary: 'Get list of all parent categories',
+    description:
+      'Get all category which have no parent (parent = null), but they have all children categories inside "children" field',
+  })
   @ApiSwaggerArrayResponse(Actions.GET_LIST, EntityType.CATEGORY, Category)
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_CATEGORY_MSG })
   async getList(): Promise<ApiResponse<CategoryDocument[]>> {
