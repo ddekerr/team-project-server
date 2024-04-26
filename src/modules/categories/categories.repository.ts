@@ -2,10 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, FilterQuery, UpdateQuery } from 'mongoose';
 import { Category, CategoryDocument } from './schemas/category.schema';
+// import { ResponseCategory } from './types';
 
 @Injectable()
 export class CategoriesRepository {
-  private selectedFields = { childrens: 0 };
+  private selectedFields = ['title', 'slug', 'icon', 'parent', 'children'];
   constructor(
     @InjectModel(Category.name)
     private categoriesModel: Model<CategoryDocument>,
@@ -13,7 +14,8 @@ export class CategoriesRepository {
 
   // ########## INSERT NEW CATEGORY INTO CATEGORIES TABLE ##########
   async create(createEntityData: unknown): Promise<CategoryDocument> {
-    return await this.categoriesModel.create(createEntityData);
+    const category = await this.categoriesModel.create(createEntityData);
+    return category;
   }
 
   // ########## UPDATE CATEGORY FROM CATEGORIES TABLE ##########
@@ -34,11 +36,28 @@ export class CategoriesRepository {
 
   // ########## SELECT ONE CATEGORY FROM CATEGORIES TABLE ##########
   async getOne(entityFilterQuery: FilterQuery<CategoryDocument>): Promise<CategoryDocument> {
-    return await this.categoriesModel.findOne(entityFilterQuery).select(this.selectedFields);
+    return await this.categoriesModel
+      .findOne(entityFilterQuery)
+      .select(this.selectedFields)
+      .populate({ path: 'children', select: this.selectedFields });
   }
 
   // ########## SELECT CATEGOREIS LIST FROM CATEGOREIS TABLE ##########
   async getList(entityFilterQuery: FilterQuery<CategoryDocument>): Promise<CategoryDocument[]> {
-    return await this.categoriesModel.find(entityFilterQuery).select(this.selectedFields);
+    return await this.categoriesModel
+      .find(entityFilterQuery)
+      .select(this.selectedFields)
+      .populate({
+        path: 'children',
+        select: this.selectedFields,
+        populate: {
+          path: 'children',
+          select: this.selectedFields,
+          populate: {
+            path: 'children',
+            select: this.selectedFields,
+          },
+        },
+      });
   }
 }

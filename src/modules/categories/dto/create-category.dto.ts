@@ -10,9 +10,15 @@ export class CreateCategoryDto {
   @MaxLength(64, { message: validationMessage.CATEGORY_TITLE_MAX_LENGTH_MSG })
   readonly title: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsNotEmpty({ message: validationMessage.CATEGORY_PARENT_EMPTY_MSG })
   @IsString({ message: validationMessage.CATEGORY_PARENT_STRING_MSG })
   @IsOptional()
   readonly parent?: string;
+
+  @ApiProperty({ required: false })
+  @IsNotEmpty({ message: validationMessage.CATEGORY_ICON_EMPTY_MSG })
+  @IsString({ message: validationMessage.CATEGORY_ICON_STRING_MSG })
+  @IsOptional()
+  readonly icon?: string;
 }
