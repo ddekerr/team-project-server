@@ -29,7 +29,8 @@ export class AuthService {
   // #################### LOGIN USER ####################
   async login(dto: CreateUserDto): Promise<UserResponseWithRefresh> {
     const user = await this.usersService.getUser(dto.email);
-    if ('password' in dto && 'password' in user) {
+    
+    if (user.password !== undefined) {
       this.checkPassword(dto.password, user.password);
       return await this.generateResponse(user);
     }
@@ -86,19 +87,18 @@ export class AuthService {
     return { userResponse, refreshToken };
   }
 
+  // #################### Checks the correctness of the Google Token ####################
   private async verifuGoogleAccessToken(accessToken: string) {
     try {
       const response = await this.httpService.get(`https://oauth2.googleapis.com/tokeninfo?access_token=${accessToken}`).toPromise()
-
       return response.data.email
-
     } catch (err) {
       throw new InternalServerErrorException(exceptionMessages.GOOGLE_ERROR_MSG)
     }
-
   }
 
-  async googleAuth(accessToken: string, provider: string) {
+  // #################### Returns the user if he is in the database or registers a new one through Google ####################
+  async googleAuth(accessToken: string, provider: string):Promise<UserResponseWithRefresh> {
 
     const email = await this.verifuGoogleAccessToken(accessToken)
     const userExists = await this.usersService.checkUserByEmail(email)
