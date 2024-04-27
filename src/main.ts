@@ -12,7 +12,7 @@ async function start() {
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser());
   app.enableCors();
-  //app.useGlobalPipes(new GlobalValidationPipe());
+  app.useGlobalPipes(new GlobalValidationPipe());
   app.useGlobalFilters(new HttpExceptionFilter());
 
   // setup swagger

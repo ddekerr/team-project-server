@@ -29,8 +29,11 @@ export class AuthService {
   // #################### LOGIN USER ####################
   async login(dto: CreateUserDto): Promise<UserResponseWithRefresh> {
     const user = await this.usersService.getUser(dto.email);
-    this.checkPassword(dto.password, user.password);
-    return await this.generateResponse(user);
+    if ('password' in dto && 'password' in user) {
+      this.checkPassword(dto.password, user.password);
+      return await this.generateResponse(user);
+    }
+    throw new UnauthorizedException(exceptionMessages.UNAUTHORIZED_PASSWORD_MSG);
   }
 
   // #################### LOGOUT USER ####################
