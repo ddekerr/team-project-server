@@ -20,12 +20,13 @@ import {
   ApiNotFoundResponse,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 
 import { ProductsService } from './products.service';
 import { Product, ProductDocument } from './schemas/product.schema';
-import { AddCategoryDto, CreateProductDto } from './dto/create-product.dto';
+import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { FileUploadDto } from './dto/file-upload.dto';
 import { RateDto } from './dto/rate.dto';
@@ -100,6 +101,7 @@ export class ProductsController {
   @Get()
   @HttpCode(200)
   @ApiOperation({ summary: 'Get Product list' })
+  @ApiQuery({ name: 'category', type: String, required: false })
   @ApiSwaggerArrayResponse(Actions.GET_LIST, EntityType.PRODUCT, Product)
   async getList(@Query() params: Params): Promise<ApiResponse<ProductDocument[]>> {
     const filter = this.productsService.setFilter(params);
@@ -111,11 +113,11 @@ export class ProductsController {
   @Patch(':id/upload-poster')
   @HttpCode(200)
   @ApiOperation({ summary: 'Upload poster to product by ID' })
+  @ApiBody({ type: FileUploadDto })
   @ApiSwaggerResponse(Actions.ADD_POSTER, EntityType.PRODUCT, Product)
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_PRODUCT_MSG })
   @UseInterceptors(FileInterceptor('poster'))
   @ApiConsumes('multipart/form-data')
-  @ApiBody({ type: FileUploadDto })
   async uploadPoster(
     @Param('id') id: number,
     @UploadedFile() poster: Express.Multer.File,
@@ -125,17 +127,17 @@ export class ProductsController {
   }
 
   // #################### ADD CATEGORY TO PRODUCT ####################
-  @Patch(':id/add-category')
-  @HttpCode(200)
-  @ApiOperation({ summary: 'Add category to product by ID' })
-  @ApiSwaggerResponse(Actions.ADD_CATEGORY, EntityType.PRODUCT, Product)
-  @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_PRODUCT_MSG })
-  @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_CATEGORY_MSG })
-  @ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR })
-  async addCategory(@Param('id') id: number, @Body() dto: AddCategoryDto): Promise<ApiResponse<ProductDocument>> {
-    const product = await this.productsService.addCategories(id, dto.category);
-    return new ApiResponse(Actions.ADD_CATEGORY, EntityType.PRODUCT, product);
-  }
+  // @Patch(':id/add-category')
+  // @HttpCode(200)
+  // @ApiOperation({ summary: 'Add category to product by ID' })
+  // @ApiSwaggerResponse(Actions.ADD_CATEGORY, EntityType.PRODUCT, Product)
+  // @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_PRODUCT_MSG })
+  // @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_CATEGORY_MSG })
+  // @ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR })
+  // async addCategory(@Param('id') id: number, @Body() dto: AddCategoryDto): Promise<ApiResponse<ProductDocument>> {
+  //   const product = await this.productsService.addCategories(id, dto.category);
+  //   return new ApiResponse(Actions.ADD_CATEGORY, EntityType.PRODUCT, product);
+  // }
 
   // #################### RATE PRODUCT ####################
   @Patch(':id/rate')

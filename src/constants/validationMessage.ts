@@ -45,8 +45,10 @@ export default {
 
   PRODUCT_POSTER_EMPTY_MSG: 'Products poster must not be empty',
 
-  PRODUCT_CATEGORY_EMPTY_MSG: 'Products category must not be empty',
-  PRODUCT_CATEGORY_STRING_MSG: 'Products categories must be a string',
+  PRODUCT_CATEGORIES_ARRAY_EMPTY_MSG: 'Products categories must have at least one value',
+  PRODUCT_CATEGORIES_ARRAY_MSG: 'Products categories must be an array',
+  PRODUCT_CATEGORIES_ITEM_EMPTY_MSG: 'Category slug must not be empty',
+  PRODUCT_CATEGORIES_ITEM_STRING_MSG: 'Category slug must be a string',
 
   PRODUCT_RATE_VALUE_EMPTY_MSG: 'Products rate value must not be empty',
   PRODUCT_RATE_VALUE_NUMBER_MSG: 'Products rate value must be one of $constraint1',

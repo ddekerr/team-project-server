@@ -1,3 +1,4 @@
+import { Express } from 'express';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { ProductsRepository } from './products.repository';
@@ -10,7 +11,6 @@ import { UpdateProductDto } from './dto/update-product.dto';
 
 import exceptionMessages from 'constants/exceptionMessages';
 import { Filter, Params } from './types';
-import { FilterQuery } from 'mongoose';
 
 @Injectable()
 export class ProductsService {
@@ -22,11 +22,14 @@ export class ProductsService {
 
   // #################### CREATE NEW PRODUCT ####################
   async create(dto: CreateProductDto): Promise<ProductDocument> {
-    if (dto.category) {
-      const category = await this.categoriesService.getOneBySlug(dto.category);
-      return await this.productsRepository.create({ ...dto, category });
-    }
-    return await this.productsRepository.create(dto);
+    const product = await this.productsRepository.create(dto);
+    async () =>
+      dto.categories.forEach(async (slug) => {
+        console.log(await this.categoriesService.getOneBySlug(slug));
+        // await this.categoriesService.getOneBySlug(slug);
+      });
+
+    return product;
   }
 
   // #################### UPDATE PRODUCT BY ID ####################
@@ -62,6 +65,10 @@ export class ProductsService {
           prev[param] = { $in: valueOfParam.split(',').map((i) => Number(i)) };
           break;
 
+        case 'category':
+          prev['categories'] = valueOfParam;
+          break;
+
         default:
           prev[param] = valueOfParam;
           break;
@@ -93,13 +100,13 @@ export class ProductsService {
   }
 
   // #################### ADD CATEGORIES TO PRODUCT ####################
-  async addCategories(id: number, categorySlug: string): Promise<ProductDocument> {
-    const product = await this.getOneById(id);
-    const category = await this.categoriesService.getOneBySlug(categorySlug);
+  // async addCategories(id: number, categorySlug: string): Promise<ProductDocument> {
+  //   const product = await this.getOneById(id);
+  //   // const category = await this.categoriesService.getOneBySlug(categorySlug);
 
-    product.category = category;
-    return await product.save();
-  }
+  //   product.category = category;
+  //   return await product.save();
+  // }
 
   // #################### RATE PRODUCT ####################
   async updateRating(id: number, value: number): Promise<number> {
