@@ -84,7 +84,6 @@ export class CategoriesService {
   // #################### CHECK CATEGORY IS EXIST ####################
   private async checkCategoryExist(slug: string): Promise<CategoryDocument> {
     const category = await this.categoriesRepository.getOne({ slug });
-    console.log(category);
     if (!category) {
       throw new NotFoundException(exceptionMessages.NOT_FOUND_CATEGORY_MSG);
     }
