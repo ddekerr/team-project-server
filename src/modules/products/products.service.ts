@@ -18,18 +18,18 @@ export class ProductsService {
     private productsRepository: ProductsRepository,
     private categoriesService: CategoriesService,
     private filesService: FilesService,
-  ) { }
+  ) {}
 
   // #################### CREATE NEW PRODUCT ####################
   async create(dto: CreateProductDto): Promise<ProductDocument> {
-    await this.checkingCategories(dto.categories)
-    return await this.productsRepository.create(dto)
+    await this.checkingCategories(dto.categories);
+    return await this.productsRepository.create(dto);
   }
 
   // #################### UPDATE PRODUCT BY ID ####################
   async update(id: number, dto: UpdateProductDto): Promise<ProductDocument> {
     if (dto.hasOwnProperty('categories')) {
-      await this.checkingCategories(dto.categories)
+      await this.checkingCategories(dto.categories);
     }
     return await this.productsRepository.update({ id }, dto);
   }
@@ -119,7 +119,7 @@ export class ProductsService {
   // #################### CHECKING CATEGORY BY SLUG ####################
   private async checkingCategories(categories: string[]): Promise<void> {
     for (let i = 0; i < categories.length; i++) {
-      await this.categoriesService.getOneBySlug(categories[i])
+      await this.categoriesService.getOneBySlug(categories[i]);
     }
   }
 }
