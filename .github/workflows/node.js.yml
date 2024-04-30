@@ -35,6 +35,3 @@ jobs:
         
       - name: Build Application
         run: npm run build --if-present
-
-      - name: Re-Start Application with Pm2
-        run: pm2 restart TechStop
