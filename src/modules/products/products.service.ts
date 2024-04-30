@@ -22,18 +22,15 @@ export class ProductsService {
 
   // #################### CREATE NEW PRODUCT ####################
   async create(dto: CreateProductDto): Promise<ProductDocument> {
-    const product = await this.productsRepository.create(dto);
-    async () =>
-      dto.categories.forEach(async (slug) => {
-        console.log(await this.categoriesService.getOneBySlug(slug));
-        // await this.categoriesService.getOneBySlug(slug);
-      });
-
-    return product;
+    await this.checkingCategories(dto.categories);
+    return await this.productsRepository.create(dto);
   }
 
   // #################### UPDATE PRODUCT BY ID ####################
   async update(id: number, dto: UpdateProductDto): Promise<ProductDocument> {
+    if (dto.hasOwnProperty('categories')) {
+      await this.checkingCategories(dto.categories);
+    }
     return await this.productsRepository.update({ id }, dto);
   }
 
@@ -117,5 +114,12 @@ export class ProductsService {
     await product.save();
 
     return result;
+  }
+
+  // #################### CHECKING CATEGORY BY SLUG ####################
+  private async checkingCategories(categories: string[]): Promise<void> {
+    for (let i = 0; i < categories.length; i++) {
+      await this.categoriesService.getOneBySlug(categories[i]);
+    }
   }
 }
