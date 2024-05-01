@@ -6,7 +6,7 @@ import { HttpExceptionFilter } from 'filter/exception.filter';
 import * as cookieParser from 'cookie-parser';
 
 async function start() {
-  const PORT = process.env.PORT || 5000;
+  const PORT = +process.env.PORT || 5000;
 
   // init application
   const app = await NestFactory.create(AppModule);
