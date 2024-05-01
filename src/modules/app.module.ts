@@ -7,6 +7,7 @@ import { CategoriesModule } from './categories/categories.module';
 import { UsersModule } from './user/users.module';
 import { AuthModule } from './auth/auth.module';
 import { OrdersModule } from './orders/orders.module';
+import { CronModule } from './cron/cron.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { OrdersModule } from './orders/orders.module';
     UsersModule,
     AuthModule,
     OrdersModule,
+    CronModule,
   ],
 })
 export class AppModule {}
