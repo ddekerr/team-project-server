@@ -14,6 +14,7 @@ export class ATStrategy extends PassportStrategy(Strategy, 'access-strategy') {
   }
 
   async validate(payload: Payload) {
+    console.log(payload)
     return payload;
   }
 }

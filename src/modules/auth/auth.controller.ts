@@ -83,6 +83,17 @@ export class AuthController {
     return new ApiResponse(Actions.LOGOUT, EntityType.USER, message);
   }
 
+// #################### GET USER ####################
+  @Get('me')
+  @HttpCode(200)
+  @ApiSwaggerResponse(Actions.GET, EntityType.USER, String)
+  async me(@Req() request: Request) {
+    const email: string = request['user']['payload']['email'];
+    const userResponse = await this.authService.me(email);
+    return new ApiResponse(Actions.GET, EntityType.USER, userResponse);
+  }
+
+
   // #################### REFRESH USER ####################
   @Post('refresh')
   @HttpCode(200)

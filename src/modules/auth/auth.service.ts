@@ -43,6 +43,12 @@ export class AuthService {
     return successMessages.USER_LOGGED_IN_MSG;
   }
 
+  // #################### GET USER BY EMAIL ####################
+  async me(email: string): Promise<UserDocument> { //: Promise<UserResponseWithRefresh> 
+    return await this.usersService.getUser(email);
+    //return await this.generateResponse(user);
+  }
+
   // #################### REFRESH USER ####################
   async refresh(email: string): Promise<Tokens> {
     const user = await this.usersService.getUser(email);
