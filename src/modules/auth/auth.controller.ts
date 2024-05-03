@@ -1,8 +1,9 @@
-import { Body, Controller, HttpCode, Post, Req, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, HttpCode, Get, Post, Req, UseGuards, UseInterceptors } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBody,
   ApiConflictResponse,
+  ApiNotFoundResponse,
   ApiOperation,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -52,8 +53,9 @@ export class AuthController {
   @ApiOperation({ summary: 'Login user, send the access token and set cookie with refresh token' })
   @ApiBody({ type: CreateUserDto })
   @ApiSwaggerResponse(Actions.CREATE, EntityType.USER, User)
-  @ApiUnauthorizedResponse({ type: ApiError, description: exceptionMessages.UNAUTHORIZED_PASSWORD_MSG })
   @ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR })
+  @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_USER_MSG })
+  @ApiUnauthorizedResponse({ type: ApiError, description: exceptionMessages.UNAUTHORIZED_PASSWORD_MSG })
   @UseInterceptors(SetCookieInterceptor)
   async login(@Body() dto: CreateUserDto): Promise<ApiResponse<UserResponseWithRefresh>> {
     const userResponse = await this.authService.login(dto);
@@ -66,6 +68,8 @@ export class AuthController {
   @UseGuards(AuthGuard('access-strategy'))
   @ApiOperation({ summary: 'Logout user, clear cookies' })
   @ApiSwaggerResponse(Actions.LOGOUT, EntityType.USER, String)
+  @ApiUnauthorizedResponse({ description: exceptionMessages.UNAUTHORIZED_TOKEN_VALID_MSG })
+  @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_USER_MSG })
   @UseInterceptors(ClearCookieInterceptor)
   async logout(@Req() request: Request) {
     // ITS LOGIC HAVE TO BE IN DECORATORS OR OTHER FUNCTION (NEED REFACTOR)
@@ -77,12 +81,19 @@ export class AuthController {
     return new ApiResponse(Actions.LOGOUT, EntityType.USER, message);
   }
 
-// #################### GET ME ####################
+  // #################### GET ME ####################
   @Get('me')
   @HttpCode(200)
-  @ApiSwaggerResponse(Actions.GET, EntityType.USER, String)
+  @UseGuards(AuthGuard('access-strategy'))
+  @ApiOperation({ summary: 'Get the user information, with the access token and set cookie with refresh token' })
+  @ApiSwaggerResponse(Actions.GET, EntityType.USER, User)
+  @ApiUnauthorizedResponse({ description: exceptionMessages.UNAUTHORIZED_TOKEN_VALID_MSG })
+  @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_USER_MSG })
+  @UseInterceptors(SetCookieInterceptor)
   async me(@Req() request: Request) {
+    // Access-strategy push Payload ro request and here we get email from there
     const email: string = request['user']['payload']['email'];
+
     const userResponse = await this.authService.me(email);
     return new ApiResponse(Actions.GET, EntityType.USER, userResponse);
   }

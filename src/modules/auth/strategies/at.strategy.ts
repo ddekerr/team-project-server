@@ -2,11 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Payload } from '../types';
-import { AuthService } from '../auth.service';
 
 @Injectable()
 export class ATStrategy extends PassportStrategy(Strategy, 'access-strategy') {
-  constructor(private authService: AuthService) {
+  constructor() {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: true,
@@ -22,7 +21,7 @@ export class ATStrategy extends PassportStrategy(Strategy, 'access-strategy') {
     if (timeLeft < 30) {
       payload['payload']['refresh'] = true;
     }
-    
+
     return payload;
   }
 }

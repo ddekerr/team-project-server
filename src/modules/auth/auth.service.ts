@@ -40,9 +40,9 @@ export class AuthService {
   }
 
   // #################### GET USER BY EMAIL ####################
-  async me(email: string): Promise<UserDocument> { //: Promise<UserResponseWithRefresh> 
-    return await this.usersService.getUser(email);
-    //return await this.generateResponse(user);
+  async me(email: string): Promise<UserResponseWithRefresh> {
+    const user = await this.usersService.getUser(email);
+    return await this.generateResponse(user);
   }
 
   // #################### REFRESH USER ####################
