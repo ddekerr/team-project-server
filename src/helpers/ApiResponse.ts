@@ -29,4 +29,16 @@ export class ApiResponse<T> {
 
     return 'OK';
   }
+
+  getdata(): T {
+    return this.data;
+  }
+
+  getStatus(): number {
+    return this.status;
+  }
+
+  getMessage(): string {
+    return this.message;
+  }
 }

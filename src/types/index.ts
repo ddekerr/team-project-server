@@ -12,6 +12,7 @@ export enum Actions {
   ADD_CATEGORY = 'ADD_CATEGORY',
   RATE = 'RATE',
   LOGOUT = 'LOGOUT',
+  LOGIN = 'LOGIN',
   REFRESH = 'REFRESH',
 }
 
