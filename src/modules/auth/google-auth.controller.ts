@@ -1,6 +1,6 @@
 import { Controller, Get, UseGuards, HttpCode, Req, UseInterceptors } from '@nestjs/common';
 import { Request } from 'express';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { GoogleGuard } from './guards/google.guard';
 import { ApiResponse } from 'helpers/ApiResponse';
 import { Actions, EntityType } from 'types';
@@ -23,6 +23,7 @@ export class GoogleAuthController {
   @HttpCode(200)
   @UseGuards(GoogleGuard)
   @UseInterceptors(SetCookieInterceptor)
+  @ApiExcludeEndpoint()
   async googleAuthCallback(@Req() req: Request) {
     const googleAccessToken = req.user['googleAccessToken'];
     const userResponse = await this.googleAuthService.googleAuth(googleAccessToken);
