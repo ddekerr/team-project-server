@@ -45,8 +45,10 @@ export default {
 
   PRODUCT_POSTER_EMPTY_MSG: 'Products poster must not be empty',
 
-  PRODUCT_CATEGORY_EMPTY_MSG: 'Products category must not be empty',
-  PRODUCT_CATEGORY_STRING_MSG: 'Products categories must be a string',
+  PRODUCT_CATEGORIES_ARRAY_EMPTY_MSG: 'Products categories must have at least one value',
+  PRODUCT_CATEGORIES_ARRAY_MSG: 'Products categories must be an array',
+  PRODUCT_CATEGORIES_ITEM_EMPTY_MSG: 'Category slug must not be empty',
+  PRODUCT_CATEGORIES_ITEM_STRING_MSG: 'Category slug must be a string',
 
   PRODUCT_RATE_VALUE_EMPTY_MSG: 'Products rate value must not be empty',
   PRODUCT_RATE_VALUE_NUMBER_MSG: 'Products rate value must be one of $constraint1',
@@ -59,6 +61,9 @@ export default {
 
   CATEGORY_PARENT_EMPTY_MSG: 'Category parent must not be empty',
   CATEGORY_PARENT_STRING_MSG: 'Category parent must be a string',
+
+  CATEGORY_ICON_EMPTY_MSG: 'Category icon must not be empty',
+  CATEGORY_ICON_STRING_MSG: 'Category icon must be a string',
 
   // orders fields validation
   ORDER_CUSTOMER_PHONE_MSG: 'Customer`s phone must be in the correct format',

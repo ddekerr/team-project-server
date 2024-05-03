@@ -3,7 +3,7 @@ export default {
   USER_CREATE_MSG: 'User has been successfully created',
   USER_UPDATE_MSG: 'User has been successfully updated',
   USER_DELETE_MSG: 'User has been successfully deleted',
-  USER_LOGGED_IN_MSG: 'User has been successfully logged in',
+  USER_LOGIN_MSG: 'User has been successfully logged in',
   USER_LOGOUT_MSG: 'User has been successfully logout',
 
   // product success messages

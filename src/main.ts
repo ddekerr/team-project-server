@@ -4,17 +4,16 @@ import { AppModule } from './modules/app.module';
 import { GlobalValidationPipe } from 'pipes/validation.pipe';
 import { HttpExceptionFilter } from 'filter/exception.filter';
 import * as cookieParser from 'cookie-parser';
-import { ValidationPipe } from '@nestjs/common';
+// import { ValidationPipe } from '@nestjs/common';
 
 async function start() {
-  const PORT = process.env.PORT || 5000;
+  const PORT = +process.env.PORT || 5000;
 
   // init application
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser());
   app.enableCors();
-  //app.useGlobalPipes(new GlobalValidationPipe());
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new GlobalValidationPipe());
   app.useGlobalFilters(new HttpExceptionFilter());
 
   // setup swagger

@@ -35,6 +35,11 @@ export class OrdersService {
     return order;
   }
 
+  // #################### GET ORDER LIST ####################
+  async getList(): Promise<OrderDocument[]> {
+    return await this.ordersRepository.getList({});
+  }
+
   // #################### GENERATE UNIQUE ORDER CODE ####################
   private async generateUniqueOrderCode(): Promise<string> {
     let order: OrderDocument | null;
