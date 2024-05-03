@@ -1,28 +1,33 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { Category } from 'modules/categories/schemas/category.schema';
-import mongoose, { Document } from 'mongoose';
+import { Document } from 'mongoose';
 
 export type ProductDocument = Product & Document;
 
-type Rating = { 1: number; 2: number; 3: number; 4: number; 5: number };
+class Rating {
+  1: number;
+  2: number;
+  3: number;
+  4: number;
+  5: number;
+}
 
 @Schema({ timestamps: true, versionKey: false })
 export class Product {
-  @ApiProperty()
-  @Prop()
+  @ApiProperty({ required: true })
+  @Prop({ required: true })
   title: string;
 
-  @ApiProperty()
-  @Prop()
+  @ApiProperty({ required: true })
+  @Prop({ required: true })
   price: number;
 
-  @ApiProperty({ required: false })
-  @Prop({ required: false })
+  @ApiProperty({ required: false, nullable: true })
+  @Prop({ required: false, default: null })
   poster?: string;
 
-  @ApiProperty({ default: true })
-  @Prop({ default: true })
+  @ApiProperty({ required: false, default: true })
+  @Prop({ required: false, default: true })
   inStock: boolean;
 
   @ApiProperty({
@@ -44,9 +49,9 @@ export class Product {
   })
   rating: Rating;
 
-  @ApiProperty({ type: mongoose.Schema.Types.ObjectId, description: 'Categories list of product' })
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Category', default: null })
-  category: Category;
+  @ApiProperty({ type: [String], description: 'Categories list of product' })
+  @Prop({ type: [String], default: [] })
+  categories: string[];
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);
