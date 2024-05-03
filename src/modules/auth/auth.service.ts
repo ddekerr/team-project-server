@@ -1,24 +1,20 @@
-import { Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from 'modules/user/dto/create-user.dto';
-// import { UserDocument } from 'modules/user/schemas/user.schema';
 import { UsersService } from 'modules/user/users.service';
-import { Payload, Token, TokenType, Tokens, UserResponseWithRefresh } from './types';
+import { Tokens, UserResponseWithRefresh } from './types';
 
-import { ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN } from 'constants/tokens';
 import { UserDocument } from 'modules/user/schemas/user.schema';
 import { compareSync } from 'bcrypt';
 import exceptionMessages from 'constants/exceptionMessages';
 import successMessages from 'constants/successMessages';
-import { HttpService } from '@nestjs/axios';
+import { TokensService } from './tokens.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
-    private jwtService: JwtService,
-    private httpService: HttpService
-  ) { }
+    private tokensService: TokensService,
+  ) {}
 
   // #################### REGISTER NEW USER ####################
   async register(dto: CreateUserDto): Promise<UserResponseWithRefresh> {
@@ -29,7 +25,7 @@ export class AuthService {
   // #################### LOGIN USER ####################
   async login(dto: CreateUserDto): Promise<UserResponseWithRefresh> {
     const user = await this.usersService.getUser(dto.email);
-    
+
     if (user.password !== undefined) {
       this.checkPassword(dto.password, user.password);
       return await this.generateResponse(user);
@@ -40,35 +36,13 @@ export class AuthService {
   // #################### LOGOUT USER ####################
   async logout(email: string): Promise<string> {
     await this.usersService.getUser(email);
-    return successMessages.USER_LOGGED_IN_MSG;
+    return successMessages.USER_LOGOUT_MSG;
   }
 
   // #################### REFRESH USER ####################
   async refresh(email: string): Promise<Tokens> {
     const user = await this.usersService.getUser(email);
-    return await this.generateTokens({ email: user.email, userId: user._id });
-  }
-
-  // #################### GENERATE ACCESS AND REFRESH TOKENS ####################
-  // це асинхронна функція вона через Promise.all генерить масив токенів і повертає об'єктом
-  async generateTokens(payload: Payload): Promise<Tokens> {
-    const [accessToken, refreshToken] = await Promise.all([
-      this.getToken(payload, TokenType.ACCESS),
-      this.getToken(payload, TokenType.REFRESH),
-    ]);
-
-    return { accessToken, refreshToken };
-  }
-
-  // #################### GENERATE TOKEN ####################
-  // це синхронна функція, вона буде використовувати jwt сервіс і викликатися у функції generateTokens
-  private getToken(payload: Payload, type: TokenType): Token {
-    const expiresIn = type === TokenType.ACCESS ? ACCESS_TOKEN_EXPIRES_IN : REFRESH_TOKEN_EXPIRES_IN;
-    const secret = type === TokenType.ACCESS ? process.env.ACCESS_TOKEN_SECRET : process.env.REFRESH_TOKEN_SECRET;
-
-    const tokens = this.jwtService.sign({ payload }, { secret, expiresIn });
-
-    return tokens;
+    return await this.tokensService.generateTokens({ email: user.email, userId: user._id });
   }
 
   // #################### COMPARE PASSWORD HASH ####################
@@ -81,41 +55,12 @@ export class AuthService {
   }
 
   // #################### GENERATE THE SAME RESPONSE FOR REGISTER AND LOGIN ####################
-  private async generateResponse(user: UserDocument): Promise<UserResponseWithRefresh> {
-    const { accessToken, refreshToken } = await this.generateTokens({ email: user.email, userId: user._id });
+  async generateResponse(user: UserDocument): Promise<UserResponseWithRefresh> {
+    const { accessToken, refreshToken } = await this.tokensService.generateTokens({
+      email: user.email,
+      userId: user._id,
+    });
     const userResponse = { user, token: accessToken };
     return { userResponse, refreshToken };
-  }
-
-  // #################### Checks the correctness of the Google Token ####################
-  private async verifuGoogleAccessToken(accessToken: string) {
-    try {
-      const response = await this.httpService.get(`https://oauth2.googleapis.com/tokeninfo?access_token=${accessToken}`).toPromise()
-      return response.data.email
-    } catch (err) {
-      throw new InternalServerErrorException(exceptionMessages.GOOGLE_ERROR_MSG)
-    }
-  }
-
-  // #################### Returns the user if he is in the database or registers a new one through Google ####################
-  async googleAuth(accessToken: string, provider: string):Promise<UserResponseWithRefresh> {
-
-    const email = await this.verifuGoogleAccessToken(accessToken)
-    const userExists = await this.usersService.checkUserByEmail(email)
-
-    if (userExists) {
-      return this.generateResponse(userExists)
-    }
-
-    return await this.register({
-      email,
-      provider,
-      first_name: undefined,
-      last_name: undefined,
-      password: undefined,
-      phone_number: undefined,
-      address: undefined,
-    });
-
   }
 }

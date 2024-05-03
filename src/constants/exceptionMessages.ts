@@ -9,6 +9,7 @@ export default {
 
   UNAUTHORIZED_TOKEN_VALID_MSG: 'Token are not valid',
   UNAUTHORIZED_TOKEN_MISSING_MSG: 'Token missing. You have to sign in',
+  UNAUTHORIZED_TOKEN_EXPIRED_MSG: 'Token are expired',
 
   // bad request messages
   BAD_REQUEST_MSG: 'Wrong data',
@@ -22,5 +23,5 @@ export default {
   FILE_ERROR_MSG: 'Something went wrong working with file',
 
   //google problem messages
-  GOOGLE_ERROR_MSG: 'The Google server cannot verify the Token'
+  GOOGLE_ERROR_MSG: 'The Google server cannot verify the Token',
 };

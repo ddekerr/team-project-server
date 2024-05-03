@@ -1,16 +1,23 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { AuthController } from './auth.controller';
-import { UsersModule } from 'modules/user/users.module';
 import { JwtModule } from '@nestjs/jwt';
+import { HttpModule } from '@nestjs/axios';
+
+import { AuthController } from './auth.controller';
+import { GoogleAuthController } from './google-auth.controller';
+
+import { AuthService } from './auth.service';
+
+import { UsersModule } from 'modules/user/users.module';
+
 import { ATStrategy } from './strategies/at.strategy';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { GoogleGuard } from './guards/google.guard';
-import { HttpModule } from '@nestjs/axios';
+import { GoogleAuthService } from './google-auth.service';
+import { TokensService } from './tokens.service';
 
 @Module({
-  providers: [AuthService, ATStrategy, GoogleStrategy ,GoogleGuard],
-  controllers: [AuthController],
-  imports: [UsersModule, JwtModule.register({}),HttpModule],
+  providers: [AuthService, GoogleAuthService, TokensService, ATStrategy, GoogleStrategy, GoogleGuard],
+  controllers: [AuthController, GoogleAuthController],
+  imports: [UsersModule, JwtModule.register({}), HttpModule],
 })
 export class AuthModule {}
