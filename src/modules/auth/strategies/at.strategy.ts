@@ -22,7 +22,7 @@ export class ATStrategy extends PassportStrategy(Strategy, 'access-strategy') {
     if (timeLeft < 30) {
       payload['payload']['refresh'] = true;
     }
-
+    
     return payload;
   }
 }
