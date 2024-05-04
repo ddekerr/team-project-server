@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, FilterQuery, UpdateQuery } from 'mongoose';
-import { Order, OrderDocument } from './schemas/order.chema';
+import { Order, OrderDocument } from './schemas/order.shema';
 
 @Injectable()
 export class OrdersRepository {

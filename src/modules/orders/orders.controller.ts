@@ -3,7 +3,7 @@ import { ApiBadRequestResponse, ApiBody, ApiOperation, ApiTags } from '@nestjs/s
 
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { Order, OrderDocument } from './schemas/order.chema';
+import { Order, OrderDocument } from './schemas/order.shema';
 
 import { Actions, EntityType } from 'types';
 import validationMessage from 'constants/validationMessage';
