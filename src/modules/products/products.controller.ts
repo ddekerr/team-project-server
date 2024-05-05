@@ -40,7 +40,7 @@ import { ApiResponse } from 'helpers/ApiResponse';
 import { ApiValidationError } from 'helpers/ApiValidationError';
 import { ApiSwaggerResponse } from 'helpers/ApiSwaggerResponse';
 import { ApiSwaggerArrayResponse } from 'helpers/ApiSwaggerArrayResponse';
-import { Params } from './types';
+import { Params, Rating } from './types';
 
 @ApiTags('Products')
 @Controller('api/products')
@@ -143,10 +143,11 @@ export class ProductsController {
   @Patch(':id/rate')
   @HttpCode(200)
   @ApiOperation({ summary: 'Rate product by ID' })
+  @ApiBody({ type: RateDto })
   @ApiSwaggerResponse(Actions.RATE, EntityType.PRODUCT, Product)
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_PRODUCT_MSG })
   @ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR })
-  async rateProduct(@Param('id') id: number, @Body() dto: RateDto): Promise<ApiResponse<number>> {
+  async rateProduct(@Param('id') id: number, @Body() dto: RateDto): Promise<ApiResponse<Rating>> {
     const rating = await this.productsService.updateRating(id, dto.value);
     return new ApiResponse(Actions.RATE, EntityType.PRODUCT, rating);
   }
