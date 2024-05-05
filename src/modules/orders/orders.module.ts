@@ -5,7 +5,7 @@ import { OrdersRepository } from './orders.repository';
 import { OrdersController } from './orders.controller';
 import { ProductsModule } from 'modules/products/products.module';
 import { UsersModule } from 'modules/user/users.module';
-import { Order, OrderSchema } from './schemas/order.chema';
+import { Order, OrderSchema } from './schemas/order.shema';
 
 @Module({
   providers: [OrdersService, OrdersRepository],
