@@ -18,7 +18,7 @@ export class ProductsService {
     private productsRepository: ProductsRepository,
     private categoriesService: CategoriesService,
     private filesService: FilesService,
-  ) {}
+  ) { }
 
   // #################### CREATE NEW PRODUCT ####################
   async create(dto: CreateProductDto): Promise<ProductDocument> {
@@ -90,7 +90,7 @@ export class ProductsService {
 
     // upload new posetr to cloud service
     const filePath = await this.filesService.uploadFile(FileType.POSTERS, poster);
-
+    console.log(filePath)
     // save path to poster in DB
     product.poster = filePath;
     return await product.save();
