@@ -10,7 +10,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
 import exceptionMessages from 'constants/exceptionMessages';
-import { Filter, Params } from './types';
+import { Filter, Params, Rating } from './types';
 
 @Injectable()
 export class ProductsService {
@@ -106,14 +106,23 @@ export class ProductsService {
   // }
 
   // #################### RATE PRODUCT ####################
-  async updateRating(id: number, value: number): Promise<number> {
+  async updateRating(id: number, value: number): Promise<Rating> {
     const product = await this.getOneById(id);
-    product.rating[value] += 1;
-    const result = Object.values(product.rating).reduce((sum, item) => sum + item, 0) / 5;
 
+    // change product rating by star value
+    product.rating[value] += 1;
     await product.save();
 
-    return result;
+    // count product rating
+    let votes = 0;
+    let sumOfValues = 0;
+    for (let prop = 1; prop <= 5; prop += 1) {
+      votes += product.rating[prop];
+      sumOfValues += product.rating[prop] * prop;
+    }
+    const rating = sumOfValues / votes;
+
+    return { rating };
   }
 
   // #################### CHECKING CATEGORY BY SLUG ####################

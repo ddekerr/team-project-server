@@ -14,6 +14,7 @@ export class UsersService {
 
   // #################### CREATE NEW USER ####################
   async createUser(dto: CreateUserDto): Promise<UserDocument> {
+    console.log(dto);
     await this.checkUserNotExist(dto.email);
     const { password, ...rest } = dto;
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -37,10 +38,24 @@ export class UsersService {
     return await this.checkUserExist(email);
   }
 
+  // #################### GET ONE USER BY EMAIL WITHOUT CHECKING ####################
+  async getUserWithoutChecking(email: string): Promise<UserDocument> {
+    return await this.usersRepository.getOne({ email });
+  }
+
   // #################### GET USERS LIST ####################
   async getList(): Promise<UserDocument[]> {
     return await this.usersRepository.getList({});
   }
+
+  // // #################### GET USER BY EMAIL ####################
+  // async checkUserByEmail(email: string) {
+  //   const candidate = await this.usersRepository.getOne({ email });
+  //   if (!candidate) {
+  //     return false;
+  //   }
+  //   return candidate;
+  // }
 
   // #################### CHECK USER IS NOT EXIST ####################
   private async checkUserNotExist(email: string): Promise<void> {

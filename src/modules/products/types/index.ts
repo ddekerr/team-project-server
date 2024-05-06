@@ -8,3 +8,7 @@ export type Params = {
   category?: string;
   id?: string;
 };
+
+export type Rating = {
+  rating: number;
+};

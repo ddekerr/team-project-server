@@ -51,7 +51,8 @@ export default {
   PRODUCT_CATEGORIES_ITEM_STRING_MSG: 'Category slug must be a string',
 
   PRODUCT_RATE_VALUE_EMPTY_MSG: 'Products rate value must not be empty',
-  PRODUCT_RATE_VALUE_NUMBER_MSG: 'Products rate value must be one of $constraint1',
+  PRODUCT_RATE_VALUE_NUMBER_MSG: 'Products rate value must be a number',
+  PRODUCT_RATE_VALUE_IN_RANGE_MSG: 'Products rate value must be only such values: $constraint1',
 
   // category fields validation
   CATEGORY_TITLE_EMPTY_MSG: 'Category title mustnot not be empty',

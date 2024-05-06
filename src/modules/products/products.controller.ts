@@ -12,6 +12,7 @@ import {
   UploadedFile,
   HttpCode,
   Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -40,7 +41,7 @@ import { ApiResponse } from 'helpers/ApiResponse';
 import { ApiValidationError } from 'helpers/ApiValidationError';
 import { ApiSwaggerResponse } from 'helpers/ApiSwaggerResponse';
 import { ApiSwaggerArrayResponse } from 'helpers/ApiSwaggerArrayResponse';
-import { Params } from './types';
+import { Params, Rating } from './types';
 
 @ApiTags('Products')
 @Controller('api/products')
@@ -69,7 +70,7 @@ export class ProductsController {
   @ApiSwaggerResponse(Actions.UPDATE, EntityType.PRODUCT, Product)
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_PRODUCT_MSG })
   @ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR })
-  async update(@Param('id') id: number, @Body() dto: UpdateProductDto) {
+  async update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateProductDto) {
     const product = await this.productsService.update(id, dto);
     return new ApiResponse(Actions.UPDATE, EntityType.PRODUCT, product);
   }
@@ -92,7 +93,7 @@ export class ProductsController {
   @ApiOperation({ summary: 'Get one product by ID' })
   @ApiSwaggerResponse(Actions.GET, EntityType.PRODUCT, Product)
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_PRODUCT_MSG })
-  async getOne(@Param('id') id: number): Promise<ApiResponse<ProductDocument>> {
+  async getOne(@Param('id', ParseIntPipe) id: number) {
     const product = await this.productsService.getOneById(id);
     return new ApiResponse(Actions.GET, EntityType.PRODUCT, product);
   }
@@ -143,10 +144,11 @@ export class ProductsController {
   @Patch(':id/rate')
   @HttpCode(200)
   @ApiOperation({ summary: 'Rate product by ID' })
+  @ApiBody({ type: RateDto })
   @ApiSwaggerResponse(Actions.RATE, EntityType.PRODUCT, Product)
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_PRODUCT_MSG })
   @ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR })
-  async rateProduct(@Param('id') id: number, @Body() dto: RateDto): Promise<ApiResponse<number>> {
+  async rateProduct(@Param('id') id: number, @Body() dto: RateDto): Promise<ApiResponse<Rating>> {
     const rating = await this.productsService.updateRating(id, dto.value);
     return new ApiResponse(Actions.RATE, EntityType.PRODUCT, rating);
   }

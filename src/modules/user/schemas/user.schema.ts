@@ -34,7 +34,7 @@ export class User {
   b_day: Date;
 
   @ApiProperty()
-  @Prop()
+  @Prop({required: false})
   password: string;
 
   @ApiProperty({ required: false })

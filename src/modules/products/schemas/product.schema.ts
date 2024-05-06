@@ -30,15 +30,9 @@ export class Product {
   @Prop({ required: false, default: true })
   inStock: boolean;
 
-  @ApiProperty({
-    description: 'Product rating',
-    type: 'object',
-    items: {
-      type: 'number',
-      default: 0,
-    },
-  })
+  @ApiProperty({ type: Rating })
   @Prop({
+    _id: false,
     type: {
       1: { type: Number, default: 0 },
       2: { type: Number, default: 0 },
@@ -46,6 +40,7 @@ export class Product {
       4: { type: Number, default: 0 },
       5: { type: Number, default: 0 },
     },
+    required: true,
   })
   rating: Rating;
 

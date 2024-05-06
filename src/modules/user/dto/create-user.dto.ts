@@ -51,14 +51,14 @@ export class CreateUserDto {
   @Length(3, 70, { message: validationMessage.USER_NAME_LENGTH_MSG })
   @IsNotEmpty({ message: validationMessage.USER_NAME_EMPTY_MSG })
   @IsOptional()
-  readonly first_name: string;
+  readonly first_name?: string;
 
   @ApiProperty({ required: false })
   @IsString({ message: validationMessage.USER_NAME_STRING_MSG })
   @Length(3, 70, { message: validationMessage.USER_NAME_LENGTH_MSG })
   @IsNotEmpty({ message: validationMessage.USER_NAME_EMPTY_MSG })
   @IsOptional()
-  readonly last_name: string;
+  readonly last_name?: string;
 
   @ApiProperty()
   @IsEmail({}, { message: validationMessage.USER_EMAIL_MSG })
@@ -75,11 +75,11 @@ export class CreateUserDto {
   @IsPhoneNumber('UA', { message: validationMessage.USER_PHONE_MSG })
   @IsNotEmpty({ message: validationMessage.USER_PHONE_EMPTY_MSG })
   @IsOptional()
-  readonly phone_number: string;
+  readonly phone_number?: string;
 
   @ApiProperty({ required: false })
   @ValidateNested()
   @Type(() => AddressDto)
   @IsOptional()
-  readonly address: AddressDto;
+  readonly address?: AddressDto;
 }

@@ -5,7 +5,7 @@ import { ProductsService } from 'modules/products/products.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { OrderedProduct } from './types';
 import { UniqueOTP } from 'unique-string-generator';
-import { OrderDocument } from './schemas/order.chema';
+import { OrderDocument } from './schemas/order.shema';
 
 @Injectable()
 export class OrdersService {
