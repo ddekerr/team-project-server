@@ -13,7 +13,7 @@ export class OrdersService {
     private ordersRepository: OrdersRepository,
     private usersService: UsersService,
     private productsService: ProductsService,
-  ) {}
+  ) { }
 
   // #################### CREATE NEW ORDER ####################
   async create(dto: CreateOrderDto) {
@@ -40,6 +40,11 @@ export class OrdersService {
     return await this.ordersRepository.getList({});
   }
 
+  // #################### DELETE ORDER BY ID ####################
+  async delete(orderCode: number): Promise<OrderDocument> {
+    return await this.ordersRepository.delete({orderCode});
+  }
+
   // #################### GENERATE UNIQUE ORDER CODE ####################
   private async generateUniqueOrderCode(): Promise<string> {
     let order: OrderDocument | null;
@@ -52,4 +57,6 @@ export class OrdersService {
 
     return orderCode.toString();
   }
+
+
 }

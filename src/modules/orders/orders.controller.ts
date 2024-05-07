@@ -1,5 +1,5 @@
-import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Post } from '@nestjs/common';
+import { ApiBadRequestResponse, ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -16,8 +16,9 @@ import { ApiValidationError } from 'helpers/ApiValidationError';
 @ApiTags('Orders')
 @Controller('api/orders')
 export class OrdersController {
-  constructor(private ordersService: OrdersService) {}
+  constructor(private ordersService: OrdersService) { }
 
+  // #################### CREATE NEW ORDER ####################
   @Post()
   @HttpCode(201)
   @ApiOperation({ summary: 'Create new order' })
@@ -36,5 +37,16 @@ export class OrdersController {
   async getList(): Promise<ApiResponse<OrderDocument[]>> {
     const orders = await this.ordersService.getList();
     return new ApiResponse(Actions.GET_LIST, EntityType.ORDERS, orders);
+  }
+
+  // #################### DELETE ORDER BY ID ####################
+  @Delete(':orderCode')
+  @HttpCode(200)
+  @ApiParam({ name: 'orderCode', type: Number })
+  @ApiOperation({ summary: 'Delete order by OrderCode' })
+  @ApiSwaggerResponse(Actions.DELETE, EntityType.ORDERS, Order)
+  async delete(@Param('orderCode', ParseIntPipe) orderCode: number): Promise<ApiResponse<OrderDocument>> {
+    const order = await this.ordersService.delete(orderCode);
+    return new ApiResponse(Actions.DELETE, EntityType.ORDERS, order);
   }
 }
