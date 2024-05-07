@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Post } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBody, ApiNotFoundResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -12,6 +12,8 @@ import { ApiResponse } from 'helpers/ApiResponse';
 import { ApiSwaggerArrayResponse } from 'helpers/ApiSwaggerArrayResponse';
 import { ApiSwaggerResponse } from 'helpers/ApiSwaggerResponse';
 import { ApiValidationError } from 'helpers/ApiValidationError';
+import { ApiError } from 'helpers/ApiError';
+import exceptionMessages from 'constants/exceptionMessages';
 
 @ApiTags('Orders')
 @Controller('api/orders')
@@ -30,6 +32,7 @@ export class OrdersController {
     return new ApiResponse(Actions.CREATE, EntityType.ORDERS, order);
   }
 
+  // #################### GET ORDER LIST ####################
   @Get()
   @HttpCode(200)
   @ApiOperation({ summary: 'Get orders list' })
@@ -39,7 +42,18 @@ export class OrdersController {
     return new ApiResponse(Actions.GET_LIST, EntityType.ORDERS, orders);
   }
 
-  // #################### DELETE ORDER BY ID ####################
+    // #################### GET ONE ORDER BY ORDERCODE ####################
+    @Get(':orderCode')
+    @HttpCode(200)
+    @ApiOperation({ summary: 'Get one orders by OrderCode' })
+    @ApiSwaggerResponse(Actions.GET, EntityType.ORDERS, Order)
+    @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_ORDER_MSG })
+    async getOne(@Param('orderCode', ParseIntPipe) orderCode: number): Promise<ApiResponse<OrderDocument>>  {
+      const order = await this.ordersService.getOneByOrderCode(orderCode);
+      return new ApiResponse(Actions.GET, EntityType.ORDERS, order);
+    }
+
+  // #################### DELETE ORDER BY ORDERCODE ####################
   @Delete(':orderCode')
   @HttpCode(200)
   @ApiParam({ name: 'orderCode', type: Number })
