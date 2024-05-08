@@ -21,4 +21,5 @@ export enum EntityType {
   CATEGORY = 'CATEGORY',
   USER = 'USER',
   ORDERS = 'ORDERS',
+  REVIEW = 'REVIEW',
 }

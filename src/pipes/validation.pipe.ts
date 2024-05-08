@@ -11,7 +11,7 @@ export class GlobalValidationPipe implements PipeTransform<any> {
     const err = await validate(obj);
 
     if (err.length) {
-      const errors = this.errorResponse(err)
+      const errors = this.errorResponse(err);
 
       throw new ValidationException(errors);
     }
@@ -20,20 +20,19 @@ export class GlobalValidationPipe implements PipeTransform<any> {
   }
 
   private errorResponse(arrErrorValue) {
-    const errors = []
+    const errors = [];
     for (let i = 0; i < arrErrorValue.length; i++) {
+      const e = arrErrorValue[i];
 
-      const e = arrErrorValue[i]
-
-      let constraints
+      let constraints;
       if (e.children.length) {
-        constraints = this.errorResponse(e.children)
+        constraints = this.errorResponse(e.children);
       } else {
-        constraints = e.constraints
+        constraints = e.constraints;
       }
 
-      errors.push({ [e.property]: constraints })
+      errors.push({ [e.property]: constraints });
     }
-    return errors
+    return errors;
   }
 }

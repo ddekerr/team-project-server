@@ -93,4 +93,24 @@ export default {
 
   ORDER_RECEPIENT_PHONE_MSG: 'Recepint phone must be in the correct format',
   ORDER_RECEPIENT_PHONE_EMPTY_MSG: 'Recepint e-mail must not be empty',
+
+  // review fields validation
+  REVIEW_RATING_EMPTY_MSG: 'Review advantages must not be empty',
+  REVIEW_RATING_NUMBER_MSG: 'Review advantages must be a string',
+  REVIEW_RATING_IN_RANGE_MSG: 'Review rating must be only such values: $constraint1',
+
+  REVIEW_ADVANTAGES_EMPTY_MSG: 'Review advantages must not be empty',
+  REVIEW_ADVANTAGES_STRING_MSG: 'Review advantages must be a string',
+
+  REVIEW_DISADVANTAGES_EMPTY_MSG: 'Review disadvantages must not be empty',
+  REVIEW_DISADVANTAGES_STRING_MSG: 'Review disadvantages must be a string',
+
+  REVIEW_COMMENT_EMPTY_MSG: 'Review comment must not be empty',
+  REVIEW_COMMENT_STRING_MSG: 'Review comment must be a string',
+
+  REVIEW_USER_EMAIL_EMPTY_MSG: 'Review User email must not be empty',
+  REVIEW_USER_EMAIL_MSG: 'Review User email must be in the correct format',
+
+  REVIEW_PRODUCTID_EMPTY_MSG: 'Review Product id must not be empty',
+  REVIEW_PRODUCTID_NUMBER_MSG: 'Review Product id must be a number',
 };
