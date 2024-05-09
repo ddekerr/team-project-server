@@ -1,7 +1,7 @@
 import { Review, ReviewDocument } from './schemas/review.schema';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, FilterQuery } from 'mongoose';
+import { Model, FilterQuery, UpdateQuery } from 'mongoose';
 
 @Injectable()
 export class ReviewsRepository {
@@ -11,6 +11,16 @@ export class ReviewsRepository {
   async create(createEntityData: unknown): Promise<ReviewDocument> {
     const newReview = await this.reviewsModel.create(createEntityData);
     return newReview;
+  }
+
+  // ########## UPDATE PRODUCT FROM PRODUCT TABLE ##########
+  async update(
+    entityFilterQuery: FilterQuery<ReviewDocument>,
+    updateEntityData: UpdateQuery<unknown>,
+  ): Promise<ReviewDocument> {
+    return await this.reviewsModel.findOneAndUpdate(entityFilterQuery, updateEntityData, {
+      new: true,
+    });
   }
 
   // ########## DELETE REVIEW FROM REVIEWS TABLE ##########

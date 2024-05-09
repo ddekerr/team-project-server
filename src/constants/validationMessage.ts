@@ -113,4 +113,10 @@ export default {
 
   REVIEW_PRODUCTID_EMPTY_MSG: 'Review Product id must not be empty',
   REVIEW_PRODUCTID_NUMBER_MSG: 'Review Product id must be a number',
+
+  REVIEW_PARAMS_PRODUCTID_EMPTY_MSG: 'Product id in query string must not be empty',
+  REVIEW_PARAMS_PRODUCTID_NUMBER_MSG: 'Product id in query string must be a number',
+
+  REVIEW_PARAMS_USERID_EMPTY_MSG: 'User id in query string must not be empty',
+  REVIEW_PARAMS_USERID_STRING_MSG: 'User id in query string must be a string',
 };
