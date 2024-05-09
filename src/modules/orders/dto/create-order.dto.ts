@@ -36,11 +36,11 @@ export class CreateOrderDto {
   @IsNotEmpty({ message: validationMessage.ORDER_CUSTOMER_PHONE_EMPTY_MSG })
   readonly customerPhone: string;
 
-  @ApiProperty()
-  @IsNumber({}, { message: validationMessage.ORDER_TOTAL_PRICE_NUMBER_MSG })
-  @Min(0.01, { message: validationMessage.ORDER_TOTAL_PRICE_MIN_MSG })
-  @IsNotEmpty({ message: validationMessage.ORDER_TOTAL_PRICE_EMPTY_MSG })
-  readonly totalPrice: number;
+  // @ApiProperty()
+  // @IsNumber({}, { message: validationMessage.ORDER_TOTAL_PRICE_NUMBER_MSG })
+  // @Min(0.01, { message: validationMessage.ORDER_TOTAL_PRICE_MIN_MSG })
+  // @IsNotEmpty({ message: validationMessage.ORDER_TOTAL_PRICE_EMPTY_MSG })
+  // readonly totalPrice: number;
 
   @ApiProperty()
   @IsString({ message: validationMessage.ORDER_PAYMENT_STATUS_STRING_MSG })

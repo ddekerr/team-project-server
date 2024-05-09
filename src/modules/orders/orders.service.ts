@@ -7,6 +7,7 @@ import { OrderedProduct } from './types';
 import { UniqueOTP } from 'unique-string-generator';
 import { OrderDocument } from './schemas/order.shema';
 import exceptionMessages from 'constants/exceptionMessages';
+import { UpdateOrderDto } from './dto/update-order.dto';
 
 @Injectable()
 export class OrdersService {
@@ -43,18 +44,23 @@ export class OrdersService {
 
   // #################### DELETE ORDER BY ID ####################
   async delete(orderCode: number): Promise<OrderDocument> {
-    return await this.ordersRepository.delete({orderCode});
+    return await this.ordersRepository.delete({ orderCode });
   }
 
-    // #################### GET ONE ORDER BY ORDERCODE ####################
-    async getOneByOrderCode(orderCode: number): Promise<OrderDocument> {
-      const order = await this.ordersRepository.getOne({ orderCode });
-      if (!order) {
-        throw new NotFoundException(exceptionMessages.NOT_FOUND_ORDER_MSG);
-      }
-  
-      return order;
+  // #################### UPDATE PRODUCT BY ID ####################
+  async update(orderCode: number, dto: UpdateOrderDto): Promise<OrderDocument> {
+    return await this.ordersRepository.update({ orderCode }, dto);
+  }
+
+  // #################### GET ONE ORDER BY ORDERCODE ####################
+  async getOneByOrderCode(orderCode: number): Promise<OrderDocument> {
+    const order = await this.ordersRepository.getOne({ orderCode });
+    if (!order) {
+      throw new NotFoundException(exceptionMessages.NOT_FOUND_ORDER_MSG);
     }
+
+    return order;
+  }
 
   // #################### GENERATE UNIQUE ORDER CODE ####################
   private async generateUniqueOrderCode(): Promise<string> {

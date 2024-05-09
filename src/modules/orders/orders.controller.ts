@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiBody, ApiNotFoundResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
 import { OrdersService } from './orders.service';
@@ -14,6 +14,7 @@ import { ApiSwaggerResponse } from 'helpers/ApiSwaggerResponse';
 import { ApiValidationError } from 'helpers/ApiValidationError';
 import { ApiError } from 'helpers/ApiError';
 import exceptionMessages from 'constants/exceptionMessages';
+import { UpdateOrderDto } from './dto/update-order.dto';
 
 @ApiTags('Orders')
 @Controller('api/orders')
@@ -42,16 +43,16 @@ export class OrdersController {
     return new ApiResponse(Actions.GET_LIST, EntityType.ORDERS, orders);
   }
 
-    // #################### GET ONE ORDER BY ORDERCODE ####################
-    @Get(':orderCode')
-    @HttpCode(200)
-    @ApiOperation({ summary: 'Get one orders by OrderCode' })
-    @ApiSwaggerResponse(Actions.GET, EntityType.ORDERS, Order)
-    @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_ORDER_MSG })
-    async getOne(@Param('orderCode', ParseIntPipe) orderCode: number): Promise<ApiResponse<OrderDocument>>  {
-      const order = await this.ordersService.getOneByOrderCode(orderCode);
-      return new ApiResponse(Actions.GET, EntityType.ORDERS, order);
-    }
+  // #################### GET ONE ORDER BY ORDERCODE ####################
+  @Get(':orderCode')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Get one orders by OrderCode' })
+  @ApiSwaggerResponse(Actions.GET, EntityType.ORDERS, Order)
+  @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_ORDER_MSG })
+  async getOne(@Param('orderCode', ParseIntPipe) orderCode: number): Promise<ApiResponse<OrderDocument>> {
+    const order = await this.ordersService.getOneByOrderCode(orderCode);
+    return new ApiResponse(Actions.GET, EntityType.ORDERS, order);
+  }
 
   // #################### DELETE ORDER BY ORDERCODE ####################
   @Delete(':orderCode')
@@ -62,5 +63,19 @@ export class OrdersController {
   async delete(@Param('orderCode', ParseIntPipe) orderCode: number): Promise<ApiResponse<OrderDocument>> {
     const order = await this.ordersService.delete(orderCode);
     return new ApiResponse(Actions.DELETE, EntityType.ORDERS, order);
+  }
+
+  // #################### UPDATE ORDER BY ORDERCODE ####################
+  @Patch(':orderCode')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Update order by orderCode' })
+  @ApiParam({ name: 'orderCode', type: Number })
+  @ApiBody({ type: CreateOrderDto })
+  @ApiSwaggerResponse(Actions.UPDATE, EntityType.ORDERS, Order)
+  @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_ORDER_MSG })
+  @ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR })
+  async update(@Param('orderCode', ParseIntPipe) orderCode: number, @Body() dto: UpdateOrderDto) {
+    const order = await this.ordersService.update(orderCode, dto);
+    return new ApiResponse(Actions.UPDATE, EntityType.ORDERS, order);
   }
 }
