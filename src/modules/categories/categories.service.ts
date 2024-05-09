@@ -37,7 +37,7 @@ export class CategoriesService {
   }
 
   // #################### UPDATE CATEGORY BY SLUG ####################
-  async update(slug: string, dto: UpdateCategoryDto): Promise<CategoryDocument> {
+  async update(slug: string, dto: UpdateCategoryDto): Promise<ResponseCategory> {
     let newSlug = slug;
 
     if (dto.title) {

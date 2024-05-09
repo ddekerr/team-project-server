@@ -1,12 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ResponseCategory {
-  @ApiProperty({ description: 'Title of category in ukrainian', default: 'Category title' })
+  @ApiProperty({ description: 'Title of category in ukrainian' })
   readonly title: string;
 
   @ApiProperty({
     description: 'Mutated title field in latin without spaces and uppercese characters',
-    default: 'category-slug',
     uniqueItems: true,
   })
   readonly slug: string;
