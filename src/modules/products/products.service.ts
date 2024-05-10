@@ -58,8 +58,8 @@ export class ProductsService {
   setFilter(params: Params): Filter {
     const filter = Object.entries(params).reduce((prev, [param, valueOfParam]) => {
       switch (param) {
-        case 'id':
-          prev[param] = { $in: valueOfParam.split(',').map((i) => Number(i)) };
+        case '_id':
+          prev[param] = { $in: valueOfParam.split(',') };
           break;
 
         case 'category':

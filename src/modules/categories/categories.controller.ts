@@ -49,7 +49,7 @@ export class CategoriesController {
   async update(
     @Param() { slug }: { slug: string },
     @Body() dto: UpdateCategoryDto,
-  ): Promise<ApiResponse<CategoryDocument>> {
+  ): Promise<ApiResponse<ResponseCategory>> {
     const category = await this.categoriesService.update(slug, dto);
     return new ApiResponse(Actions.UPDATE, EntityType.CATEGORY, category);
   }
