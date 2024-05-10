@@ -64,7 +64,7 @@ export class ProductsController {
   @Patch(':_id')
   @HttpCode(200)
   @ApiOperation({ summary: 'Update product by ID' })
-  @ApiParam({ name: '_id', type: Number })
+  @ApiParam({ name: '_id', type: String })
   @ApiBody({ type: CreateProductDto })
   @ApiSwaggerResponse(Actions.UPDATE, EntityType.PRODUCT, Product)
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_PRODUCT_MSG })
