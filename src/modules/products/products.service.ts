@@ -18,7 +18,7 @@ export class ProductsService {
     private productsRepository: ProductsRepository,
     private categoriesService: CategoriesService,
     private filesService: FilesService,
-  ) { }
+  ) {}
 
   // #################### CREATE NEW PRODUCT ####################
   async create(dto: CreateProductDto): Promise<ProductDocument> {
