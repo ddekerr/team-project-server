@@ -33,9 +33,7 @@ export class OrdersService {
       return { ...product, quantity };
     });
 
-    const totalPrice = products.reduce((totalPrice, product) => totalPrice + product.price * product.quantity, 0);
-
-    const order = await this.ordersRepository.create({ ...dto, orderCode, products, totalPrice });
+    const order = await this.ordersRepository.create({ ...dto, orderCode, products });
     return order;
   }
 

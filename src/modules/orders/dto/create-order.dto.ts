@@ -63,11 +63,6 @@ export class CreateOrderDto {
   readonly recepient: RecepientDto;
 
   @ApiProperty()
-  @IsString()
-  @IsNotEmpty({ message: validationMessage.ORDER_PAYMENT_METHOD_EMPTY_MSG })//
-  readonly deliveryMethod:string
-
-  @ApiProperty()
   @ValidateNested()
   @Type(() => AddressDto)
   readonly deliveryAddress: AddressDto;

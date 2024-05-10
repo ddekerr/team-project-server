@@ -9,6 +9,8 @@ export type Address = {
   street: string;
   house: string;
   apartment: number;
+  postalOperator: string;
+  postalAddress: string;
 };
 
 @Schema({ timestamps: true, versionKey: false })
@@ -38,7 +40,16 @@ export class User {
   password: string;
 
   @ApiProperty({ required: false })
-  @Prop({ type: { city: String, street: String, house: String, apartment: Number } })
+  @Prop({
+    type: {
+      city: String,
+      street: String,
+      house: String,
+      apartment: Number,
+      postalOperator: String,
+      postalAddress: String,
+    },
+  })
   addresses: Address;
 }
 

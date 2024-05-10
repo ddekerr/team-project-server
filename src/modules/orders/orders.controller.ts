@@ -76,7 +76,6 @@ export class OrdersController {
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_ORDER_MSG })
   @ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR })
   async update(@Param('orderCode', ParseIntPipe) orderCode: number, @Body() dto: UpdateOrderDto) {
-    console.log(dto);
     const order = await this.ordersService.update(orderCode, dto);
     return new ApiResponse(Actions.UPDATE, EntityType.ORDERS, order);
   }
