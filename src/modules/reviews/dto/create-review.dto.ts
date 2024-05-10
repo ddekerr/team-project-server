@@ -32,6 +32,6 @@ export class CreateReviewDto {
 
   @ApiProperty({ type: Number, nullable: false })
   @IsNotEmpty({ message: validationMessage.REVIEW_PRODUCTID_EMPTY_MSG })
-  @IsNumber({}, { message: validationMessage.REVIEW_PRODUCTID_NUMBER_MSG })
-  readonly productId: number;
+  @IsString({ message: validationMessage.REVIEW_PRODUCTID_STRING_MSG })
+  readonly productId: string;
 }

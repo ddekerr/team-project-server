@@ -27,21 +27,21 @@ export class ProductsService {
   }
 
   // #################### UPDATE PRODUCT BY ID ####################
-  async update(id: number, dto: UpdateProductDto): Promise<ProductDocument> {
-    if (dto.hasOwnProperty('categories')) {
+  async update(_id: string, dto: UpdateProductDto): Promise<ProductDocument> {
+    if (dto.categories) {
       await this.checkingCategories(dto.categories);
     }
-    return await this.productsRepository.update({ id }, dto);
+    return await this.productsRepository.update({ _id }, dto);
   }
 
   // #################### DELETE PRODUCT BY ID ####################
-  async delete(id: number): Promise<ProductDocument> {
-    return await this.productsRepository.delete({ id });
+  async delete(_id: string): Promise<ProductDocument> {
+    return await this.productsRepository.delete({ _id });
   }
 
   // #################### GET ONE PRODUCT BY ID ####################
-  async getOneById(id: number): Promise<ProductDocument> {
-    const product = await this.productsRepository.getOne({ id });
+  async getOneById(_id: string): Promise<ProductDocument> {
+    const product = await this.productsRepository.getOne({ _id });
     if (!product) {
       throw new NotFoundException(exceptionMessages.NOT_FOUND_PRODUCT_MSG);
     }
@@ -78,9 +78,9 @@ export class ProductsService {
   }
 
   // #################### UPLOAD POSTER TO PRODUCT ####################
-  async uploadPoster(id: number, poster: Express.Multer.File): Promise<ProductDocument> {
+  async uploadPoster(_id: string, poster: Express.Multer.File): Promise<ProductDocument> {
     // check product exist
-    const product = await this.getOneById(id);
+    const product = await this.getOneById(_id);
 
     // check product already have poster
     if (product.poster) {
@@ -96,18 +96,9 @@ export class ProductsService {
     return await product.save();
   }
 
-  // #################### ADD CATEGORIES TO PRODUCT ####################
-  // async addCategories(id: number, categorySlug: string): Promise<ProductDocument> {
-  //   const product = await this.getOneById(id);
-  //   // const category = await this.categoriesService.getOneBySlug(categorySlug);
-
-  //   product.category = category;
-  //   return await product.save();
-  // }
-
   // #################### RATE PRODUCT ####################
-  async updateRating(id: number, value: number): Promise<Rating> {
-    const product = await this.getOneById(id);
+  async updateRating(_id: string, value: number): Promise<Rating> {
+    const product = await this.getOneById(_id);
 
     // change product rating by star value
     product.rating[value] += 1;

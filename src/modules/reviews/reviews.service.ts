@@ -23,9 +23,7 @@ export class ReviewsService {
 
     const user = await this.usersService.getUser(userEmail);
     const product = await this.productService.getOneById(productId);
-    await this.productService.updateRating(product.id, rating);
-
-    console.log(product);
+    await this.productService.updateRating(product._id, rating);
 
     const review = await this.reviewsRepository.create({ user, product, ...dto });
     return review;
@@ -53,10 +51,10 @@ export class ReviewsService {
   }
 
   // #################### SET FILTER ####################
-  private setFilter(params?: QueryParamsDto): { product?: { id: number }; user?: { id: string } } {
+  private setFilter(params?: QueryParamsDto): { product?: { _id: string }; user?: { _id: string } } {
     const filter = Object.entries(params).reduce((prev, [keyParam, valueParam]) => {
       if (keyParam === 'productId') {
-        prev['product.id'] = Number(valueParam);
+        prev['product._id'] = valueParam;
       }
 
       if (keyParam === 'userId') {

@@ -74,8 +74,7 @@ export default {
   ORDER_TOTAL_PRICE_MIN_MSG: 'Order`s total must be at least $constraint1',
   ORDER_TOTAL_PRICE_EMPTY_MSG: 'Order`s total must not be empty',
 
-  ORDER_PRODUCT_ID_NUMBER_MSG: 'Product Id must be a number',
-  ORDER_PRODUCT_ID_MIN_MSG: 'Product Id must be at least $constraint1',
+  ORDER_PRODUCT_ID_STRING_MSG: 'Product Id must be a string',
   ORDER_PRODUCT_ID_EMPTY_MSG: 'Product Id must not be empty',
 
   ORDER_QUANTITY_NUMBER_MSG: 'Product quantity must be a number',
@@ -112,7 +111,7 @@ export default {
   REVIEW_USER_EMAIL_MSG: 'Review User email must be in the correct format',
 
   REVIEW_PRODUCTID_EMPTY_MSG: 'Review Product id must not be empty',
-  REVIEW_PRODUCTID_NUMBER_MSG: 'Review Product id must be a number',
+  REVIEW_PRODUCTID_STRING_MSG: 'Review Product id must be a string',
 
   REVIEW_PARAMS_PRODUCTID_EMPTY_MSG: 'Product id in query string must not be empty',
   REVIEW_PARAMS_PRODUCTID_NUMBER_MSG: 'Product id in query string must be a number',

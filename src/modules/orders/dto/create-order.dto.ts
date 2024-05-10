@@ -6,10 +6,9 @@ import { AddressDto } from 'modules/user/dto/create-user.dto';
 
 class OrderedProductDto {
   @ApiProperty()
-  @IsNumber({}, { message: validationMessage.ORDER_PRODUCT_ID_NUMBER_MSG })
-  @Min(1, { message: validationMessage.ORDER_PRODUCT_ID_MIN_MSG })
+  @IsString({ message: validationMessage.ORDER_PRODUCT_ID_STRING_MSG })
   @IsNotEmpty({ message: validationMessage.ORDER_PRODUCT_ID_EMPTY_MSG })
-  readonly productId: number;
+  readonly productId: string;
 
   @ApiProperty()
   @IsNumber({}, { message: validationMessage.ORDER_QUANTITY_NUMBER_MSG })
@@ -54,7 +53,7 @@ export class CreateOrderDto {
 
   @ApiProperty()
   @IsArray()
-  @ValidateNested({ each: true, message:validationMessage.ORDER_PAYMENT_METHOD_STRING_MSG})
+  @ValidateNested({ each: true, message: validationMessage.ORDER_PAYMENT_METHOD_STRING_MSG })
   @Type(() => OrderedProductDto)
   readonly products: OrderedProductDto[];
 
