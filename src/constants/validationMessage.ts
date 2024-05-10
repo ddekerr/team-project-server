@@ -74,8 +74,7 @@ export default {
   ORDER_TOTAL_PRICE_MIN_MSG: 'Order`s total must be at least $constraint1',
   ORDER_TOTAL_PRICE_EMPTY_MSG: 'Order`s total must not be empty',
 
-  ORDER_PRODUCT_ID_NUMBER_MSG: 'Product Id must be a number',
-  ORDER_PRODUCT_ID_MIN_MSG: 'Product Id must be at least $constraint1',
+  ORDER_PRODUCT_ID_STRING_MSG: 'Product Id must be a string',
   ORDER_PRODUCT_ID_EMPTY_MSG: 'Product Id must not be empty',
 
   ORDER_QUANTITY_NUMBER_MSG: 'Product quantity must be a number',
@@ -93,4 +92,30 @@ export default {
 
   ORDER_RECEPIENT_PHONE_MSG: 'Recepint phone must be in the correct format',
   ORDER_RECEPIENT_PHONE_EMPTY_MSG: 'Recepint e-mail must not be empty',
+
+  // review fields validation
+  REVIEW_RATING_EMPTY_MSG: 'Review advantages must not be empty',
+  REVIEW_RATING_NUMBER_MSG: 'Review advantages must be a string',
+  REVIEW_RATING_IN_RANGE_MSG: 'Review rating must be only such values: $constraint1',
+
+  REVIEW_ADVANTAGES_EMPTY_MSG: 'Review advantages must not be empty',
+  REVIEW_ADVANTAGES_STRING_MSG: 'Review advantages must be a string',
+
+  REVIEW_DISADVANTAGES_EMPTY_MSG: 'Review disadvantages must not be empty',
+  REVIEW_DISADVANTAGES_STRING_MSG: 'Review disadvantages must be a string',
+
+  REVIEW_COMMENT_EMPTY_MSG: 'Review comment must not be empty',
+  REVIEW_COMMENT_STRING_MSG: 'Review comment must be a string',
+
+  REVIEW_USER_EMAIL_EMPTY_MSG: 'Review User email must not be empty',
+  REVIEW_USER_EMAIL_MSG: 'Review User email must be in the correct format',
+
+  REVIEW_PRODUCTID_EMPTY_MSG: 'Review Product id must not be empty',
+  REVIEW_PRODUCTID_STRING_MSG: 'Review Product id must be a string',
+
+  REVIEW_PARAMS_PRODUCTID_EMPTY_MSG: 'Product id in query string must not be empty',
+  REVIEW_PARAMS_PRODUCTID_NUMBER_MSG: 'Product id in query string must be a number',
+
+  REVIEW_PARAMS_USERID_EMPTY_MSG: 'User id in query string must not be empty',
+  REVIEW_PARAMS_USERID_STRING_MSG: 'User id in query string must be a string',
 };

@@ -5,7 +5,7 @@ export type CategoryDocument = Category & Document;
 
 @Schema({ timestamps: true, versionKey: false })
 export class Category {
-  @Prop({ minlength: 3, maxlength: 64, type: String })
+  @Prop({ required: true, type: String, minlength: 3, maxlength: 64 })
   title: string;
 
   @Prop({ unique: true, required: true, type: String })
@@ -17,7 +17,7 @@ export class Category {
   @Prop({ required: false, type: String, default: null })
   parent?: string;
 
-  @Prop({ default: [], required: false, type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }] })
+  @Prop({ required: false, type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }], default: [] })
   children?: Category[];
 }
 

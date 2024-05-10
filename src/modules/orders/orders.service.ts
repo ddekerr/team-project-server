@@ -23,7 +23,7 @@ export class OrdersService {
     const orderCode = await this.generateUniqueOrderCode();
 
     // filtered products in ProductDocument format
-    const filteredProducts = (await this.productsService.getList({ id: dto.products.map((p) => p.productId) })).map(
+    const filteredProducts = (await this.productsService.getList({ _id: dto.products.map((p) => p.productId) })).map(
       ({ title, price, poster, id }) => ({ title, price, poster, id }),
     );
 

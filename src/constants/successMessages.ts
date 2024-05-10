@@ -19,4 +19,9 @@ export default {
   CATEGORY_CREATE_MSG: 'Category has been successfully created',
   CATEGORY_UPDATE_MSG: 'Category has been successfully updated',
   CATEGORY_DELETE_MSG: 'Category has been successfully deleted',
+
+  // reviews success messages
+  REVIEW_CREATE_MSG: 'Review has been successfully created',
+  REVIEW_UPDATE_MSG: 'Review has been successfully updated',
+  REVIEW_DELETE_MSG: 'Review has been successfully deleted',
 };

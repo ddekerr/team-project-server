@@ -1,12 +1,12 @@
 export type Filter = {
   category?: string;
-  id?: number[];
+  _id?: string[];
 };
 
 export type Params = {
   sort?: string;
   category?: string;
-  id?: string;
+  _id?: string;
 };
 
 export type Rating = {
