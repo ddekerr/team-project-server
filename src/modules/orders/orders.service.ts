@@ -15,7 +15,7 @@ export class OrdersService {
     private ordersRepository: OrdersRepository,
     private usersService: UsersService,
     private productsService: ProductsService,
-  ) { }
+  ) {}
 
   // #################### CREATE NEW ORDER ####################
   async create(dto: CreateOrderDto) {
@@ -33,7 +33,9 @@ export class OrdersService {
       return { ...product, quantity };
     });
 
-    const order = await this.ordersRepository.create({ ...dto, orderCode, products });
+    const totalPrice = products.reduce((totalPrice, product) => totalPrice + product.price * product.quantity, 0);
+
+    const order = await this.ordersRepository.create({ ...dto, orderCode, products, totalPrice });
     return order;
   }
 
@@ -74,6 +76,4 @@ export class OrdersService {
 
     return orderCode.toString();
   }
-
-
 }

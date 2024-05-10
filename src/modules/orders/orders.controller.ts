@@ -19,7 +19,7 @@ import { UpdateOrderDto } from './dto/update-order.dto';
 @ApiTags('Orders')
 @Controller('api/orders')
 export class OrdersController {
-  constructor(private ordersService: OrdersService) { }
+  constructor(private ordersService: OrdersService) {}
 
   // #################### CREATE NEW ORDER ####################
   @Post()
@@ -29,6 +29,7 @@ export class OrdersController {
   @ApiSwaggerResponse(Actions.CREATE, EntityType.ORDERS, Order)
   @ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR })
   async create(@Body() dto: CreateOrderDto): Promise<ApiResponse<OrderDocument>> {
+    console.log(dto);
     const order = await this.ordersService.create(dto);
     return new ApiResponse(Actions.CREATE, EntityType.ORDERS, order);
   }
@@ -75,6 +76,7 @@ export class OrdersController {
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_ORDER_MSG })
   @ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR })
   async update(@Param('orderCode', ParseIntPipe) orderCode: number, @Body() dto: UpdateOrderDto) {
+    console.log(dto);
     const order = await this.ordersService.update(orderCode, dto);
     return new ApiResponse(Actions.UPDATE, EntityType.ORDERS, order);
   }

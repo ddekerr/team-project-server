@@ -69,6 +69,10 @@ export class Order {
   @ApiProperty({ description: 'The address where the order will be delivered' })
   @Prop({ _id: false, type: { city: String, street: String, house: String, apartment: Number } })
   deliveryAddress: Address;
+
+  @ApiProperty({ description: 'Delivery method' })
+  @Prop({ type: String })
+  readonly deliveryMethod:string
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
