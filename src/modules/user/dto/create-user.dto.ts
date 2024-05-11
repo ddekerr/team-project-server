@@ -43,16 +43,6 @@ export class AddressDto {
   @IsNotEmpty({ message: validationMessage.USER_APARTMENT_EMPTY_MSG })
   @IsOptional()
   readonly apartment: number;
-
-  @ApiProperty({ required: false })
-  @IsString({ message: validationMessage.USER_POSTALOPERATOR_EMPTY_MSG })
-  @IsOptional()
-  readonly postalOperator: String;
-
-  @ApiProperty({ required: false })
-  @IsString({ message: validationMessage.USER_POSTALADDRESS_EMPTY_MSG })
-  @IsOptional()
-  readonly postalAddress: String;
 }
 
 export class CreateUserDto {
