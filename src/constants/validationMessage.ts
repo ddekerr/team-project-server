@@ -28,6 +28,10 @@ export default {
   USER_HOUSE_LENGTH_MSG: 'House must be between $constraint1-$constraint2 characters',
   USER_HOUSE_EMPTY_MSG: 'House must be not empty',
 
+  USER_POSTALOPERATOR_EMPTY_MSG: 'Postal operator must be a string',
+
+  USER_POSTALADDRESS_EMPTY_MSG: 'Postal address must be a string',
+
   USER_APARTMENT_NUMBER_MSG: 'Apartment must be a number',
   USER_APARTMENT_MIN_MSG: 'User apartment must be at least $constraint1',
   USER_APARTMENT_MAX_MSG: 'User apartment cannot be bigger then $constraint1',

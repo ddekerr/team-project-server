@@ -19,6 +19,7 @@ export default {
   NOT_FOUND_PRODUCT_MSG: 'Product not found, invalid id ',
   NOT_FOUND_CATEGORY_MSG: 'Category not found, invalid slug',
   NOT_FOUND_USER_MSG: 'User not found',
+  NOT_FOUND_ORDER_MSG: 'Order not found, invalid order code',
 
   // file problem messages
   FILE_ERROR_MSG: 'Something went wrong working with file',
