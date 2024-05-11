@@ -49,7 +49,7 @@ export class ReviewsController {
   @Delete(':id')
   @HttpCode(200)
   @ApiOperation({ summary: 'Delete review by ID' })
-  @ApiParam({ name: '_id', type: String })
+  @ApiParam({ name: 'id', type: String })
   @ApiSwaggerResponse(Actions.CREATE, EntityType.PRODUCT, String)
   async delete(@Param('id') id: string): Promise<ApiResponse<string>> {
     const message = await this.reviwsService.delete(id);

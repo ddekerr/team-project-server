@@ -75,25 +75,26 @@ export class ProductsController {
   }
 
   // #################### DELETE PRODUCT BY ID ####################
-  @Delete(':_id')
+  @Delete(':id')
   @HttpCode(200)
-  @ApiParam({ name: '_id', type: Number })
   @ApiOperation({ summary: 'Delete product by ID' })
+  @ApiParam({ name: 'id', type: String })
   @ApiSwaggerResponse(Actions.DELETE, EntityType.PRODUCT, Product)
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_PRODUCT_MSG })
-  async delete(@Param('_id') _id: string): Promise<ApiResponse<ProductDocument>> {
-    const product = await this.productsService.delete(_id);
+  async delete(@Param('id') id: string): Promise<ApiResponse<ProductDocument>> {
+    const product = await this.productsService.delete(id);
     return new ApiResponse(Actions.DELETE, EntityType.PRODUCT, product);
   }
 
   // #################### GET ONE PRODUCT BY ID ####################
-  @Get(':_id')
+  @Get(':id')
   @HttpCode(200)
   @ApiOperation({ summary: 'Get one product by ID' })
+  @ApiParam({ name: 'id', type: String })
   @ApiSwaggerResponse(Actions.GET, EntityType.PRODUCT, Product)
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_PRODUCT_MSG })
-  async getOne(@Param('_id') _id: string) {
-    const product = await this.productsService.getOneById(_id);
+  async getOne(@Param() { id }: { id: string }) {
+    const product = await this.productsService.getOneById(id);
     return new ApiResponse(Actions.GET, EntityType.PRODUCT, product);
   }
 
