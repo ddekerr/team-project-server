@@ -67,7 +67,17 @@ export class Order {
   recepient: Recepient;
 
   @ApiProperty({ description: 'The address where the order will be delivered' })
-  @Prop({ _id: false, type: { city: String, street: String, house: String, apartment: Number } })
+  @Prop({
+    _id: false,
+    type: {
+      city: String,
+      street: String,
+      house: String,
+      apartment: Number,
+      postalOperator: String,
+      postAddress: String,
+    },
+  })
   deliveryAddress: Address;
 }
 

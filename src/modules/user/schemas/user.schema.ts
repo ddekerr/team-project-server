@@ -38,7 +38,14 @@ export class User {
   password: string;
 
   @ApiProperty({ required: false })
-  @Prop({ type: { city: String, street: String, house: String, apartment: Number } })
+  @Prop({
+    type: {
+      city: String,
+      street: String,
+      house: String,
+      apartment: Number,
+    },
+  })
   addresses: Address;
 }
 

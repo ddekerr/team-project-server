@@ -53,7 +53,7 @@ export class CreateOrderDto {
 
   @ApiProperty()
   @IsArray()
-  @ValidateNested({ each: true, message: validationMessage.ORDER_PAYMENT_METHOD_STRING_MSG })
+  @ValidateNested()
   @Type(() => OrderedProductDto)
   readonly products: OrderedProductDto[];
 
