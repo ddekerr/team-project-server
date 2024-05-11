@@ -9,8 +9,6 @@ export type Address = {
   street: string;
   house: string;
   apartment: number;
-  postalOperator: string;
-  postalAddress: string;
 };
 
 @Schema({ timestamps: true, versionKey: false })
@@ -46,8 +44,6 @@ export class User {
       street: String,
       house: String,
       apartment: Number,
-      postalOperator: String,
-      postalAddress: String,
     },
   })
   addresses: Address;
