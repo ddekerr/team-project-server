@@ -42,29 +42,12 @@ export class ProductsService {
 
   // #################### GET ONE PRODUCT BY ID ####################
   async getOneById(id: Types.ObjectId): Promise<ProductDocument> {
-    const product = await this.productsRepository.getOne({ id });
-    if (!product) {
-      throw new NotFoundException(exceptionMessages.NOT_FOUND_PRODUCT_MSG);
-    }
-    return product;
-  }
-
-  async getOneByIdd(id: Types.ObjectId): Promise<ProductDocument> {
-    // let _id: Types.ObjectId
-
-    // try {
-    //   _id = new Types.ObjectId(id);
-    // } catch (error) {
-    //   throw new NotFoundException(exceptionMessages.NOT_FOUND_PRODUCT_MSG);
-    // }
-
     const product = await this.productsRepository.getById(id);
     if (!product) {
       throw new NotFoundException(exceptionMessages.NOT_FOUND_PRODUCT_MSG);
     }
     return product;
   }
-
   // #################### GET PRODUCT LIST ####################
   async getList(filter?: Filter): Promise<ProductDocument[]> {
     return await this.productsRepository.getList(filter);

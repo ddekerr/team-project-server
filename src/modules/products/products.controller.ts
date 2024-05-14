@@ -98,7 +98,7 @@ export class ProductsController {
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_PRODUCT_MSG })
   @UsePipes(new MongooseIdValidationPipe())
   async getOne(@Param() { id }: { id: Types.ObjectId }) {
-    const product = await this.productsService.getOneByIdd(id);
+    const product = await this.productsService.getOneById(id);
     return new ApiResponse(Actions.GET, EntityType.PRODUCT, product);
   }
 
