@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { FilterQuery, Model, UpdateQuery } from 'mongoose';
+import { FilterQuery, Model, Types, UpdateQuery } from 'mongoose';
 
 import { Product, ProductDocument } from './schemas/product.schema';
 import { DEFAULT_LIMIT } from './constants';
@@ -35,6 +35,10 @@ export class ProductsRepository {
   // ########## SELECT ONE PRODUCT FROM PRODUCT TABLE BY ID ##########
   async getOne(entityFilterQuery: FilterQuery<ProductDocument>): Promise<ProductDocument> {
     return await this.productModel.findOne(entityFilterQuery).select(this.selectedFields);
+  }
+
+  async getById(_id:Types.ObjectId){
+    return await this.productModel.findById(_id)
   }
 
   // ########## SELECT PRODUCTS LIST FROM PRODUCT TABLE WITH FILTER AND LIMIT ##########

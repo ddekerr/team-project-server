@@ -1,6 +1,7 @@
 import { IsNotEmpty, IsString, IsNumber, IsOptional, IsIn, IsEmail } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import validationMessage from 'constants/validationMessage';
+import { Types } from 'mongoose';
 
 export class CreateReviewDto {
   @ApiProperty({ type: Number, nullable: false, enum: [1, 2, 3, 4, 5] })
@@ -33,5 +34,5 @@ export class CreateReviewDto {
   @ApiProperty({ type: Number, nullable: false })
   @IsNotEmpty({ message: validationMessage.REVIEW_PRODUCTID_EMPTY_MSG })
   @IsString({ message: validationMessage.REVIEW_PRODUCTID_STRING_MSG })
-  readonly productId: string;
+  readonly productId: Types.ObjectId;
 }
