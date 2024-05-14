@@ -10,6 +10,8 @@ export class GlobalValidationPipe implements PipeTransform<any> {
     const obj = plainToClass(metadata.metatype, value);
     const err = await validate(obj);
 
+    console.log('dsa');
+
     if (err.length) {
       const errors = this.errorResponse(err);
 
