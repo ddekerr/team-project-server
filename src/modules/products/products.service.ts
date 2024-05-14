@@ -11,6 +11,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 
 import exceptionMessages from 'constants/exceptionMessages';
 import { Filter, Params, Rating } from './types';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class ProductsService {
@@ -40,12 +41,19 @@ export class ProductsService {
   }
 
   // #################### GET ONE PRODUCT BY ID ####################
-  async getOneById(_id: string): Promise<ProductDocument> {
+  async getOneById(id: string): Promise<ProductDocument> {
+    let _id: Types.ObjectId
+    
+    try {
+      _id = new Types.ObjectId(id);
+    } catch (error) {
+      throw new NotFoundException(exceptionMessages.NOT_FOUND_PRODUCT_MSG);
+    }
+
     const product = await this.productsRepository.getOne({ _id });
     if (!product) {
       throw new NotFoundException(exceptionMessages.NOT_FOUND_PRODUCT_MSG);
     }
-
     return product;
   }
 
