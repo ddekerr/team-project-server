@@ -18,8 +18,8 @@ export class ATStrategy extends PassportStrategy(Strategy, 'access-strategy') {
     const timeLeft = payload['exp'] - Date.now() / 1000;
 
     // if that time less then 30 seconds notice that a refresh is needed
-    if (timeLeft < 30) {
-      payload['payload']['refresh'] = true;
+    if (timeLeft < 0) {
+      payload['payload']['needRefresh'] = true;
     }
 
     return payload;

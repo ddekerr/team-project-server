@@ -7,7 +7,7 @@ import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class ProductsRepository {
-  private selectedFields = ['id', 'title', 'price', 'inStock', 'poster', 'rating'];
+  private selectedFields = ['id', 'title', 'price', 'inStock', 'poster', 'rating', 'categories'];
   constructor(@InjectModel(Product.name) private productModel: Model<ProductDocument>) {}
 
   // ########## INSERT NEW PRODUCT INTO PRODUCT TABLE ##########

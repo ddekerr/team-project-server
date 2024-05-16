@@ -21,7 +21,7 @@ export class Review {
   comment?: string;
 
   @ApiProperty({ required: true, type: User })
-  @Prop({ required: true, type: User })
+  @Prop({ required: true, type: User, ref: 'user' })
   user: User;
 
   @ApiProperty({ required: true })

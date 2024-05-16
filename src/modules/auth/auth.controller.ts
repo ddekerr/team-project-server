@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Get, Post, Req, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, HttpCode, Get, Post, UseGuards, UseInterceptors } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -9,7 +9,6 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { Request } from 'express';
 
 import { AuthService } from './auth.service';
 import { User } from './../user/schemas/user.schema';
@@ -26,11 +25,12 @@ import { ApiError } from 'helpers/ApiError';
 import { ApiValidationError } from 'helpers/ApiValidationError';
 import { SetCookieInterceptor } from './interceptors/setCookie.interceptor';
 import { ClearCookieInterceptor } from './interceptors/clearCookie.interceptor';
+import { Payload } from './decorators/Payload.decorator';
+import { CheckRefresh } from './interceptors/checkRefresh.interceptor';
 
 @ApiTags('Auth')
 @Controller('api/auth')
 export class AuthController {
-  private REFRESH_TOKEN_KEY = 'refreshToken';
   constructor(private readonly authService: AuthService) {}
 
   // #################### REGISTER NEW USER ####################
@@ -70,15 +70,12 @@ export class AuthController {
   @ApiSwaggerResponse(Actions.LOGOUT, EntityType.USER, String)
   @ApiUnauthorizedResponse({ description: exceptionMessages.UNAUTHORIZED_TOKEN_VALID_MSG })
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_USER_MSG })
+  @UseInterceptors(CheckRefresh)
   @UseInterceptors(ClearCookieInterceptor)
-  async logout(@Req() request: Request) {
-    // ITS LOGIC HAVE TO BE IN DECORATORS OR OTHER FUNCTION (NEED REFACTOR)
-    // Access-stratege push Payload ro request and here we get email from there
-    const email: string = request['user']['payload']['email'];
-
+  async logout(@Payload('email') email: string): Promise<ApiResponse<string>> {
     // check the user is logged in
-    const message = await this.authService.logout(email);
-    return new ApiResponse(Actions.LOGOUT, EntityType.USER, message);
+    await this.authService.logout(email);
+    return new ApiResponse(Actions.LOGOUT, EntityType.USER);
   }
 
   // #################### GET ME ####################
@@ -89,11 +86,10 @@ export class AuthController {
   @ApiSwaggerResponse(Actions.GET, EntityType.USER, User)
   @ApiUnauthorizedResponse({ description: exceptionMessages.UNAUTHORIZED_TOKEN_VALID_MSG })
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_USER_MSG })
+  @UseInterceptors(CheckRefresh)
   @UseInterceptors(SetCookieInterceptor)
-  async me(@Req() request: Request) {
-    // Access-strategy push Payload ro request and here we get email from there
-    const email: string = request['user']['payload']['email'];
-
+  async me(@Payload('email') email: string): Promise<ApiResponse<UserResponseWithRefresh>> {
+    // check the user is logged in
     const userResponse = await this.authService.me(email);
     return new ApiResponse(Actions.GET, EntityType.USER, userResponse);
   }

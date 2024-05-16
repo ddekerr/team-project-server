@@ -6,7 +6,15 @@ import { CreateReviewDto } from './dto/create-review.dto';
 import { Actions, EntityType } from 'types';
 import { UpdateRewievDto } from './dto/update-review.dto';
 import { QueryParamsDto } from './dto/query-params.dto';
-import { ApiBadRequestResponse, ApiBody, ApiNotFoundResponse, ApiOperation, ApiParam, ApiQuery } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiNotFoundResponse,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ApiSwaggerResponse } from 'helpers/ApiSwaggerResponse';
 import { ApiError } from 'helpers/ApiError';
 import exceptionMessages from 'constants/exceptionMessages';
@@ -14,6 +22,7 @@ import { ApiValidationError } from 'helpers/ApiValidationError';
 import validationMessage from 'constants/validationMessage';
 import { ApiSwaggerArrayResponse } from 'helpers/ApiSwaggerArrayResponse';
 
+@ApiTags('Reviews')
 @Controller('api/reviews')
 export class ReviewsController {
   constructor(private reviwsService: ReviewsService) {}
@@ -36,7 +45,7 @@ export class ReviewsController {
   @Patch(':id')
   @HttpCode(200)
   @ApiOperation({ summary: 'Update review by ID' })
-  @ApiParam({ name: '_id', type: String })
+  @ApiParam({ name: 'id', type: String })
   @ApiBody({ type: UpdateRewievDto })
   @ApiSwaggerResponse(Actions.UPDATE, EntityType.REVIEW, Review)
   @ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR })
