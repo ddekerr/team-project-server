@@ -14,9 +14,10 @@ import { GoogleStrategy } from './strategies/google.strategy';
 import { GoogleGuard } from './guards/google.guard';
 import { GoogleAuthService } from './google-auth.service';
 import { TokensService } from './tokens.service';
+import { RTStrategy } from './strategies/rt.strategy';
 
 @Module({
-  providers: [AuthService, GoogleAuthService, TokensService, ATStrategy, GoogleStrategy, GoogleGuard],
+  providers: [AuthService, GoogleAuthService, TokensService, ATStrategy, RTStrategy, GoogleStrategy, GoogleGuard],
   controllers: [AuthController, GoogleAuthController],
   imports: [UsersModule, JwtModule.register({}), HttpModule],
 })

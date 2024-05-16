@@ -26,7 +26,6 @@ import { ApiValidationError } from 'helpers/ApiValidationError';
 import { SetCookieInterceptor } from './interceptors/setCookie.interceptor';
 import { ClearCookieInterceptor } from './interceptors/clearCookie.interceptor';
 import { Payload } from './decorators/Payload.decorator';
-import { CheckRefresh } from './interceptors/checkRefresh.interceptor';
 
 @ApiTags('Auth')
 @Controller('api/auth')
@@ -70,7 +69,6 @@ export class AuthController {
   @ApiSwaggerResponse(Actions.LOGOUT, EntityType.USER, String)
   @ApiUnauthorizedResponse({ description: exceptionMessages.UNAUTHORIZED_TOKEN_VALID_MSG })
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_USER_MSG })
-  @UseInterceptors(CheckRefresh)
   @UseInterceptors(ClearCookieInterceptor)
   async logout(@Payload('email') email: string): Promise<ApiResponse<string>> {
     // check the user is logged in
@@ -81,12 +79,11 @@ export class AuthController {
   // #################### GET ME ####################
   @Get('me')
   @HttpCode(200)
-  @UseGuards(AuthGuard('access-strategy'))
+  @UseGuards(AuthGuard('access-strategy'), AuthGuard('refresh-strategy'))
   @ApiOperation({ summary: 'Get the user information, with the access token and set cookie with refresh token' })
   @ApiSwaggerResponse(Actions.GET, EntityType.USER, User)
   @ApiUnauthorizedResponse({ description: exceptionMessages.UNAUTHORIZED_TOKEN_VALID_MSG })
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_USER_MSG })
-  @UseInterceptors(CheckRefresh)
   @UseInterceptors(SetCookieInterceptor)
   async me(@Payload('email') email: string): Promise<ApiResponse<UserResponseWithRefresh>> {
     // check the user is logged in
