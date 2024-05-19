@@ -14,7 +14,7 @@ import { CreateReviewDto } from '../dto/create-review.dto';
 import { UpdateRewievDto } from '../dto/update-review.dto';
 import { Review } from '../schemas/review.schema';
 
-export function CreateReview() {
+export function ApiCreateReview() {
   return applyDecorators(
     HttpCode(201),
     ApiOperation({ summary: 'Create new review' }),
@@ -26,7 +26,7 @@ export function CreateReview() {
   );
 }
 
-export function UpdateRewiev() {
+export function ApiUpdateRewiev() {
   return applyDecorators(
     HttpCode(200),
     ApiOperation({ summary: 'Update review by ID' }),
@@ -38,7 +38,7 @@ export function UpdateRewiev() {
   );
 }
 
-export function DeleteRewiev() {
+export function ApiDeleteRewiev() {
   return applyDecorators(
     HttpCode(200),
     ApiOperation({ summary: 'Delete review by ID' }),
@@ -49,7 +49,7 @@ export function DeleteRewiev() {
   );
 }
 
-export function GetReviewsList() {
+export function ApiGetReviewsList() {
   return applyDecorators(
     HttpCode(200),
     ApiOperation({ summary: 'Get Review list' }),

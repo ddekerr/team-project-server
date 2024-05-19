@@ -15,7 +15,7 @@ import { ApiValidationError } from 'helpers/ApiValidationError';
 import { ApiError } from 'helpers/ApiError';
 import exceptionMessages from 'constants/exceptionMessages';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { CreateOrder, DeleteOrder, GetListOrder, GetOneOrder, UpdateOrder } from './helpers/ApiOrder.documentation';
+import { ApiCreateOrder, ApiDeleteOrder, ApiGetListOrder, ApiGetOneOrder, ApiUpdateOrder } from './helpers/ApiOrder.documentation';
 
 @ApiTags('Orders')
 @Controller('api/orders')
@@ -24,7 +24,7 @@ export class OrdersController {
 
   // #################### CREATE NEW ORDER ####################
   @Post()
-  @CreateOrder()
+  @ApiCreateOrder()
   async create(@Body() dto: CreateOrderDto): Promise<ApiResponse<OrderDocument>> {
     const order = await this.ordersService.create(dto);
     return new ApiResponse(Actions.CREATE, EntityType.ORDERS, order);
@@ -32,7 +32,7 @@ export class OrdersController {
 
   // #################### GET ORDER LIST ####################
   @Get()
-  @GetListOrder()
+  @ApiGetListOrder()
   async getList(): Promise<ApiResponse<OrderDocument[]>> {
     const orders = await this.ordersService.getList();
     return new ApiResponse(Actions.GET_LIST, EntityType.ORDERS, orders);
@@ -40,7 +40,7 @@ export class OrdersController {
 
   // #################### GET ONE ORDER BY ORDERCODE ####################
   @Get(':orderCode')
-  @GetOneOrder()
+  @ApiGetOneOrder()
   async getOne(@Param('orderCode', ParseIntPipe) orderCode: number): Promise<ApiResponse<OrderDocument>> {
     const order = await this.ordersService.getOneByOrderCode(orderCode);
     return new ApiResponse(Actions.GET, EntityType.ORDERS, order);
@@ -48,7 +48,7 @@ export class OrdersController {
 
   // #################### DELETE ORDER BY ORDERCODE ####################
   @Delete(':orderCode')
-  @DeleteOrder()
+  @ApiDeleteOrder()
   async delete(@Param('orderCode', ParseIntPipe) orderCode: number): Promise<ApiResponse<OrderDocument>> {
     const order = await this.ordersService.delete(orderCode);
     return new ApiResponse(Actions.DELETE, EntityType.ORDERS, order);
@@ -56,7 +56,7 @@ export class OrdersController {
 
   // #################### UPDATE ORDER BY ORDERCODE ####################
   @Patch(':orderCode')
-  @UpdateOrder()
+  @ApiUpdateOrder()
   async update(@Param('orderCode', ParseIntPipe) orderCode: number, @Body() dto: UpdateOrderDto) {
     const order = await this.ordersService.update(orderCode, dto);
     return new ApiResponse(Actions.UPDATE, EntityType.ORDERS, order);

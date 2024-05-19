@@ -10,7 +10,7 @@ import { Actions, EntityType } from 'types';
 import { ResponseCategory } from './types';
 
 import { ApiResponse } from 'helpers/ApiResponse';
-import { CreateCategory, DeleteCategory, GetListCategory, UpdateCategory } from './helpers/ApiCategories.documentation';
+import { ApiCreateCategory, ApiDeleteCategory, ApiGetListCategory, ApiUpdateCategory } from './helpers/ApiCategories.documentation';
 
 @ApiTags('Categories')
 @Controller('api/categories')
@@ -19,7 +19,7 @@ export class CategoriesController {
 
   // #################### CREATE NEW CATEGORY ####################
   @Post()
-  @CreateCategory()
+  @ApiCreateCategory()
   async create(@Body() dto: CreateCategoryDto): Promise<ApiResponse<ResponseCategory>> {
     const category = await this.categoriesService.create(dto);
     return new ApiResponse(Actions.CREATE, EntityType.CATEGORY, category);
@@ -27,7 +27,7 @@ export class CategoriesController {
 
   // #################### UPDATE CATEGORY BY SLUG ####################
   @Patch(':slug')
-  @UpdateCategory()
+  @ApiUpdateCategory()
   async update(
     @Param() { slug }: { slug: string },
     @Body() dto: UpdateCategoryDto,
@@ -38,7 +38,7 @@ export class CategoriesController {
 
   // #################### DELETE CATEGORY BY SLUG ####################
   @Delete(':slug')
-  @DeleteCategory()
+  @ApiDeleteCategory()
   async delete(@Param() { slug }: { slug: string }): Promise<ApiResponse<string>> {
     const successMessage = await this.categoriesService.delete(slug);
     return new ApiResponse(Actions.DELETE, EntityType.CATEGORY, successMessage);
@@ -57,7 +57,7 @@ export class CategoriesController {
 
   // #################### GET CATEGORIES LIST ####################
   @Get()
-  @GetListCategory()
+  @ApiGetListCategory()
   async getList(): Promise<ApiResponse<CategoryDocument[]>> {
     const categories = await this.categoriesService.getList();
     return new ApiResponse(Actions.GET, EntityType.CATEGORY, categories);

@@ -11,7 +11,7 @@ import { ApiError } from 'helpers/ApiError';
 import exceptionMessages from 'constants/exceptionMessages';
 import { UpdateOrderDto } from '../dto/update-order.dto';
 
-export function CreateOrder() {
+export function ApiCreateOrder() {
   return applyDecorators(
     HttpCode(201),
     ApiOperation({ summary: 'Create new order' }),
@@ -21,7 +21,7 @@ export function CreateOrder() {
   );
 }
 
-export function GetListOrder() {
+export function ApiGetListOrder() {
   return applyDecorators(
     HttpCode(200),
     ApiOperation({ summary: 'Get orders list' }),
@@ -30,7 +30,7 @@ export function GetListOrder() {
   );
 }
 
-export function GetOneOrder() {
+export function ApiGetOneOrder() {
   return applyDecorators(
     HttpCode(200),
     ApiOperation({ summary: 'Get one orders by OrderCode' }),
@@ -41,7 +41,7 @@ export function GetOneOrder() {
   );
 }
 
-export function DeleteOrder() {
+export function ApiDeleteOrder() {
   return applyDecorators(
     HttpCode(200),
     ApiOperation({ summary: 'Delete order by OrderCode' }),
@@ -52,7 +52,7 @@ export function DeleteOrder() {
   );
 }
 
-export function UpdateOrder() {
+export function ApiUpdateOrder() {
   return applyDecorators(
     HttpCode(200),
     ApiOperation({ summary: 'Update order by orderCode' }),

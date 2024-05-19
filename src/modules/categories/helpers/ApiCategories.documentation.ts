@@ -21,7 +21,7 @@ import { ApiSwaggerResponse } from 'helpers/ApiSwaggerResponse';
 import { ApiValidationError } from 'helpers/ApiValidationError';
 import { ApiError } from 'helpers/ApiError';
 
-export function CreateCategory() {
+export function ApiCreateCategory() {
   return applyDecorators(
     HttpCode(201),
     ApiOperation({
@@ -40,7 +40,7 @@ export function CreateCategory() {
   );
 }
 
-export function UpdateCategory() {
+export function ApiUpdateCategory() {
   return applyDecorators(
     ApiOperation({ summary: 'Update one category by slug' }),
     ApiParam({ name: 'slug', type: String }),
@@ -51,7 +51,7 @@ export function UpdateCategory() {
   );
 }
 
-export function DeleteCategory() {
+export function ApiDeleteCategory() {
   return applyDecorators(
     HttpCode(200),
     ApiOperation({ summary: 'Delete one category by slug' }),
@@ -62,7 +62,7 @@ export function DeleteCategory() {
   );
 }
 
-export function GetListCategory() {
+export function ApiGetListCategory() {
   return applyDecorators(
     HttpCode(200),
     ApiOperation({
