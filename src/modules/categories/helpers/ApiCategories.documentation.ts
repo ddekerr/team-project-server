@@ -1,5 +1,12 @@
-import { applyDecorators } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiBody, ApiNotFoundResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
+import { applyDecorators, HttpCode } from '@nestjs/common';
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiConflictResponse,
+  ApiNotFoundResponse,
+  ApiOperation,
+  ApiParam,
+} from '@nestjs/swagger';
 
 import { CreateCategoryDto } from '../dto/create-category.dto';
 import { UpdateCategoryDto } from '../dto/update-category.dto';
@@ -16,14 +23,19 @@ import { ApiError } from 'helpers/ApiError';
 
 export function CreateCategory() {
   return applyDecorators(
+    HttpCode(201),
     ApiOperation({
       summary: 'Create new category',
       description:
         'If there is a "parent" field in Request Body, then the created category is added to parent categoty in the "children" field',
     }),
     ApiBody({ type: CreateCategoryDto }),
-    ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_CATEGORY_MSG }),
     ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR }),
+    ApiConflictResponse({
+      status: 409,
+      description: exceptionMessages.CONFLICT_CATEGORY_MSG,
+      type: ApiError,
+    }),
     ApiSwaggerResponse(Actions.CREATE, EntityType.CATEGORY, Category),
   );
 }
@@ -41,6 +53,7 @@ export function UpdateCategory() {
 
 export function DeleteCategory() {
   return applyDecorators(
+    HttpCode(200),
     ApiOperation({ summary: 'Delete one category by slug' }),
     ApiParam({ name: 'slug', type: String }),
     ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_CATEGORY_MSG }),
@@ -51,6 +64,7 @@ export function DeleteCategory() {
 
 export function GetListCategory() {
   return applyDecorators(
+    HttpCode(200),
     ApiOperation({
       summary: 'Get list of all parent categories',
       description:
