@@ -17,6 +17,7 @@ export default {
 
   // not found messages
   NOT_FOUND_PRODUCT_MSG: 'Product not found, invalid id ',
+  NOT_FOUND_REVIEW_MSG: 'Review not found, invalid id ',
   NOT_FOUND_CATEGORY_MSG: 'Category not found, invalid slug',
   NOT_FOUND_USER_MSG: 'User not found',
   NOT_FOUND_ORDER_MSG: 'Order not found, invalid order code',
