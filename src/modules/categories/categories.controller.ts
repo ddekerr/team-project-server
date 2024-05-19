@@ -10,7 +10,7 @@ import { Actions, EntityType } from 'types';
 import { ResponseCategory } from './types';
 
 import { ApiResponse } from 'helpers/ApiResponse';
-import { CreateCategory, DeleteCategory, GetListCategory, UpdateCategory } from './helpers/SwaggerDocumentation';
+import { CreateCategory, DeleteCategory, GetListCategory, UpdateCategory } from './helpers/ApiCategories.documentation';
 
 @ApiTags('Categories')
 @Controller('api/categories')
