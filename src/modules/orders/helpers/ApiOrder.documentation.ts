@@ -1,15 +1,17 @@
 import { applyDecorators, HttpCode } from '@nestjs/common';
 import { ApiOperation, ApiBody, ApiBadRequestResponse, ApiNotFoundResponse, ApiParam } from '@nestjs/swagger';
-import validationMessage from 'constants/validationMessage';
+
 import { ApiSwaggerResponse } from 'helpers/ApiSwaggerResponse';
 import { ApiValidationError } from 'helpers/ApiValidationError';
-import { Actions, EntityType } from 'types';
-import { CreateOrderDto } from '../dto/create-order.dto';
-import { Order } from '../schemas/order.shema';
 import { ApiSwaggerArrayResponse } from 'helpers/ApiSwaggerArrayResponse';
 import { ApiError } from 'helpers/ApiError';
-import exceptionMessages from 'constants/exceptionMessages';
+
 import { UpdateOrderDto } from '../dto/update-order.dto';
+import { CreateOrderDto } from '../dto/create-order.dto';
+import { Actions, EntityType } from 'types';
+import { Order } from '../schemas/order.shema';
+import validationMessage from 'constants/validationMessage';
+import exceptionMessages from 'constants/exceptionMessages';
 
 export function ApiCreateOrder() {
   return applyDecorators(
@@ -17,6 +19,11 @@ export function ApiCreateOrder() {
     ApiOperation({ summary: 'Create new order' }),
     ApiBody({ type: CreateOrderDto }),
     ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR }),
+    ApiBadRequestResponse({ 
+      status: 404, 
+      description: exceptionMessages.NOT_FOUND_PRODUCT_MSG,
+      type: ApiValidationError,
+    }),    
     ApiSwaggerResponse(Actions.CREATE, EntityType.ORDERS, Order),
   );
 }
@@ -25,7 +32,6 @@ export function ApiGetListOrder() {
   return applyDecorators(
     HttpCode(200),
     ApiOperation({ summary: 'Get orders list' }),
-    ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_ORDER_MSG }),
     ApiSwaggerArrayResponse(Actions.GET_LIST, EntityType.ORDERS, Order),
   );
 }

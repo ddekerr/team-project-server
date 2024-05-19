@@ -53,7 +53,11 @@ export class OrdersService {
 
   // #################### DELETE ORDER BY ID ####################
   async delete(orderCode: number): Promise<OrderDocument> {
-    return await this.ordersRepository.delete({ orderCode });
+    const order = await this.ordersRepository.delete({ orderCode });
+    if (!order) {
+      throw new NotFoundException(exceptionMessages.NOT_FOUND_ORDER_MSG);
+    }
+    return order;
   }
 
   // #################### UPDATE PRODUCT BY ID ####################
@@ -67,7 +71,6 @@ export class OrdersService {
     if (!order) {
       throw new NotFoundException(exceptionMessages.NOT_FOUND_ORDER_MSG);
     }
-
     return order;
   }
 

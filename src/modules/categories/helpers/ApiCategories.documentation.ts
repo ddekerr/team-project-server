@@ -35,7 +35,7 @@ export function ApiCreateCategory() {
       status: 409,
       description: exceptionMessages.CONFLICT_CATEGORY_MSG,
       type: ApiError,
-    }),
+    }), //?
     ApiSwaggerResponse(Actions.CREATE, EntityType.CATEGORY, Category),
   );
 }
@@ -45,6 +45,11 @@ export function ApiUpdateCategory() {
     ApiOperation({ summary: 'Update one category by slug' }),
     ApiParam({ name: 'slug', type: String }),
     ApiBody({ type: UpdateCategoryDto }),
+    ApiConflictResponse({
+      status: 409,
+      description: exceptionMessages.CONFLICT_CATEGORY_MSG,
+      type: ApiError,
+    }),
     ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_CATEGORY_MSG }),
     ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR }),
     ApiSwaggerResponse(Actions.UPDATE, EntityType.CATEGORY, Category),
@@ -70,7 +75,6 @@ export function ApiGetListCategory() {
       description:
         'Get all category which have no parent (parent = null), but they have all children categories inside "children" field',
     }),
-    ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_CATEGORY_MSG }),
     ApiSwaggerArrayResponse(Actions.GET_LIST, EntityType.CATEGORY, Category),
   );
 }

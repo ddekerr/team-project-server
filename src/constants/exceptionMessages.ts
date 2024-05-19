@@ -1,7 +1,7 @@
 export default {
   // conflict messages
   CONFLICT_EMAIL_MSG: 'E-mail already in use',
-  CONFLICT_CATEGORY_MSG: 'Category already exist, please change the title',
+  CONFLICT_CATEGORY_MSG: 'The category already exists, please change the name. Or indicate an existing parent class',
 
   // unauthorize messages
   UNAUTHORIZED_PASSWORD_MSG: 'Password are not valid',
