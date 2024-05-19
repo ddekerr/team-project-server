@@ -8,6 +8,7 @@ import { UniqueOTP } from 'unique-string-generator';
 import { OrderDocument } from './schemas/order.shema';
 import exceptionMessages from 'constants/exceptionMessages';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class OrdersService {
@@ -24,12 +25,14 @@ export class OrdersService {
 
     // filtered products in ProductDocument format
     const filteredProducts = (await this.productsService.getList({ _id: dto.products.map((p) => p.productId) })).map(
-      ({ title, price, poster, id }) => ({ title, price, poster, id }),
+      ({ title, price, poster, _id }) => ({ title, price, poster, _id }),
     );
 
     // formated product to save in order table
-    const products: OrderedProduct[] = filteredProducts.map((product) => {
-      const quantity = dto.products.find(({ productId }) => productId === product.id).quantity;
+    console.log(filteredProducts)
+
+    const products = filteredProducts.map((product) => {
+      const quantity = dto.products.find(({ productId }) => {return product._id.equals(productId)}).quantity//new Types.ObjectId(productId) === product._id)//.quantity;
       return { ...product, quantity };
     });
 
