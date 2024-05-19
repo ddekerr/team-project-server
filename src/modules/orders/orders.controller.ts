@@ -1,19 +1,13 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiBody, ApiNotFoundResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { Order, OrderDocument } from './schemas/order.shema';
 
 import { Actions, EntityType } from 'types';
-import validationMessage from 'constants/validationMessage';
 
 import { ApiResponse } from 'helpers/ApiResponse';
-import { ApiSwaggerArrayResponse } from 'helpers/ApiSwaggerArrayResponse';
-import { ApiSwaggerResponse } from 'helpers/ApiSwaggerResponse';
-import { ApiValidationError } from 'helpers/ApiValidationError';
-import { ApiError } from 'helpers/ApiError';
-import exceptionMessages from 'constants/exceptionMessages';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { ApiCreateOrder, ApiDeleteOrder, ApiGetListOrder, ApiGetOneOrder, ApiUpdateOrder } from './helpers/ApiOrder.documentation';
 

@@ -23,18 +23,24 @@ export class OrdersService {
     // generated order code with 7 characters
     const orderCode = await this.generateUniqueOrderCode();
 
-    // filtered products in ProductDocument format
-    const filteredProducts = (await this.productsService.getList({ _id: dto.products.map((p) => p.productId) })).map(
-      ({ title, price, poster, _id }) => ({ title, price, poster, _id }),
-    );
+    const filteredProducts = [];
+    for (let i = 0; i < dto.products.length; i++) {
+      const _id = dto.products[i].productId;
+      const product = await this.productsService.getOneById(_id);
+      filteredProducts.push(product);
+    }
 
     // formated product to save in order table
-    console.log(filteredProducts)
-
     const products = filteredProducts.map((product) => {
-      const quantity = dto.products.find(({ productId }) => {return product._id.equals(productId)}).quantity//new Types.ObjectId(productId) === product._id)//.quantity;
+      const quantity = dto.products.find(({ productId }) => {
+        return product._id.equals(productId);
+      }).quantity;
       return { ...product, quantity };
     });
+
+    if (!products.length) {
+      throw new NotFoundException(exceptionMessages.NOT_FOUND_ORDER_MSG);
+    }
 
     const order = await this.ordersRepository.create({ ...dto, orderCode, products });
     return order;
