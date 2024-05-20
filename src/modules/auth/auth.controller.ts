@@ -1,31 +1,18 @@
-import { Body, Controller, HttpCode, Get, Post, UseGuards, UseInterceptors } from '@nestjs/common';
-import {
-  ApiBadRequestResponse,
-  ApiBody,
-  ApiConflictResponse,
-  ApiNotFoundResponse,
-  ApiOperation,
-  ApiTags,
-  ApiUnauthorizedResponse,
-} from '@nestjs/swagger';
+import { Body, Controller, Get, Post, UseGuards, UseInterceptors } from '@nestjs/common';
+import { ApiTags} from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
 import { AuthService } from './auth.service';
-import { User } from './../user/schemas/user.schema';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 
-import validationMessage from 'constants/validationMessage';
-import exceptionMessages from 'constants/exceptionMessages';
 import { Actions, EntityType } from 'types';
 import { UserResponseWithRefresh } from './types';
 
 import { ApiResponse } from 'helpers/ApiResponse';
-import { ApiSwaggerResponse } from 'helpers/ApiSwaggerResponse';
-import { ApiError } from 'helpers/ApiError';
-import { ApiValidationError } from 'helpers/ApiValidationError';
 import { SetCookieInterceptor } from './interceptors/setCookie.interceptor';
 import { ClearCookieInterceptor } from './interceptors/clearCookie.interceptor';
 import { Payload } from './decorators/Payload.decorator';
+import { ApiGetMe, ApiLoginUser, ApiLogoutUser, ApiRegisterUser } from './helpers/ApiAuth.documentation';
 
 @ApiTags('Auth')
 @Controller('api/auth')
@@ -34,12 +21,7 @@ export class AuthController {
 
   // #################### REGISTER NEW USER ####################
   @Post('register')
-  @HttpCode(201)
-  @ApiOperation({ summary: 'Register new user, send the access token and set cookie with refresh token' })
-  @ApiBody({ type: CreateUserDto })
-  @ApiSwaggerResponse(Actions.CREATE, EntityType.USER, User)
-  @ApiConflictResponse({ type: ApiError, description: exceptionMessages.CONFLICT_EMAIL_MSG })
-  @ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR })
+  @ApiRegisterUser()
   @UseInterceptors(SetCookieInterceptor)
   async register(@Body() createUserDto: CreateUserDto): Promise<ApiResponse<UserResponseWithRefresh>> {
     const userResponse = await this.authService.register(createUserDto);
@@ -48,13 +30,7 @@ export class AuthController {
 
   // #################### LOGIN USER ####################
   @Post('login')
-  @HttpCode(200)
-  @ApiOperation({ summary: 'Login user, send the access token and set cookie with refresh token' })
-  @ApiBody({ type: CreateUserDto })
-  @ApiSwaggerResponse(Actions.CREATE, EntityType.USER, User)
-  @ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR })
-  @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_USER_MSG })
-  @ApiUnauthorizedResponse({ type: ApiError, description: exceptionMessages.UNAUTHORIZED_PASSWORD_MSG })
+  @ApiLoginUser()
   @UseInterceptors(SetCookieInterceptor)
   async login(@Body() dto: CreateUserDto): Promise<ApiResponse<UserResponseWithRefresh>> {
     const userResponse = await this.authService.login(dto);
@@ -63,12 +39,8 @@ export class AuthController {
 
   // #################### LOGOUT USER ####################
   @Post('logout')
-  @HttpCode(200)
+  @ApiLogoutUser()
   @UseGuards(AuthGuard('access-strategy'))
-  @ApiOperation({ summary: 'Logout user, clear cookies' })
-  @ApiSwaggerResponse(Actions.LOGOUT, EntityType.USER, String)
-  @ApiUnauthorizedResponse({ description: exceptionMessages.UNAUTHORIZED_TOKEN_VALID_MSG })
-  @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_USER_MSG })
   @UseInterceptors(ClearCookieInterceptor)
   async logout(@Payload('email') email: string): Promise<ApiResponse<string>> {
     // check the user is logged in
@@ -78,12 +50,8 @@ export class AuthController {
 
   // #################### GET ME ####################
   @Get('me')
-  @HttpCode(200)
+  @ApiGetMe()
   @UseGuards(AuthGuard('access-strategy'), AuthGuard('refresh-strategy'))
-  @ApiOperation({ summary: 'Get the user information, with the access token and set cookie with refresh token' })
-  @ApiSwaggerResponse(Actions.GET, EntityType.USER, User)
-  @ApiUnauthorizedResponse({ description: exceptionMessages.UNAUTHORIZED_TOKEN_VALID_MSG })
-  @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_USER_MSG })
   @UseInterceptors(SetCookieInterceptor)
   async me(@Payload('email') email: string): Promise<ApiResponse<UserResponseWithRefresh>> {
     // check the user is logged in

@@ -8,6 +8,7 @@ import { UniqueOTP } from 'unique-string-generator';
 import { OrderDocument } from './schemas/order.shema';
 import exceptionMessages from 'constants/exceptionMessages';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class OrdersService {
@@ -22,16 +23,24 @@ export class OrdersService {
     // generated order code with 7 characters
     const orderCode = await this.generateUniqueOrderCode();
 
-    // filtered products in ProductDocument format
-    const filteredProducts = (await this.productsService.getList({ _id: dto.products.map((p) => p.productId) })).map(
-      ({ title, price, poster, id }) => ({ title, price, poster, id }),
-    );
+    const filteredProducts = [];
+    for (let i = 0; i < dto.products.length; i++) {
+      const _id = dto.products[i].productId;
+      const product = await this.productsService.getOneById(_id);
+      filteredProducts.push(product);
+    }
 
     // formated product to save in order table
-    const products: OrderedProduct[] = filteredProducts.map((product) => {
-      const quantity = dto.products.find(({ productId }) => productId === product.id).quantity;
+    const products = filteredProducts.map((product) => {
+      const quantity = dto.products.find(({ productId }) => {
+        return product._id.equals(productId);
+      }).quantity;
       return { ...product, quantity };
     });
+
+    if (!products.length) {
+      throw new NotFoundException(exceptionMessages.NOT_FOUND_ORDER_MSG);
+    }
 
     const order = await this.ordersRepository.create({ ...dto, orderCode, products });
     return order;
@@ -44,7 +53,11 @@ export class OrdersService {
 
   // #################### DELETE ORDER BY ID ####################
   async delete(orderCode: number): Promise<OrderDocument> {
-    return await this.ordersRepository.delete({ orderCode });
+    const order = await this.ordersRepository.delete({ orderCode });
+    if (!order) {
+      throw new NotFoundException(exceptionMessages.NOT_FOUND_ORDER_MSG);
+    }
+    return order;
   }
 
   // #################### UPDATE PRODUCT BY ID ####################
@@ -58,7 +71,6 @@ export class OrdersService {
     if (!order) {
       throw new NotFoundException(exceptionMessages.NOT_FOUND_ORDER_MSG);
     }
-
     return order;
   }
 
