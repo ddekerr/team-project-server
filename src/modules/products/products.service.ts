@@ -11,6 +11,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 
 import exceptionMessages from 'constants/exceptionMessages';
 import { Filter, Params, Rating } from './types';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class ProductsService {
@@ -40,15 +41,13 @@ export class ProductsService {
   }
 
   // #################### GET ONE PRODUCT BY ID ####################
-  async getOneById(_id: string): Promise<ProductDocument> {
-    const product = await this.productsRepository.getOne({ _id });
+  async getOneById(id: Types.ObjectId): Promise<ProductDocument> {
+    const product = await this.productsRepository.getById(id);
     if (!product) {
       throw new NotFoundException(exceptionMessages.NOT_FOUND_PRODUCT_MSG);
     }
-
     return product;
   }
-
   // #################### GET PRODUCT LIST ####################
   async getList(filter?: Filter): Promise<ProductDocument[]> {
     return await this.productsRepository.getList(filter);
@@ -78,7 +77,7 @@ export class ProductsService {
   }
 
   // #################### UPLOAD POSTER TO PRODUCT ####################
-  async uploadPoster(_id: string, poster: Express.Multer.File): Promise<ProductDocument> {
+  async uploadPoster(_id: Types.ObjectId, poster: Express.Multer.File): Promise<ProductDocument> {
     // check product exist
     const product = await this.getOneById(_id);
 
@@ -97,7 +96,7 @@ export class ProductsService {
   }
 
   // #################### RATE PRODUCT ####################
-  async updateRating(_id: string, value: number): Promise<Rating> {
+  async updateRating(_id: Types.ObjectId, value: number): Promise<Rating> {
     const product = await this.getOneById(_id);
 
     // change product rating by star value

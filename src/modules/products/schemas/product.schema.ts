@@ -40,6 +40,13 @@ export class Product {
       4: { type: Number, default: 0 },
       5: { type: Number, default: 0 },
     },
+    default: {
+      1: 0,
+      2: 0,
+      3: 0,
+      4: 0,
+      5: 0,
+    },
     required: true,
   })
   rating: Rating;

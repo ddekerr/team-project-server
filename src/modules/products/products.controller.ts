@@ -12,6 +12,7 @@ import {
   UploadedFile,
   HttpCode,
   Query,
+  UsePipes,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -41,6 +42,8 @@ import { ApiValidationError } from 'helpers/ApiValidationError';
 import { ApiSwaggerResponse } from 'helpers/ApiSwaggerResponse';
 import { ApiSwaggerArrayResponse } from 'helpers/ApiSwaggerArrayResponse';
 import { Params, Rating } from './types';
+import { MongooseIdValidationPipe } from './dto/mongoID.dto';
+import { Types } from 'mongoose';
 
 @ApiTags('Products')
 @Controller('api/products')
@@ -93,7 +96,8 @@ export class ProductsController {
   @ApiParam({ name: 'id', type: String })
   @ApiSwaggerResponse(Actions.GET, EntityType.PRODUCT, Product)
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_PRODUCT_MSG })
-  async getOne(@Param() { id }: { id: string }) {
+  @UsePipes(new MongooseIdValidationPipe())
+  async getOne(@Param() { id }: { id: Types.ObjectId }) {
     const product = await this.productsService.getOneById(id);
     return new ApiResponse(Actions.GET, EntityType.PRODUCT, product);
   }
@@ -119,8 +123,9 @@ export class ProductsController {
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_PRODUCT_MSG })
   @UseInterceptors(FileInterceptor('poster'))
   @ApiConsumes('multipart/form-data')
+  @UsePipes(new MongooseIdValidationPipe())
   async uploadPoster(
-    @Param('_id') _id: string,
+    @Param('_id') _id: Types.ObjectId,
     @UploadedFile() poster: Express.Multer.File,
   ): Promise<ApiResponse<ProductDocument>> {
     const product = await this.productsService.uploadPoster(_id, poster);
@@ -135,7 +140,8 @@ export class ProductsController {
   @ApiSwaggerResponse(Actions.RATE, EntityType.PRODUCT, Product)
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_PRODUCT_MSG })
   @ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR })
-  async rateProduct(@Param('_id') _id: string, @Body() dto: RateDto): Promise<ApiResponse<Rating>> {
+  @UsePipes(new MongooseIdValidationPipe())
+  async rateProduct(@Param('_id') _id: Types.ObjectId, @Body() dto: RateDto): Promise<ApiResponse<Rating>> {
     const rating = await this.productsService.updateRating(_id, dto.value);
     return new ApiResponse(Actions.RATE, EntityType.PRODUCT, rating);
   }
