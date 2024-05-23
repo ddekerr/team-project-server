@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ReviewsRepository } from './reviews.repository';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { ReviewDocument } from './schemas/review.schema';
@@ -7,6 +7,7 @@ import { ProductsService } from 'modules/products/products.service';
 import { UpdateRewievDto } from './dto/update-review.dto';
 import successMessages from 'constants/successMessages';
 import { QueryParamsDto } from './dto/query-params.dto';
+import exceptionMessages from 'constants/exceptionMessages';
 
 @Injectable()
 export class ReviewsService {
@@ -22,6 +23,8 @@ export class ReviewsService {
     const { userEmail, productId, rating } = dto;
 
     const user = await this.usersService.getUser(userEmail);
+    await this.checkReviewUserExists(userEmail);
+
     const product = await this.productService.getOneById(productId);
 
     await this.productService.updateRating(product._id, rating);
@@ -32,6 +35,15 @@ export class ReviewsService {
     review.product = product;
 
     return await review.save();
+  }
+
+  // #################### CHECK REVIEW EXIST ####################
+  async checkReviewUserExists(email: string): Promise<void> {
+    console.log(email);
+    const review = await this.reviewsRepository.getOne({ 'user.email': email });
+    if (!(typeof review === 'object' && review === null)) {
+      throw new NotFoundException(exceptionMessages.NOT_FOUND_USER_MSG);
+    }
   }
 
   // #################### UPDATE REVIEW ####################

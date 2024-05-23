@@ -1,5 +1,5 @@
 import { applyDecorators, HttpCode } from '@nestjs/common';
-import { ApiOperation, ApiBody, ApiNotFoundResponse, ApiBadRequestResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
+import { ApiOperation, ApiBody, ApiNotFoundResponse, ApiBadRequestResponse, ApiParam, ApiQuery, ApiFoundResponse } from '@nestjs/swagger';
 
 import exceptionMessages from 'constants/exceptionMessages';
 import validationMessage from 'constants/validationMessage';
@@ -22,6 +22,7 @@ export function ApiCreateReview() {
     ApiSwaggerResponse(Actions.CREATE, EntityType.REVIEW, Review),
     ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_USER_MSG }),
     ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_PRODUCT_MSG }),
+    ApiFoundResponse({ type: ApiError, description: exceptionMessages.FOUND_RECIEW }),
     ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR }),
   );
 }

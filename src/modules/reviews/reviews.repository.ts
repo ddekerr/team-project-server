@@ -32,4 +32,9 @@ export class ReviewsRepository {
   async getList(entityFilterQuery: FilterQuery<ReviewDocument>): Promise<ReviewDocument[]> {
     return await this.reviewsModel.find(entityFilterQuery);
   }
+
+  // ########## SELECT ONE REVIEW FROM REVIEW TABLE ##########
+  async getOne(entityFilterQuery: FilterQuery<ReviewDocument>): Promise<ReviewDocument>{
+    return await this.reviewsModel.findOne(entityFilterQuery);
+  }
 }
