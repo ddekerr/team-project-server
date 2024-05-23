@@ -23,7 +23,7 @@ export class UsersService {
 
   // #################### UPDATE USER BY EMAIL ####################
   async updateUser(email: string, dto: UpdateUserDto): Promise<UserDocument> {
-    await this.checkUserExist(dto.email);
+    await this.checkUserExist(email);
     return await this.usersRepository.update({ email }, dto);
   }
 
@@ -47,15 +47,6 @@ export class UsersService {
   async getList(): Promise<UserDocument[]> {
     return await this.usersRepository.getList({});
   }
-
-  // // #################### GET USER BY EMAIL ####################
-  // async checkUserByEmail(email: string) {
-  //   const candidate = await this.usersRepository.getOne({ email });
-  //   if (!candidate) {
-  //     return false;
-  //   }
-  //   return candidate;
-  // }
 
   // #################### CHECK USER IS NOT EXIST ####################
   private async checkUserNotExist(email: string): Promise<void> {

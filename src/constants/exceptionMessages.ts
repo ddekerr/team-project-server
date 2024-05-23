@@ -29,5 +29,5 @@ export default {
   GOOGLE_ERROR_MSG: 'The Google server cannot verify the Token',
 
   //mongoDB invalid id
-  MONGO_INVALID_ID:'Invalid _id for Mongoose'
+  MONGO_INVALID_ID: 'Invalid _id for Mongoose',
 };

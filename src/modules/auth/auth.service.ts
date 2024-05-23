@@ -8,6 +8,7 @@ import { compareSync } from 'bcrypt';
 import exceptionMessages from 'constants/exceptionMessages';
 import successMessages from 'constants/successMessages';
 import { TokensService } from './tokens.service';
+import { UpdateUserDto } from 'modules/user/dto/update-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -45,11 +46,11 @@ export class AuthService {
     return await this.generateResponse(user);
   }
 
-  // // #################### REFRESH USER ####################
-  // async refresh(email: string): Promise<Tokens> {
-  //   const user = await this.usersService.getUser(email);
-  //   return await this.tokensService.generateTokens({ email: user.email, userId: user._id });
-  // }
+  // #################### UPDATE USER BY EMAIL ####################
+  async update(email: string, dto: UpdateUserDto): Promise<UserResponseWithRefresh> {
+    const user = await this.usersService.updateUser(email, dto);
+    return await this.generateResponse(user);
+  }
 
   // #################### COMPARE PASSWORD HASH ####################
   private checkPassword(rawPassword: string, hashPassword: string): void {
@@ -60,7 +61,7 @@ export class AuthService {
     }
   }
 
-  // #################### GENERATE THE SAME RESPONSE FOR REGISTER AND LOGIN ####################
+  // #################### GENERATE THE SAME RESPONSE ####################
   async generateResponse(user: UserDocument): Promise<UserResponseWithRefresh> {
     const { accessToken, refreshToken } = await this.tokensService.generateTokens({
       email: user.email,

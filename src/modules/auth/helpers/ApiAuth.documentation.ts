@@ -53,11 +53,22 @@ export function ApiLogoutUser() {
 }
 
 export function ApiGetMe() {
-    return applyDecorators(
-      HttpCode(200),
-      ApiOperation({ summary: 'Get the user information, with the access token and set cookie with refresh token' }),
-      ApiSwaggerResponse(Actions.GET, EntityType.USER, User),
-      ApiUnauthorizedResponse({ description: exceptionMessages.UNAUTHORIZED_TOKEN_VALID_MSG }),
-      ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_USER_MSG }),
-    );
-  }
+  return applyDecorators(
+    HttpCode(200),
+    ApiOperation({ summary: 'Get the user information, with the access token and set cookie with refresh token' }),
+    ApiSwaggerResponse(Actions.GET, EntityType.USER, User),
+    ApiUnauthorizedResponse({ description: exceptionMessages.UNAUTHORIZED_TOKEN_VALID_MSG }),
+    ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_USER_MSG }),
+  );
+}
+
+export function ApiUpdateMe() {
+  return applyDecorators(
+    HttpCode(200),
+    ApiOperation({ summary: 'Update user information, with the access token and set cookie with refresh token' }),
+    ApiSwaggerResponse(Actions.UPDATE, EntityType.USER, User),
+    ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR }),
+    ApiUnauthorizedResponse({ description: exceptionMessages.UNAUTHORIZED_TOKEN_VALID_MSG }),
+    ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_USER_MSG }),
+  );
+}

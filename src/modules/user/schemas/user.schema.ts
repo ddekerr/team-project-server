@@ -4,11 +4,17 @@ import { Document } from 'mongoose';
 
 export type UserDocument = User & Document;
 
-export type Address = {
-  city: string;
+type PersonalAddress = {
   street: string;
   house: string;
-  apartment: number;
+  apartament?: number;
+};
+
+export type Address = {
+  city: string;
+  postalOperator: string;
+  postalDepartment: string;
+  personalAddress?: PersonalAddress;
 };
 
 @Schema({ timestamps: true, versionKey: false })
@@ -26,7 +32,7 @@ export class User {
   phone_number: string;
 
   @ApiProperty()
-  @Prop({ unique: true })
+  @Prop({ unique: true, required: true })
   email: string;
 
   @ApiProperty({ required: false })
@@ -41,12 +47,22 @@ export class User {
   @Prop({
     type: {
       city: String,
-      street: String,
-      house: String,
-      apartment: Number,
+      postalOperator: String,
+      postalDepartment: String,
+      personalAddress: {
+        type: {
+          street: String,
+          house: String,
+          apartament: { type: Number, required: false },
+        },
+        required: false,
+        _id: false,
+      },
     },
+    required: false,
+    _id: false,
   })
-  addresses: Address;
+  address?: Address;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

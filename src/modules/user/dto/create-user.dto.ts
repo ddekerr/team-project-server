@@ -14,26 +14,17 @@ import {
 } from 'class-validator';
 import validationMessage from 'constants/validationMessage';
 
-export class AddressDto {
-  @ApiProperty({ required: false })
-  @IsString({ message: validationMessage.USER_CITY_STRING_MSG })
-  @Length(3, 40, { message: validationMessage.USER_CITY_LENGTH_MSG })
-  @IsNotEmpty({ message: validationMessage.USER_CITY_EMPTY_MSG })
-  @IsOptional()
-  readonly city: string;
-
-  @ApiProperty({ required: false })
+class PersonalAddressDto {
+  @ApiProperty()
   @IsString({ message: validationMessage.USER_STREET_STRING_MSG })
   @Length(3, 40, { message: validationMessage.USER_STREET_LENGTH_MSG })
   @IsNotEmpty({ message: validationMessage.USER_STREET_EMPTY_MSG })
-  @IsOptional()
   readonly street: string;
 
-  @ApiProperty({ required: false })
+  @ApiProperty()
   @IsString({ message: validationMessage.USER_HOUSE_STRING_MSG })
   @Length(1, 5, { message: validationMessage.USER_HOUSE_LENGTH_MSG })
   @IsNotEmpty({ message: validationMessage.USER_HOUSE_EMPTY_MSG })
-  @IsOptional()
   readonly house: string;
 
   @ApiProperty({ required: false })
@@ -42,7 +33,31 @@ export class AddressDto {
   @Max(999, { message: validationMessage.USER_APARTMENT_MAX_MSG })
   @IsNotEmpty({ message: validationMessage.USER_APARTMENT_EMPTY_MSG })
   @IsOptional()
-  readonly apartment: number;
+  readonly apartment?: number;
+}
+
+export class AddressDto {
+  @ApiProperty()
+  @IsString({ message: validationMessage.USER_CITY_STRING_MSG })
+  @Length(3, 40, { message: validationMessage.USER_CITY_LENGTH_MSG })
+  @IsNotEmpty({ message: validationMessage.USER_CITY_EMPTY_MSG })
+  readonly city: string;
+
+  @ApiProperty()
+  @IsString({ message: validationMessage.USER_POSTAL_OPERATOR_STRING_MSG })
+  @IsNotEmpty({ message: validationMessage.USER_CITY_EMPTY_MSG })
+  readonly postalOperator: string;
+
+  @ApiProperty()
+  @IsString({ message: validationMessage.USER_POSTAL_OPERATOR_STRING_MSG })
+  @IsNotEmpty({ message: validationMessage.USER_CITY_EMPTY_MSG })
+  readonly postalDepartment: string;
+
+  @ApiProperty()
+  @ValidateNested()
+  @Type(() => PersonalAddressDto)
+  @IsOptional()
+  readonly personalAddress?: PersonalAddressDto;
 }
 
 export class CreateUserDto {

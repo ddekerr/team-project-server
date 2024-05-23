@@ -20,6 +20,12 @@ export default {
   USER_CITY_LENGTH_MSG: 'City must be between $constraint1-$constraint2 characters',
   USER_CITY_EMPTY_MSG: 'City must be not empty',
 
+  USER_POSTAL_OPERATOR_STRING_MSG: 'Postal Operator must be a string',
+  USER_POSTAL_OPERATOR_EMPTY_MSG: 'Postal Operator must be not empty',
+
+  USER_POSTAL_DEPARTMENT_STRING_MSG: 'Postal department must be a string',
+  USER_POSTAL_DEPARTMENT_EMPTY_MSG: 'Postal department must be not empty',
+
   USER_STREET_STRING_MSG: 'Street must be a string',
   USER_STREET_LENGTH_MSG: 'Street must be between $constraint1-$constraint2 characters',
   USER_STREET_EMPTY_MSG: 'Street must be not empty',

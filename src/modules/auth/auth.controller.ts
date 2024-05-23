@@ -1,5 +1,5 @@
-import { Body, Controller, Get, Post, UseGuards, UseInterceptors } from '@nestjs/common';
-import { ApiTags} from '@nestjs/swagger';
+import { Body, Controller, Get, Patch, Post, UseGuards, UseInterceptors } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
 import { AuthService } from './auth.service';
@@ -12,7 +12,8 @@ import { ApiResponse } from 'helpers/ApiResponse';
 import { SetCookieInterceptor } from './interceptors/setCookie.interceptor';
 import { ClearCookieInterceptor } from './interceptors/clearCookie.interceptor';
 import { Payload } from './decorators/Payload.decorator';
-import { ApiGetMe, ApiLoginUser, ApiLogoutUser, ApiRegisterUser } from './helpers/ApiAuth.documentation';
+import { ApiGetMe, ApiLoginUser, ApiLogoutUser, ApiRegisterUser, ApiUpdateMe } from './helpers/ApiAuth.documentation';
+import { UpdateUserDto } from 'modules/user/dto/update-user.dto';
 
 @ApiTags('Auth')
 @Controller('api/auth')
@@ -59,21 +60,16 @@ export class AuthController {
     return new ApiResponse(Actions.GET, EntityType.USER, userResponse);
   }
 
-  // // #################### REFRESH USER ####################
-  // @Post('refresh')
-  // @HttpCode(200)
-  // @UseGuards(AuthGuard('access-strategy'))
-  // @ApiOperation({ summary: 'Refresh access token, refresh cookies' })
-  // @ApiSwaggerResponse(Actions.REFRESH, EntityType.USER, String)
-  // @UseInterceptors(SetCookieInterceptor)
-  // async refresh(@Req() request: Request): Promise<ApiResponse<Tokens>> {
-  //   // ITS LOGIC HAVE TO BE IN DECORATORS OR OTHER FUNCTION (NEED REFACTOR)
-  //   // Access-stratege push Payload ro request and here we get email from there
-  //   const email: string = request['user']['payload']['email'];
-
-  //   // check the user is logged in and get new tokens
-  //   const response = await this.authService.refresh(email);
-
-  //   return new ApiResponse(Actions.REFRESH, EntityType.USER, response);
-  // }
+  // #################### UPDATE ME ####################
+  @Patch('me')
+  @ApiUpdateMe()
+  @UseGuards(AuthGuard('access-strategy'), AuthGuard('refresh-strategy'))
+  @UseInterceptors(SetCookieInterceptor)
+  async update(
+    @Payload('email') email: string,
+    @Body() dto: UpdateUserDto,
+  ): Promise<ApiResponse<UserResponseWithRefresh>> {
+    const userResponse = await this.authService.update(email, dto);
+    return new ApiResponse(Actions.UPDATE, EntityType.USER, userResponse);
+  }
 }
