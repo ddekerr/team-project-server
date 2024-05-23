@@ -50,6 +50,12 @@ import { MongooseIdValidationPipe } from './dto/mongoID.dto';
 export class ProductsController {
   constructor(private productsService: ProductsService) {}
 
+  // #################### SERCH PRODUCT ####################
+  @Get('search')
+  async searchProduct(@Query('search') searchQuery: string) {
+    return await this.productsService.searchProduct(searchQuery);
+  }
+
   // #################### CREATE NEW PRODUCT ####################
   @Post()
   @HttpCode(201)
