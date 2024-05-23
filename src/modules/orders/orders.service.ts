@@ -3,12 +3,12 @@ import { OrdersRepository } from './orders.repository';
 import { UsersService } from 'modules/user/users.service';
 import { ProductsService } from 'modules/products/products.service';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { OrderedProduct } from './types';
+// import { OrderedProduct } from './types';
 import { UniqueOTP } from 'unique-string-generator';
 import { OrderDocument } from './schemas/order.shema';
 import exceptionMessages from 'constants/exceptionMessages';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { Types } from 'mongoose';
+// import { Types } from 'mongoose';
 
 @Injectable()
 export class OrdersService {

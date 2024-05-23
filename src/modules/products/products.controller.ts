@@ -43,7 +43,7 @@ import { ApiSwaggerResponse } from 'helpers/ApiSwaggerResponse';
 import { ApiSwaggerArrayResponse } from 'helpers/ApiSwaggerArrayResponse';
 import { Params, Rating } from './types';
 import { MongooseIdValidationPipe } from './dto/mongoID.dto';
-import { Types } from 'mongoose';
+// import { Types } from 'mongoose';
 
 @ApiTags('Products')
 @Controller('api/products')
@@ -97,7 +97,7 @@ export class ProductsController {
   @ApiSwaggerResponse(Actions.GET, EntityType.PRODUCT, Product)
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_PRODUCT_MSG })
   @UsePipes(new MongooseIdValidationPipe())
-  async getOne(@Param() { id }: { id: Types.ObjectId }) {
+  async getOne(@Param() id: string) {
     const product = await this.productsService.getOneById(id);
     return new ApiResponse(Actions.GET, EntityType.PRODUCT, product);
   }
@@ -125,10 +125,10 @@ export class ProductsController {
   @ApiConsumes('multipart/form-data')
   @UsePipes(new MongooseIdValidationPipe())
   async uploadPoster(
-    @Param('_id') _id: Types.ObjectId,
+    @Param('id') id: string,
     @UploadedFile() poster: Express.Multer.File,
   ): Promise<ApiResponse<ProductDocument>> {
-    const product = await this.productsService.uploadPoster(_id, poster);
+    const product = await this.productsService.uploadPoster(id, poster);
     return new ApiResponse(Actions.ADD_POSTER, EntityType.PRODUCT, product);
   }
 
@@ -141,8 +141,8 @@ export class ProductsController {
   @ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_PRODUCT_MSG })
   @ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR })
   @UsePipes(new MongooseIdValidationPipe())
-  async rateProduct(@Param('_id') _id: Types.ObjectId, @Body() dto: RateDto): Promise<ApiResponse<Rating>> {
-    const rating = await this.productsService.updateRating(_id, dto.value);
+  async rateProduct(@Param('id') id: string, @Body() dto: RateDto): Promise<ApiResponse<Rating>> {
+    const rating = await this.productsService.updateRating(id, dto.value);
     return new ApiResponse(Actions.RATE, EntityType.PRODUCT, rating);
   }
 }
