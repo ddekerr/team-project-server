@@ -25,8 +25,8 @@ export class Review {
   user: User;
 
   @ApiProperty({ required: true })
-  @Prop({ required: true, type: Product })
-  product: Product & { id: number };
+  @Prop({ required: true, type: Product, ref: 'product' })
+  product: Product;
 }
 
 export const ReviewSchema = SchemaFactory.createForClass(Review);

@@ -12,13 +12,15 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const status = exception.getStatus();
 
-    let res = null;
-    if (exception instanceof ValidationException) {
-      res = new ApiValidationError(status, validationMessages.VALIDATION_ERROR, exception.errors);
-    } else {
-      res = new ApiError(status, exception.message);
-    }
+    console.log(typeof exception);
 
-    response.status(status).json(res);
+    // // let err = null;
+    // // if (exception instanceof ApiError) {
+    // //   err = new ApiValidationError(status, validationMessages.VALIDATION_ERROR, exception.errors);
+    // // } else {
+    // //   err = new ApiError(status, exception.message);
+    // // }
+
+    // response.status(status).json(err);
   }
 }

@@ -23,10 +23,15 @@ export class ReviewsService {
 
     const user = await this.usersService.getUser(userEmail);
     const product = await this.productService.getOneById(productId);
+
     await this.productService.updateRating(product._id, rating);
 
-    const review = await this.reviewsRepository.create({ user, product, ...dto });
-    return review;
+    const review = await this.reviewsRepository.create({ ...dto });
+
+    review.user = user;
+    review.product = product;
+
+    return await review.save();
   }
 
   // #################### UPDATE REVIEW ####################
