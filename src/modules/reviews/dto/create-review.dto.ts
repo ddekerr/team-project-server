@@ -27,9 +27,8 @@ export class CreateReviewDto {
   readonly comment?: string;
 
   @ApiProperty({ type: String, nullable: false })
-  @IsNotEmpty({ message: validationMessage.REVIEW_USER_EMAIL_EMPTY_MSG })
-  @IsEmail({}, { message: validationMessage.REVIEW_USER_EMAIL_MSG })
-  readonly userEmail: string;
+  @IsNotEmpty({ message: validationMessage.REVIEW_USER_ID })
+  readonly userId: string;
 
   @ApiProperty({ type: String, nullable: false })
   @IsNotEmpty({ message: validationMessage.REVIEW_PRODUCTID_EMPTY_MSG })

@@ -22,7 +22,7 @@ export function ApiCreateReview() {
     ApiSwaggerResponse(Actions.CREATE, EntityType.REVIEW, Review),
     ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_USER_MSG }),
     ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_PRODUCT_MSG }),
-    ApiFoundResponse({ type: ApiError, description: exceptionMessages.FOUND_RECIEW }),
+    ApiFoundResponse({ type: ApiError, description: exceptionMessages.LEFT_REVIEW }),
     ApiBadRequestResponse({ type: ApiValidationError, description: validationMessage.VALIDATION_ERROR }),
   );
 }

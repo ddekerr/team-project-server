@@ -31,5 +31,5 @@ export default {
   //mongoDB invalid id
   MONGO_INVALID_ID: 'Invalid _id for Mongoose',
 
-  FOUND_RECIEW:'This user\'s review already exists'
+  LEFT_REVIEW:'This user has already left a review for this product'
 };

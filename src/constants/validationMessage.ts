@@ -128,4 +128,6 @@ export default {
 
   REVIEW_PARAMS_USERID_EMPTY_MSG: 'User id in query string must not be empty',
   REVIEW_PARAMS_USERID_STRING_MSG: 'User id in query string must be a string',
+
+  REVIEW_USER_ID:'Review UserID must not be empty',
 };

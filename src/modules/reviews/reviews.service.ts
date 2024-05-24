@@ -20,29 +20,26 @@ export class ReviewsService {
   // #################### CREATE REVIEW ####################
   async create(dto: CreateReviewDto): Promise<ReviewDocument> {
     // const { userEmail, productId, rating, advantages, disadvantages, comment } = dto;
-    const { userEmail, productId, rating } = dto;
-
-    const user = await this.usersService.getUser(userEmail);
-    await this.checkReviewUserExists(userEmail);
+    const { userId, productId, rating } = dto;
 
     const product = await this.productService.getOneById(productId);
+
+    await this.checkReviewUserId(userId, productId);
 
     await this.productService.updateRating(product._id, rating);
 
     const review = await this.reviewsRepository.create({ ...dto });
 
-    review.user = user;
     review.product = product;
 
     return await review.save();
   }
 
   // #################### CHECK REVIEW EXIST ####################
-  async checkReviewUserExists(email: string): Promise<void> {
-    console.log(email);
-    const review = await this.reviewsRepository.getOne({ 'user.email': email });
+  async checkReviewUserId(userId: string, productId: string): Promise<void> {
+    const review = await this.reviewsRepository.getOne({ userId, 'product._id': productId });
     if (!(typeof review === 'object' && review === null)) {
-      throw new NotFoundException(exceptionMessages.NOT_FOUND_USER_MSG);
+      throw new NotFoundException(exceptionMessages.LEFT_REVIEW);
     }
   }
 

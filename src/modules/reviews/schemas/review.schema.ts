@@ -20,9 +20,9 @@ export class Review {
   @Prop({ required: false, default: null })
   comment?: string;
 
-  @ApiProperty({ required: false, type: User })
-  @Prop({ required: false, type: User, ref: 'user' })
-  user: User;
+  @ApiProperty({ required: false, type: String })
+  @Prop({ required: false, type: String })
+  userId: string;
 
   @ApiProperty({ required: false })
   @Prop({ required: false, type: Product, ref: 'product' })
