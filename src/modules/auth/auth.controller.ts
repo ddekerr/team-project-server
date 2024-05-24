@@ -52,7 +52,7 @@ export class AuthController {
   // #################### GET ME ####################
   @Get('me')
   @ApiGetMe()
-  @UseGuards(AuthGuard('access-strategy'), AuthGuard('refresh-strategy'))
+  @UseGuards(AuthGuard('access-strategy'))
   @UseInterceptors(SetCookieInterceptor)
   async me(@Payload('email') email: string): Promise<ApiResponse<UserResponseWithRefresh>> {
     // check the user is logged in
@@ -63,7 +63,7 @@ export class AuthController {
   // #################### UPDATE ME ####################
   @Patch('me')
   @ApiUpdateMe()
-  @UseGuards(AuthGuard('access-strategy'), AuthGuard('refresh-strategy'))
+  @UseGuards(AuthGuard('access-strategy'))
   @UseInterceptors(SetCookieInterceptor)
   async update(
     @Payload('email') email: string,
