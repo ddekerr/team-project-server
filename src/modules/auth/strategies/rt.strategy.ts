@@ -16,6 +16,7 @@ export class RTStrategy extends PassportStrategy(Strategy, 'refresh-strategy') {
 
   private static fromCookies(request: Request): string {
     const token: string = request.cookies['refreshToken'];
+    console.log(request.cookies);
     console.log(token);
     return token;
   }
