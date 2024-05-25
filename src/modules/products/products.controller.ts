@@ -81,7 +81,7 @@ export class ProductsController {
   @Get(':id')
   @ApiGetOneProduct()
   @UsePipes(new MongooseIdValidationPipe())
-  async getOne(@Param() id: string) {
+  async getOne(@Param('id') id: string) {
     const product = await this.productsService.getOneById(id);
     return new ApiResponse(Actions.GET, EntityType.PRODUCT, product);
   }
