@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ReviewsRepository } from './reviews.repository';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { ReviewDocument } from './schemas/review.schema';
@@ -7,6 +7,7 @@ import { ProductsService } from 'modules/products/products.service';
 import { UpdateRewievDto } from './dto/update-review.dto';
 import successMessages from 'constants/successMessages';
 import { QueryParamsDto } from './dto/query-params.dto';
+import exceptionMessages from 'constants/exceptionMessages';
 
 @Injectable()
 export class ReviewsService {
@@ -19,19 +20,27 @@ export class ReviewsService {
   // #################### CREATE REVIEW ####################
   async create(dto: CreateReviewDto): Promise<ReviewDocument> {
     // const { userEmail, productId, rating, advantages, disadvantages, comment } = dto;
-    const { userEmail, productId, rating } = dto;
+    const { userId, productId, rating } = dto;
 
-    const user = await this.usersService.getUser(userEmail);
     const product = await this.productService.getOneById(productId);
+
+    await this.checkReviewUserId(userId, productId);
 
     await this.productService.updateRating(product._id, rating);
 
     const review = await this.reviewsRepository.create({ ...dto });
 
-    review.user = user;
     review.product = product;
 
     return await review.save();
+  }
+
+  // #################### CHECK REVIEW EXIST ####################
+  async checkReviewUserId(userId: string, productId: string): Promise<void> {
+    const review = await this.reviewsRepository.getOne({ userId, 'product._id': productId });
+    if (!(typeof review === 'object' && review === null)) {
+      throw new NotFoundException(exceptionMessages.LEFT_REVIEW);
+    }
   }
 
   // #################### UPDATE REVIEW ####################

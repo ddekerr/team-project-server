@@ -30,4 +30,6 @@ export default {
 
   //mongoDB invalid id
   MONGO_INVALID_ID: 'Invalid _id for Mongoose',
+
+  LEFT_REVIEW:'This user has already left a review for this product'
 };
