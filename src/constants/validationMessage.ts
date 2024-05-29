@@ -59,6 +59,7 @@ export default {
   PRODUCT_CATEGORIES_ARRAY_MSG: 'Products categories must be an array',
   PRODUCT_CATEGORIES_ITEM_EMPTY_MSG: 'Category slug must not be empty',
   PRODUCT_CATEGORIES_ITEM_STRING_MSG: 'Category slug must be a string',
+  PRODUCT_CHARACTERISTICS_ARRAY_MSG: 'Products characteristics must be an array',
 
   PRODUCT_RATE_VALUE_EMPTY_MSG: 'Products rate value must not be empty',
   PRODUCT_RATE_VALUE_NUMBER_MSG: 'Products rate value must be a number',
@@ -129,5 +130,13 @@ export default {
   REVIEW_PARAMS_USERID_EMPTY_MSG: 'User id in query string must not be empty',
   REVIEW_PARAMS_USERID_STRING_MSG: 'User id in query string must be a string',
 
-  REVIEW_USER_ID:'Review UserID must not be empty',
+  REVIEW_USER_ID: 'Review UserID must not be empty',
+
+  CHARACTERISTIC_NAME_EMPTY_MSG: 'Characteristic name should not be empty',
+  CHARACTERISTIC_NAME_STRING_MSG: 'Characteristic name must be a string',
+  CHARACTERISTIC_DESCRIPTION_EMPTY_MSG: 'Characteristic description should not be empty',
+  CHARACTERISTIC_DESCRIPTION_ARRAY_MSG: 'Characteristic description must be an array',
+  CHARACTERISTIC_DESCRIPTION_NOT_EMPTY_MSG: 'Characteristic description array should not be empty',
+  CHARACTERISTIC_DESCRIPTION_MIN_SIZE_MSG: 'Characteristic description array must contain at least one item',
+  CHARACTERISTIC_DESCRIPTION_STRING_MSG: 'Each characteristic description must be a string',
 };

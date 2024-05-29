@@ -12,6 +12,11 @@ class Rating {
   5: number;
 }
 
+class Characteristics {
+  name: string;
+  description: string[];
+}
+
 @Schema({ timestamps: true, versionKey: false })
 export class Product {
   @ApiProperty({ required: true })
@@ -54,6 +59,10 @@ export class Product {
   @ApiProperty({ type: [String], description: 'Categories list of product' })
   @Prop({ type: [String], default: [] })
   categories: string[];
+
+  @ApiProperty({ type: [Characteristics] })
+  @Prop({ required: true, default: [], type: [Characteristics] })
+  characteristics: Characteristics[];
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

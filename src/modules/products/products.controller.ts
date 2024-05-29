@@ -36,7 +36,6 @@ import {
   ApiUploadPosterProduct,
 } from './helpers/ApiSerch.documentation';
 import { ApiUpdateCategory } from 'modules/categories/helpers/ApiCategories.documentation';
-// import { Types } from 'mongoose';
 
 @ApiTags('Products')
 @Controller('api/products')
