@@ -11,7 +11,6 @@ import { UpdateProductDto } from './dto/update-product.dto';
 
 import exceptionMessages from 'constants/exceptionMessages';
 import { Filter, Params, Rating } from './types';
-// import { Types } from 'mongoose';
 
 @Injectable()
 export class ProductsService {
@@ -29,7 +28,7 @@ export class ProductsService {
 
   // #################### UPDATE PRODUCT BY ID ####################
   async update(_id: string, dto: UpdateProductDto): Promise<ProductDocument> {
-    if (dto.categories) {
+    if ('categories' in dto) {
       await this.checkingCategories(dto.categories);
     }
     return await this.productsRepository.update({ _id }, dto);
@@ -54,7 +53,7 @@ export class ProductsService {
   }
 
   // #################### SERCH PRODUCT ####################
-  async searchProduct(query: string):Promise<ProductDocument[]> {
+  async searchProduct(query: string): Promise<ProductDocument[]> {
     const regex = new RegExp(query, 'i');
     return this.productsRepository.serchProduct(regex);
   }
