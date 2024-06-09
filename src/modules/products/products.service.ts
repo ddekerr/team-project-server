@@ -1,16 +1,18 @@
 import { Express } from 'express';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 
 import { ProductsRepository } from './products.repository';
 import { CategoriesService } from './../categories/categories.service';
 import { FileType, FilesService } from 'modules/files/files.service';
 
-import { ProductDocument } from './schemas/product.schema';
+import { ImageProduct, ProductDocument } from './schemas/product.schema';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
 import exceptionMessages from 'constants/exceptionMessages';
 import { Filter, Params, Rating } from './types';
+
+const limitImages = 10;
 
 @Injectable()
 export class ProductsService {
@@ -97,6 +99,67 @@ export class ProductsService {
 
     // save path to poster in DB
     product.poster = filePath;
+    return await product.save();
+  }
+
+  async uploadImage(id: string, image: Express.Multer.File) {
+    const limitImages = 10; // Максимальна кількість картинок на продукт
+
+    //Пошук продукту
+    const product = await this.getOneById(id);
+
+    //Чи не перевищений ліміт кількості зображень для продукту
+    if (product.images.length >= limitImages) {
+      throw new ForbiddenException(exceptionMessages.LIMIT_ADD_NEW_IMAGE);
+    }
+
+    //Визначаємо порядок id, який присвоємо до зображення
+    const { images } = product;
+    const idImage = this.determineNextID(images);
+
+    const filePath = await this.filesService.uploadFile(FileType.IMAGES, image);
+
+    product.images.push({ idImage, url: filePath });
+
+    return await product.save();
+  }
+
+  private determineNextID(images: ImageProduct[]): number {
+    const idImage = images.map((image) => image.idImage).sort((a, b) => a - b);
+
+    for (let i = 1; i <= limitImages; i++) {
+      if (!idImage.includes(i)) {
+        return i;
+      }
+    }
+
+    throw new ForbiddenException(exceptionMessages.LIMIT_ADD_NEW_IMAGE);
+  }
+
+  private removeItemById(images: ImageProduct[], idToRemove: number): ImageProduct[] {
+    return images.filter((item) => item.idImage != idToRemove);
+  }
+
+  async deleteImage(idProduct: string, idImage: number) {
+    //Пошук продукту
+    const product = await this.getOneById(idProduct);
+
+    //Пошук зображення по переданому idImage та його видалення
+    const { images } = product;
+
+    const image = images.find((item) => item.idImage == idImage);
+
+    if (!image) {
+      throw new NotFoundException(exceptionMessages.NOT_FOUND_IMAGE_BY_IDIMAGE);
+    }
+
+    const { url } = image;
+    await this.filesService.removeFile(url);
+
+    // видалення обєкту з масиву
+    const newImages = this.removeItemById(images, idImage);
+
+    product.images = newImages;
     return await product.save();
   }
 

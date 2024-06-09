@@ -82,9 +82,36 @@ export function ApiUploadPosterProduct() {
     HttpCode(200),
     ApiOperation({ summary: 'Upload poster to product by ID' }),
     ApiBody({ type: FileUploadDto }),
+    ApiParam({ name: 'id', type: String }),
     ApiSwaggerResponse(Actions.ADD_POSTER, EntityType.PRODUCT, Product),
     ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_PRODUCT_MSG }),
     ApiConsumes('multipart/form-data'),
+    ApiBadRequestResponse({ type: ApiError, description: exceptionMessages.MONGO_INVALID_ID }),
+  );
+}
+
+export function ApiAddImageProduct() {
+  return applyDecorators(
+    HttpCode(200),
+    ApiOperation({ summary: 'ADD image to product by ProductID' }),
+    ApiBody({ type: FileUploadDto }),
+    ApiParam({ name: 'id', type: String }),
+    ApiSwaggerResponse(Actions.ADD_POSTER, EntityType.PRODUCT, Product),
+    ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_PRODUCT_MSG }),
+    ApiConsumes('multipart/form-data'),
+    ApiBadRequestResponse({ type: ApiError, description: exceptionMessages.MONGO_INVALID_ID }),
+  );
+}
+
+export function ApiDeleteImageProductById() {
+  return applyDecorators(
+    HttpCode(200),
+    ApiOperation({ summary: 'Delete image to product by ImageId' }),
+    ApiBody({ type: FileUploadDto }),
+    ApiParam({ name: 'idProduct', type: String }),
+    ApiParam({ name: 'idImage', type: String }),
+    ApiSwaggerResponse(Actions.ADD_POSTER, EntityType.PRODUCT, Product),
+    ApiNotFoundResponse({ type: ApiError, description: exceptionMessages.NOT_FOUND_PRODUCT_MSG }),
     ApiBadRequestResponse({ type: ApiError, description: exceptionMessages.MONGO_INVALID_ID }),
   );
 }

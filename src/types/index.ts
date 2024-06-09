@@ -10,6 +10,7 @@ export enum Actions {
   GET_LIST = 'GET_LIST',
   ADD_POSTER = 'ADD_POSTER',
   ADD_CATEGORY = 'ADD_CATEGORY',
+  ADD_IMAGE = 'ADD_IMAGE',
   RATE = 'RATE',
   LOGOUT = 'LOGOUT',
   LOGIN = 'LOGIN',

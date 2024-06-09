@@ -27,6 +27,7 @@ import { ApiResponse } from 'helpers/ApiResponse';
 import { Params, Rating } from './types';
 import { MongooseIdValidationPipe } from './dto/mongoID.dto';
 import {
+  ApiAddImageProduct,
   ApiCreateProduct,
   ApiDeleteProduct,
   ApiGetOneProduct,
@@ -104,6 +105,25 @@ export class ProductsController {
     @UploadedFile() poster: Express.Multer.File,
   ): Promise<ApiResponse<ProductDocument>> {
     const product = await this.productsService.uploadPoster(_id, poster);
+    return new ApiResponse(Actions.ADD_POSTER, EntityType.PRODUCT, product);
+  }
+
+  // ####### ADD IMAGE
+  @Patch(':id/add-image')
+  @ApiAddImageProduct()
+  @UsePipes(new MongooseIdValidationPipe())
+  @UseInterceptors(FileInterceptor('image'))
+  async uploadImage(@Param('id') id, @UploadedFile() poster: Express.Multer.File) {
+    const product = await this.productsService.uploadImage(id, poster);
+    return new ApiResponse(Actions.ADD_IMAGE, EntityType.PRODUCT, product);
+  }
+
+  @Delete(':idProduct/:idImage/delete-image')
+  @ApiDeleteProduct()
+  @UsePipes(new MongooseIdValidationPipe())
+  async deleteImage(@Param('idProduct') idProduct: string, @Param('idImage') idImage: number) {
+    console.log(idImage);
+    const product = await this.productsService.deleteImage(idProduct, idImage);
     return new ApiResponse(Actions.ADD_POSTER, EntityType.PRODUCT, product);
   }
 

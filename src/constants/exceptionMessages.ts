@@ -31,5 +31,9 @@ export default {
   //mongoDB invalid id
   MONGO_INVALID_ID: 'Invalid _id for Mongoose',
 
-  LEFT_REVIEW:'This user has already left a review for this product'
+  LEFT_REVIEW: 'This user has already left a review for this product',
+
+  //image
+  LIMIT_ADD_NEW_IMAGE: 'Exceeded the limit for adding images to the product',
+  NOT_FOUND_IMAGE_BY_IDIMAGE:'The product does not have an image for this ID'
 };

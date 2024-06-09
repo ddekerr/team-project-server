@@ -7,6 +7,7 @@ export enum FileType {
   POSTERS = 'posters',
   SLIDES = 'slides',
   AVATARS = 'avatars',
+  IMAGES = 'images'
 }
 
 @Injectable()
@@ -27,7 +28,6 @@ export class FilesService {
   async uploadFile(type: FileType, file: Express.Multer.File): Promise<string> {
     const fileName = this.generateUniqueFileName(file.originalname);
     const filePath = type + '/' + fileName;
-
     await this.createFolderIfNotExist(this.bucketName, type + '/');
 
     const command = new PutObjectCommand({
