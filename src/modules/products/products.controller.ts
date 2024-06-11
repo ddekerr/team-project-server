@@ -1,5 +1,5 @@
 import { Express } from 'express';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import {
   Body,
   Controller,
@@ -12,6 +12,7 @@ import {
   UploadedFile,
   Query,
   UsePipes,
+  UploadedFiles,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -109,22 +110,21 @@ export class ProductsController {
   }
 
   // ####### ADD IMAGE
-  @Patch(':id/add-image')
+  @Patch(':productId/add-image')
   @ApiAddImageProduct()
   @UsePipes(new MongooseIdValidationPipe())
-  @UseInterceptors(FileInterceptor('image'))
-  async uploadImage(@Param('id') id, @UploadedFile() poster: Express.Multer.File) {
-    const product = await this.productsService.uploadImage(id, poster);
+  @UseInterceptors(FilesInterceptor('image'))
+  async uploadImage(@Param('productId') productId, @UploadedFiles() images: Array<Express.Multer.File>) {
+    const product = await this.productsService.uploadImage(productId, images);
     return new ApiResponse(Actions.ADD_IMAGE, EntityType.PRODUCT, product);
   }
 
-  @Delete(':idProduct/:idImage/delete-image')
+  @Delete(':productId/:imageId/delete-image')
   @ApiDeleteProduct()
   @UsePipes(new MongooseIdValidationPipe())
-  async deleteImage(@Param('idProduct') idProduct: string, @Param('idImage') idImage: number) {
-    console.log(idImage);
-    const product = await this.productsService.deleteImage(idProduct, idImage);
-    return new ApiResponse(Actions.ADD_POSTER, EntityType.PRODUCT, product);
+  async deleteImage(@Param('productId') productId: string, @Param('imageId') imageId: number) {
+    const product = await this.productsService.deleteImage(productId, imageId);
+    return new ApiResponse(Actions.DELETE, EntityType.PRODUCT, product);
   }
 
   // #################### RATE PRODUCT ####################

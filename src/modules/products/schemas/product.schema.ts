@@ -18,7 +18,7 @@ class Characteristics {
 }
 
 export class ImageProduct{
-  idImage:number; // Не id,щоб не заплутатись
+  imageId:number; // Не id,щоб не заплутатись
   url:string;
 }
 

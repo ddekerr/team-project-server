@@ -102,30 +102,35 @@ export class ProductsService {
     return await product.save();
   }
 
-  async uploadImage(id: string, image: Express.Multer.File) {
+  async uploadImage(id: string, image: Express.Multer.File[]) {
     const limitImages = 10; // Максимальна кількість картинок на продукт
 
     //Пошук продукту
     const product = await this.getOneById(id);
 
     //Чи не перевищений ліміт кількості зображень для продукту
-    if (product.images.length >= limitImages) {
+    if (product.images.length + image.length > limitImages) {
       throw new ForbiddenException(exceptionMessages.LIMIT_ADD_NEW_IMAGE);
     }
 
     //Визначаємо порядок id, який присвоємо до зображення
     const { images } = product;
-    const idImage = this.determineNextID(images);
 
-    const filePath = await this.filesService.uploadFile(FileType.IMAGES, image);
+    for (let i = 0; i < image.length; i++) {
+      const imageId = this.determineNextID(images);
 
-    product.images.push({ idImage, url: filePath });
+      const filePath = await this.filesService.uploadFile(FileType.IMAGES, image[i]);
+
+      images.push({ imageId, url: filePath });
+    }
+
+    product.images = images;
 
     return await product.save();
   }
 
   private determineNextID(images: ImageProduct[]): number {
-    const idImage = images.map((image) => image.idImage).sort((a, b) => a - b);
+    const idImage = images.map((image) => image.imageId).sort((a, b) => a - b);
 
     for (let i = 1; i <= limitImages; i++) {
       if (!idImage.includes(i)) {
@@ -137,17 +142,17 @@ export class ProductsService {
   }
 
   private removeItemById(images: ImageProduct[], idToRemove: number): ImageProduct[] {
-    return images.filter((item) => item.idImage != idToRemove);
+    return images.filter((item) => item.imageId != idToRemove);
   }
 
-  async deleteImage(idProduct: string, idImage: number) {
+  async deleteImage(productId: string, imageId: number) {
     //Пошук продукту
-    const product = await this.getOneById(idProduct);
+    const product = await this.getOneById(productId);
 
     //Пошук зображення по переданому idImage та його видалення
     const { images } = product;
 
-    const image = images.find((item) => item.idImage == idImage);
+    const image = images.find((item) => item.imageId == imageId);
 
     if (!image) {
       throw new NotFoundException(exceptionMessages.NOT_FOUND_IMAGE_BY_IDIMAGE);
@@ -157,7 +162,7 @@ export class ProductsService {
     await this.filesService.removeFile(url);
 
     // видалення обєкту з масиву
-    const newImages = this.removeItemById(images, idImage);
+    const newImages = this.removeItemById(images, imageId);
 
     product.images = newImages;
     return await product.save();
