@@ -64,6 +64,10 @@ export class ProductsService {
   setFilter(params: Params): Filter {
     const filter = Object.entries(params).reduce((prev, [param, valueOfParam]) => {
       switch (param) {
+        case 'search':
+          prev['title'] = new RegExp(valueOfParam, 'i');
+          break;
+
         case '_id':
           prev[param] = { $in: valueOfParam.split(',') };
           break;
