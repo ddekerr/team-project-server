@@ -54,16 +54,14 @@ export class ProductsService {
     return await this.productsRepository.getList(filter);
   }
 
-  // #################### SERCH PRODUCT ####################
-  async searchProduct(query: string): Promise<ProductDocument[]> {
-    const regex = new RegExp(query, 'i');
-    return this.productsRepository.serchProduct(regex);
-  }
-
   // #################### SET FILTER ####################
   setFilter(params: Params): Filter {
     const filter = Object.entries(params).reduce((prev, [param, valueOfParam]) => {
       switch (param) {
+        case 'search':
+          prev['title'] = new RegExp(valueOfParam, 'i');
+          break;
+
         case '_id':
           prev[param] = { $in: valueOfParam.split(',') };
           break;
