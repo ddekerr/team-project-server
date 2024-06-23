@@ -30,6 +30,10 @@ class RecepientDto {
 }
 
 export class CreateOrderDto {
+  readonly email: string;
+
+  readonly orderStatus: string;
+
   @ApiProperty()
   @IsPhoneNumber('UA', { message: validationMessage.ORDER_CUSTOMER_PHONE_MSG })
   @IsNotEmpty({ message: validationMessage.ORDER_CUSTOMER_PHONE_EMPTY_MSG })

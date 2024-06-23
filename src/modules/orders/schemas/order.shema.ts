@@ -9,6 +9,11 @@ export type OrderDocument = Order & Document;
 
 @Schema({ versionKey: false, timestamps: true })
 export class Order {
+
+  @ApiProperty({ description: 'Email adres' })
+  @Prop({ type: String })
+  email:string;
+
   @ApiProperty({ uniqueItems: true, required: true, description: 'Unique code of order' })
   @Prop({ type: String, unique: true, required: true })
   orderCode: string;
