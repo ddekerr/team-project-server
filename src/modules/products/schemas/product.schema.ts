@@ -17,9 +17,9 @@ class Characteristics {
   description: string[];
 }
 
-export class ImageProduct{
-  imageId:number; // Не id,щоб не заплутатись
-  url:string;
+export class ImageProduct {
+  imageId: number; // Не id,щоб не заплутатись
+  url: string;
 }
 
 @Schema({ timestamps: true, versionKey: false })
@@ -71,7 +71,7 @@ export class Product {
 
   @ApiProperty({ type: [ImageProduct] })
   @Prop({ required: true, default: [], type: [ImageProduct] })
-  images:ImageProduct[]
+  images: ImageProduct[];
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

@@ -13,7 +13,7 @@ export class ProductsRepository {
   // ########## INSERT NEW PRODUCT INTO PRODUCT TABLE ##########
   async create(createEntityData: unknown): Promise<ProductDocument> {
     const product = await this.productModel.create(createEntityData);
-    return product.save();
+    return await product.save();
   }
 
   // ########## UPDATE PRODUCT FROM PRODUCT TABLE ##########
@@ -32,7 +32,7 @@ export class ProductsRepository {
     return await this.productModel.findOneAndDelete(entityFilterQuery, {});
   }
 
-  // ########## SELECT ONE PRODUCT FROM PRODUCT TABLE BY ID ##########
+  // ########## SELECT ONE PRODUCT FROM PRODUCT TABLE ##########
   async getOne(entityFilterQuery: FilterQuery<ProductDocument>): Promise<ProductDocument> {
     return await this.productModel.findOne(entityFilterQuery).select(this.selectedFields);
   }
@@ -47,8 +47,13 @@ export class ProductsRepository {
   }
 
   // #################### SERCH PRODUCT ####################
-  async serchProduct(regex: RegExp):Promise<ProductDocument[]> {
+  async serchProduct(regex: RegExp): Promise<ProductDocument[]> {
     return await this.productModel.find({ title: regex }).exec();
     //Додати логіку пошуку по характеристикам
+  }
+
+  private getProductFields(product: ProductDocument) {
+    const { _id, id, title, price, inStock, poster, rating, categories } = product;
+    return { _id, id, title, price, inStock, poster, rating, categories };
   }
 }
