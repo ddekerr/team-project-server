@@ -45,10 +45,4 @@ export class ProductsRepository {
   async getList(entityFilterQuery: FilterQuery<ProductDocument>): Promise<ProductDocument[]> {
     return await this.productModel.find(entityFilterQuery).limit(DEFAULT_LIMIT).select(this.selectedFields);
   }
-
-  // #################### SERCH PRODUCT ####################
-  async serchProduct(regex: RegExp):Promise<ProductDocument[]> {
-    return await this.productModel.find({ title: regex }).exec();
-    //Додати логіку пошуку по характеристикам
-  }
 }

@@ -43,15 +43,7 @@ import { ApiUpdateCategory } from 'modules/categories/helpers/ApiCategories.docu
 @Controller('api/products')
 export class ProductsController {
   constructor(private productsService: ProductsService) {}
-
-  // #################### SERCH PRODUCT ####################
-  @Get('search')
-  @ApiSearchProduct()
-  async searchProduct(@Query('search') searchQuery: string): Promise<ApiResponse<ProductDocument[]>> {
-    const procducts = await this.productsService.searchProduct(searchQuery);
-    return new ApiResponse(Actions.GET_LIST, EntityType.PRODUCT, procducts);
-  }
-
+  
   // #################### CREATE NEW PRODUCT ####################
   @Post()
   @ApiCreateProduct()
@@ -92,6 +84,7 @@ export class ProductsController {
   @ApiGetProductList()
   async getList(@Query() params: Params): Promise<ApiResponse<ProductDocument[]>> {
     const filter = this.productsService.setFilter(params);
+    console.log(filter);
     const products = await this.productsService.getList(filter);
     return new ApiResponse(Actions.GET_LIST, EntityType.PRODUCT, products);
   }

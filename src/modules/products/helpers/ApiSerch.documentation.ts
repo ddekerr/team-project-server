@@ -73,6 +73,7 @@ export function ApiGetProductList() {
     HttpCode(200),
     ApiOperation({ summary: 'Get Product list' }),
     ApiQuery({ name: 'category', type: String, required: false }),
+    ApiQuery({ name: 'search', type: String, required: false }),
     ApiSwaggerResponse(Actions.GET_LIST, EntityType.PRODUCT, Product),
   );
 }
