@@ -104,6 +104,12 @@ export default {
   ORDER_RECEPIENT_PHONE_MSG: 'Recepint phone must be in the correct format',
   ORDER_RECEPIENT_PHONE_EMPTY_MSG: 'Recepint e-mail must not be empty',
 
+  ORDER_EMAIL_MSG: 'Order e-mail must be in the correct format',
+  ORDER_EMAIL_EMPTY_MSG: 'Order e-mail must be not empty',
+
+  ORDER_STATUS_STRING_MSG: 'Order status must be a string',
+  ORDER_STATUS_EMPTY_MSG: 'Order status must not be empty',
+
   // review fields validation
   REVIEW_RATING_EMPTY_MSG: 'Review advantages must not be empty',
   REVIEW_RATING_NUMBER_MSG: 'Review advantages must be a string',

@@ -33,12 +33,13 @@ export class OrdersService {
     });
   }
 
-  private async sendMail(to: string, subject: string, status: string) {
+  //#################### SEND MAIL ####################
+  private async sendMail(to: string, subject: string, infoOrder: { orderCode: number; orderStatus: string }) {
     const mailOptions = {
       from: `"TechStop" <${process.env.GMAIL}>`, // від кого
       to, // до кого
-      subject, // тема
-      text:`Ваш статус змінився на:${status}`, // текст
+      subject: 'Зміна статусу замовлення', // тема
+      text: `Вітаю, замовлення ${infoOrder.orderCode} змінило статус на ${infoOrder.orderStatus}`, // текст
     };
 
     return await this.transporter.sendMail(mailOptions);
@@ -91,7 +92,7 @@ export class OrdersService {
     if ('orderStatus' in dto) {
       const order = await this.getOneByOrderCode(orderCode);
       if (dto.orderStatus != order.orderStatus) {
-        this.sendMail(order.email,'Зміна статусу', dto.orderStatus)
+        this.sendMail(order.email, 'Зміна статусу', { orderCode, orderStatus: dto.orderStatus });
       }
     }
     return await this.ordersRepository.update({ orderCode }, dto);
