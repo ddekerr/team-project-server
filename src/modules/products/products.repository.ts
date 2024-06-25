@@ -4,6 +4,7 @@ import { FilterQuery, Model, UpdateQuery } from 'mongoose';
 import { Product, ProductDocument } from './schemas/product.schema';
 import { DEFAULT_LIMIT } from './constants';
 import { InjectModel } from '@nestjs/mongoose';
+import { Sort } from './types';
 
 @Injectable()
 export class ProductsRepository {
@@ -42,8 +43,15 @@ export class ProductsRepository {
   }
 
   // ########## SELECT PRODUCTS LIST FROM PRODUCT TABLE WITH FILTER AND LIMIT ##########
-  async getList(entityFilterQuery: FilterQuery<ProductDocument>): Promise<ProductDocument[]> {
-    return await this.productModel.find(entityFilterQuery).limit(DEFAULT_LIMIT).select(this.selectedFields);
+  async getList(entityFilterQuery: FilterQuery<ProductDocument>, page: number, sort: Sort): Promise<ProductDocument[]> {
+    const limit = DEFAULT_LIMIT;
+    const skip = (page - 1) * limit;
+    return await this.productModel
+      .find(entityFilterQuery)
+      .sort(sort)
+      .skip(skip)
+      .limit(limit)
+      .select(this.selectedFields);
   }
 
   // #################### SERCH PRODUCT ####################
