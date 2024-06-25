@@ -1,4 +1,4 @@
-import { IsArray, IsNotEmpty, IsNumber, IsPhoneNumber, IsString, Min, ValidateNested } from 'class-validator';
+import { IsEmail, IsArray, IsNotEmpty, IsNumber, IsPhoneNumber, IsString, Min, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import validationMessage from 'constants/validationMessage';
@@ -30,6 +30,16 @@ class RecepientDto {
 }
 
 export class CreateOrderDto {
+  @ApiProperty()
+  @IsEmail({}, { message: validationMessage.ORDER_EMAIL_MSG })
+  @IsNotEmpty({ message: validationMessage.ORDER_EMAIL_EMPTY_MSG })
+  readonly email: string;
+
+  @ApiProperty()
+  @IsString({ message: validationMessage.ORDER_STATUS_STRING_MSG })
+  @IsNotEmpty({ message: validationMessage.ORDER_STATUS_STRING_MSG })
+  readonly orderStatus: string;
+
   @ApiProperty()
   @IsPhoneNumber('UA', { message: validationMessage.ORDER_CUSTOMER_PHONE_MSG })
   @IsNotEmpty({ message: validationMessage.ORDER_CUSTOMER_PHONE_EMPTY_MSG })

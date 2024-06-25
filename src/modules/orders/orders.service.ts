@@ -10,13 +10,40 @@ import exceptionMessages from 'constants/exceptionMessages';
 import { UpdateOrderDto } from './dto/update-order.dto';
 // import { Types } from 'mongoose';
 
+import * as nodemailer from 'nodemailer';
+
 @Injectable()
 export class OrdersService {
+  private transporter: nodemailer.Transporter;
+
   constructor(
     private ordersRepository: OrdersRepository,
     private usersService: UsersService,
     private productsService: ProductsService,
-  ) {}
+  ) {
+    this.transporter = nodemailer.createTransport({
+      service: 'Gmail',
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      auth: {
+        user: process.env.GMAIL,
+        pass: process.env.GMAIL_PASSWORD, //App Password
+      },
+    });
+  }
+
+  //#################### SEND MAIL ####################
+  private async sendMail(to: string, subject: string, infoOrder: { orderCode: number; orderStatus: string }) {
+    const mailOptions = {
+      from: `"TechStop" <${process.env.GMAIL}>`, // від кого
+      to, // до кого
+      subject: 'Зміна статусу замовлення', // тема
+      text: `Вітаю, замовлення ${infoOrder.orderCode} змінило статус на ${infoOrder.orderStatus}`, // текст
+    };
+
+    return await this.transporter.sendMail(mailOptions);
+  }
 
   // #################### CREATE NEW ORDER ####################
   async create(dto: CreateOrderDto) {
@@ -62,6 +89,12 @@ export class OrdersService {
 
   // #################### UPDATE PRODUCT BY ID ####################
   async update(orderCode: number, dto: UpdateOrderDto): Promise<OrderDocument> {
+    if ('orderStatus' in dto) {
+      const order = await this.getOneByOrderCode(orderCode);
+      if (dto.orderStatus != order.orderStatus) {
+        this.sendMail(order.email, 'Зміна статусу', { orderCode, orderStatus: dto.orderStatus });
+      }
+    }
     return await this.ordersRepository.update({ orderCode }, dto);
   }
 
