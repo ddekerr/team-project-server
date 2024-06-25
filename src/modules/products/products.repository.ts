@@ -4,6 +4,7 @@ import { FilterQuery, Model, UpdateQuery } from 'mongoose';
 import { Product, ProductDocument } from './schemas/product.schema';
 import { DEFAULT_LIMIT } from './constants';
 import { InjectModel } from '@nestjs/mongoose';
+import { Sort } from './types';
 
 @Injectable()
 export class ProductsRepository {
@@ -13,7 +14,7 @@ export class ProductsRepository {
   // ########## INSERT NEW PRODUCT INTO PRODUCT TABLE ##########
   async create(createEntityData: unknown): Promise<ProductDocument> {
     const product = await this.productModel.create(createEntityData);
-    return product.save();
+    return await product.save();
   }
 
   // ########## UPDATE PRODUCT FROM PRODUCT TABLE ##########
@@ -32,7 +33,7 @@ export class ProductsRepository {
     return await this.productModel.findOneAndDelete(entityFilterQuery, {});
   }
 
-  // ########## SELECT ONE PRODUCT FROM PRODUCT TABLE BY ID ##########
+  // ########## SELECT ONE PRODUCT FROM PRODUCT TABLE ##########
   async getOne(entityFilterQuery: FilterQuery<ProductDocument>): Promise<ProductDocument> {
     return await this.productModel.findOne(entityFilterQuery).select(this.selectedFields);
   }
@@ -42,7 +43,25 @@ export class ProductsRepository {
   }
 
   // ########## SELECT PRODUCTS LIST FROM PRODUCT TABLE WITH FILTER AND LIMIT ##########
-  async getList(entityFilterQuery: FilterQuery<ProductDocument>): Promise<ProductDocument[]> {
-    return await this.productModel.find(entityFilterQuery).limit(DEFAULT_LIMIT).select(this.selectedFields);
+  async getList(entityFilterQuery: FilterQuery<ProductDocument>, page: number, sort: Sort): Promise<ProductDocument[]> {
+    const limit = DEFAULT_LIMIT;
+    const skip = (page - 1) * limit;
+    return await this.productModel
+      .find(entityFilterQuery)
+      .sort(sort)
+      .skip(skip)
+      .limit(limit)
+      .select(this.selectedFields);
+  }
+
+  // #################### SERCH PRODUCT ####################
+  async serchProduct(regex: RegExp): Promise<ProductDocument[]> {
+    return await this.productModel.find({ title: regex }).exec();
+    //Додати логіку пошуку по характеристикам
+  }
+
+  private getProductFields(product: ProductDocument) {
+    const { _id, id, title, price, inStock, poster, rating, categories } = product;
+    return { _id, id, title, price, inStock, poster, rating, categories };
   }
 }

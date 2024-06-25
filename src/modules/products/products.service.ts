@@ -10,7 +10,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
 import exceptionMessages from 'constants/exceptionMessages';
-import { Filter, Params, Rating } from './types';
+import { Filter, Params, Rating, Sort, SortParams } from './types';
 
 const limitImages = 10;
 
@@ -49,26 +49,49 @@ export class ProductsService {
     }
     return product;
   }
+
   // #################### GET PRODUCT LIST ####################
-  async getList(filter?: Filter): Promise<ProductDocument[]> {
-    return await this.productsRepository.getList(filter);
+  async getList(params?: Params, page?: number): Promise<ProductDocument[]> {
+    const filter = this.setFilter(params);
+    const sort = this.setSort(params.sort);
+    return await this.productsRepository.getList(filter, page, sort);
+  }
+
+  private setSort(sortParam: string): Sort {
+    if (sortParam === SortParams.DATEASC) {
+      return { updatedAt: 1 };
+    }
+
+    if (sortParam === SortParams.DATEDESC) {
+      return { updatedAt: -1 };
+    }
+
+    if (sortParam === SortParams.PRICEASC) {
+      return { price: 1 };
+    }
+
+    if (sortParam === SortParams.PRICEDESC) {
+      return { price: -1 };
+    }
   }
 
   // #################### SET FILTER ####################
-  setFilter(params: Params): Filter {
+  private setFilter(params: Params): Filter {
     const filter = Object.entries(params).reduce((prev, [param, valueOfParam]) => {
       switch (param) {
         case 'search':
           prev['title'] = new RegExp(valueOfParam, 'i');
-          break;
-
-        case '_id':
-          prev[param] = { $in: valueOfParam.split(',') };
-          break;
 
         case 'category':
           prev['categories'] = valueOfParam;
-          break;
+
+        case 'minPrice':
+          prev['price'] = { $gte: Number(valueOfParam) };
+
+        case 'maxPrice':
+          prev['price'] = { $lte: Number(valueOfParam) };
+
+        case 'sort':
 
         default:
           prev[param] = valueOfParam;
