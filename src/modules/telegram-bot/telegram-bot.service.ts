@@ -15,12 +15,17 @@ export class TelegramBotService {
 
   private initializeBot() {
     this.bot.start((ctx: Context) => {
+      // сценарій для /start
       ctx.reply(telegramBotMessage.START);
     });
 
     this.bot.on('message', async (ctx) => {
       if (ctx.message.chat.type === 'private') {
         const chatId = ctx.message.chat.id;
+
+        if (!this.isWithinBusinessHours())
+          this.bot.telegram.sendMessage(chatId, telegramBotMessage.NO_WITHIN_BUSINESS_HOURS);
+
         await this.forwardMessageToGroup(chatId, ctx.message.message_id);
       } else if (ctx.message.chat.type === 'supergroup') {
         const replyToMessage = (ctx.message as any).reply_to_message.forward_from.id;
@@ -32,6 +37,13 @@ export class TelegramBotService {
         }
       }
     });
+  }
+
+  private isWithinBusinessHours(): boolean {
+    const now = new Date();
+    const hours = now.getHours();
+
+    return hours >= 8 && hours < 20;
   }
 
   private async forwardMessageToGroup(chatId: number, messageId: number) {
