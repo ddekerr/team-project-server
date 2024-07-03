@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { OrdersModule } from './orders/orders.module';
 import { CronModule } from './cron/cron.module';
 import { ReviewsModule } from './reviews/reviews.module';
+import { TelegramBotModule } from './telegram-bot/telegram-bot.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ReviewsModule } from './reviews/reviews.module';
     OrdersModule,
     CronModule,
     ReviewsModule,
+    TelegramBotModule
   ],
 })
 export class AppModule {}
