@@ -43,6 +43,11 @@ export default {
   USER_APARTMENT_MAX_MSG: 'User apartment cannot be bigger then $constraint1',
   USER_APARTMENT_EMPTY_MSG: 'Apartment must be not empty',
 
+  USER_ROLES_ARRAY_EMPTY_MSG: 'User roles must have at least one value',
+  USER_ROLES_ARRAY_MSG: 'User roles must be an array',
+  USER_ROLES_ITEM_EMPTY_MSG: 'User role item must not be empty',
+  USER_ROLES_ITEM_STRING_MSG: 'User role item must be a string',
+
   // product fields validation
   PRODUCT_TITLE_EMPTY_MSG: 'Products title must be not empty',
   PRODUCT_TITLE_STRING_MSG: 'Products title must be a string',

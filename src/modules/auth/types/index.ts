@@ -14,7 +14,7 @@ export enum TokenType {
 
 export type Payload = {
   email: string;
-  userId?: string;
+  userId?: unknown;
 };
 
 export type UserResponse = {
@@ -26,3 +26,9 @@ export type UserResponseWithRefresh = {
   userResponse: UserResponse;
   refreshToken: Token;
 };
+
+export enum Role {
+  USER = 'user',
+  ADMIN = 'admin',
+  SUPERADMIN = 'superadmin',
+}

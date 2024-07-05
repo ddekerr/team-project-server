@@ -38,7 +38,7 @@ export class ProductsRepository {
     return await this.productModel.findOne(entityFilterQuery).select(this.selectedFields);
   }
 
-  async getById(_id: string) {
+  async getById(_id: unknown) {
     return await this.productModel.findById(_id);
   }
 

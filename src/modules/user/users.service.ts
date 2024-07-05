@@ -7,6 +7,7 @@ import { UsersRepository } from './users.repository';
 import { UserDocument } from './schemas/user.schema';
 
 import exceptionMessages from 'constants/exceptionMessages';
+import { ChangeRolesDto } from './dto/change-role.dto';
 
 @Injectable()
 export class UsersService {
@@ -14,11 +15,27 @@ export class UsersService {
 
   // #################### CREATE NEW USER ####################
   async createUser(dto: CreateUserDto): Promise<UserDocument> {
-    console.log(dto);
     await this.checkUserNotExist(dto.email);
     const { password, ...rest } = dto;
     const hashedPassword = await bcrypt.hash(password, 10);
+    if (this.isSuperadminCredentials(dto.email, password)) {
+      console.log('aDMIN');
+      return await this.usersRepository.create({
+        ...rest,
+        password: hashedPassword,
+        roles: ['superadmin'],
+      });
+    }
+    console.log('NOT aDMIN');
     return await this.usersRepository.create({ ...rest, password: hashedPassword });
+  }
+
+  // #################### CHECK SUPERADMIN CREDENTIALS ####################
+  private isSuperadminCredentials(email: string, password: string): boolean {
+    if (email === process.env.SUPER_USER_EMAIL && password === process.env.SUPER_USER_PASSWORDs) {
+      return true;
+    }
+    return false;
   }
 
   // #################### UPDATE USER BY EMAIL ####################
@@ -46,6 +63,12 @@ export class UsersService {
   // #################### GET USERS LIST ####################
   async getList(): Promise<UserDocument[]> {
     return await this.usersRepository.getList({});
+  }
+
+  // #################### CHANGE ROLE ####################
+  async changeRoles(dto: ChangeRolesDto): Promise<UserDocument> {
+    const { email, roles } = dto;
+    return await this.usersRepository.update({ email }, { roles });
   }
 
   // #################### CHECK USER IS NOT EXIST ####################

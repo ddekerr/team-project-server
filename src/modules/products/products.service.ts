@@ -42,7 +42,7 @@ export class ProductsService {
   }
 
   // #################### GET ONE PRODUCT BY ID ####################
-  async getOneById(id: string): Promise<ProductDocument> {
+  async getOneById(id: unknown): Promise<ProductDocument> {
     const product = await this.productsRepository.getById(id);
     if (!product) {
       throw new NotFoundException(exceptionMessages.NOT_FOUND_PRODUCT_MSG);
@@ -190,7 +190,7 @@ export class ProductsService {
   }
 
   // #################### RATE PRODUCT ####################
-  async updateRating(_id: string, value: number): Promise<Rating> {
+  async updateRating(_id: unknown, value: number): Promise<Rating> {
     const product = await this.getOneById(_id);
 
     // change product rating by star value

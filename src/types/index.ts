@@ -15,6 +15,7 @@ export enum Actions {
   LOGOUT = 'LOGOUT',
   LOGIN = 'LOGIN',
   REFRESH = 'REFRESH',
+  CHANGE_ROLE = 'CHANGE_ROLE',
 }
 
 export enum EntityType {
