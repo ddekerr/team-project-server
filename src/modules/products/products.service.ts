@@ -54,9 +54,6 @@ export class ProductsService {
   async getList(params?: Params, page?: number): Promise<ProductDocument[]> {
     const filter = this.setFilter(params);
     const sort = params.sort ? this.setSort(params.sort) : {};
-
-    console.log(params.sort);
-
     console.log('filter: ', filter);
     console.log('sort: ', sort);
 
@@ -101,6 +98,7 @@ export class ProductsService {
           prev['price'] = { ...prev['price'], $lte: Number(valueOfParam) };
           break;
 
+        case 'page':
         case 'sort':
           break;
 

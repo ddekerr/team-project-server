@@ -46,12 +46,14 @@ export class ProductsRepository {
   async getList(entityFilterQuery: FilterQuery<ProductDocument>, page: number, sort: Sort): Promise<ProductDocument[]> {
     const limit = DEFAULT_LIMIT;
     const skip = (page - 1) * limit;
+    console.log(skip);
     return await this.productModel
       .find(entityFilterQuery)
-      .sort(sort)
+      .select(this.selectedFields)
       .skip(skip)
       .limit(limit)
-      .select(this.selectedFields);
+      .sort(sort)
+      .exec();
   }
 
   // #################### SERCH PRODUCT ####################

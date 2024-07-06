@@ -23,7 +23,7 @@ import { TelegramBotModule } from './telegram-bot/telegram-bot.module';
     OrdersModule,
     CronModule,
     ReviewsModule,
-    TelegramBotModule
+    // TelegramBotModule,
   ],
 })
 export class AppModule {}
