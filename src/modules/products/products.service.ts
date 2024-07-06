@@ -53,7 +53,13 @@ export class ProductsService {
   // #################### GET PRODUCT LIST ####################
   async getList(params?: Params, page?: number): Promise<ProductDocument[]> {
     const filter = this.setFilter(params);
-    const sort = this.setSort(params.sort);
+    const sort = params.sort ? this.setSort(params.sort) : {};
+
+    console.log(params.sort);
+
+    console.log('filter: ', filter);
+    console.log('sort: ', sort);
+
     return await this.productsRepository.getList(filter, page, sort);
   }
 
@@ -81,17 +87,22 @@ export class ProductsService {
       switch (param) {
         case 'search':
           prev['title'] = new RegExp(valueOfParam, 'i');
+          break;
 
         case 'category':
           prev['categories'] = valueOfParam;
+          break;
 
         case 'minPrice':
           prev['price'] = { $gte: Number(valueOfParam) };
+          break;
 
         case 'maxPrice':
-          prev['price'] = { $lte: Number(valueOfParam) };
+          prev['price'] = { ...prev['price'], $lte: Number(valueOfParam) };
+          break;
 
         case 'sort':
+          break;
 
         default:
           prev[param] = valueOfParam;

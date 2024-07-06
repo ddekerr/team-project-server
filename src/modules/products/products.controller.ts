@@ -82,8 +82,6 @@ export class ProductsController {
   @Get()
   @ApiGetProductList()
   async getList(@Query() params: Params): Promise<ApiResponse<ProductDocument[]>> {
-    // const filter = this.productsService.setFilter(params);
-    console.log(params);
     const page = +params.page || 1;
     const products = await this.productsService.getList(params, page);
     return new ApiResponse(Actions.GET_LIST, EntityType.PRODUCT, products);
