@@ -45,12 +45,12 @@ export class AddressDto {
 
   @ApiProperty()
   @IsString({ message: validationMessage.USER_POSTAL_OPERATOR_STRING_MSG })
-  @IsNotEmpty({ message: validationMessage.USER_CITY_EMPTY_MSG })
+  //@IsNotEmpty({ message: validationMessage.USER_CITY_EMPTY_MSG })
   readonly postalOperator: string;
 
   @ApiProperty()
   @IsString({ message: validationMessage.USER_POSTAL_OPERATOR_STRING_MSG })
-  @IsNotEmpty({ message: validationMessage.USER_CITY_EMPTY_MSG })
+  //@IsNotEmpty({ message: validationMessage.USER_CITY_EMPTY_MSG })
   readonly postalDepartment: string;
 
   @ApiProperty()
@@ -94,7 +94,7 @@ export class CreateUserDto {
 
   @ApiProperty({ required: false })
   @ValidateNested()
-  @Type(() => AddressDto)
+  //@Type(() => AddressDto)
   @IsOptional()
   readonly address?: AddressDto;
 }
