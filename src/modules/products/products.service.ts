@@ -10,7 +10,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
 import exceptionMessages from 'constants/exceptionMessages';
-import { Filter, Params, Rating, Sort, SortParams } from './types';
+import { Filter, Params, Rating, Sort, SortParams, TotalProducts } from './types';
 
 const limitImages = 10;
 
@@ -51,13 +51,15 @@ export class ProductsService {
   }
 
   // #################### GET PRODUCT LIST ####################
-  async getList(params?: Params, page?: number): Promise<ProductDocument[]> {
+  async getList(params?: Params, page?: number): Promise<TotalProducts> {
     const filter = this.setFilter(params);
     const sort = params.sort ? this.setSort(params.sort) : {};
     console.log('filter: ', filter);
     console.log('sort: ', sort);
 
-    return await this.productsRepository.getList(filter, page, sort);
+    const products = await this.productsRepository.getList(filter, page, sort);
+    const total = await this.productsRepository.countProducts(filter);
+    return { products, total };
   }
 
   private setSort(sortParam: string): Sort {

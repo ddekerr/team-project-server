@@ -1,3 +1,5 @@
+import { ProductDocument } from '../schemas/product.schema';
+
 export type Filter = {
   category?: string;
   _id?: string[];
@@ -41,3 +43,8 @@ export type Sort = {
 export type Rating = {
   rating: number;
 };
+
+export interface TotalProducts {
+  products: ProductDocument[];
+  total: number;
+}
