@@ -11,6 +11,7 @@ import { UpdateOrderDto } from './dto/update-order.dto';
 // import { Types } from 'mongoose';
 
 import * as nodemailer from 'nodemailer';
+import { Params } from './types';
 
 @Injectable()
 export class OrdersService {
@@ -74,10 +75,28 @@ export class OrdersService {
   }
 
   // #################### GET ORDER LIST ####################
-  async getList(): Promise<OrderDocument[]> {
-    return await this.ordersRepository.getList({});
+  async getList(params?: Params): Promise<OrderDocument[]> {
+    const filter = this.setFilter(params);
+    return await this.ordersRepository.getList(filter);
   }
 
+  private setFilter(params: Params) {
+    const filter = Object.entries(params).reduce((prev, [param, valueOfParam]) => {
+      switch (param) {
+        case 'email':
+          prev['email'] = valueOfParam;
+          break;
+
+        default:
+          prev[param] = valueOfParam;
+          break;
+      }
+
+      return prev;
+    }, {});
+
+    return filter;
+  }
   // #################### DELETE ORDER BY ID ####################
   async delete(orderCode: number): Promise<OrderDocument> {
     const order = await this.ordersRepository.delete({ orderCode });

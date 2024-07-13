@@ -58,8 +58,6 @@ export class ReviewsService {
   // #################### GET REVIEWS LIST ####################
   async getList(params?: QueryParamsDto): Promise<ReviewDocument[]> {
     const filter = this.setFilter(params);
-    console.log(filter);
-
     const reviews = await this.reviewsRepository.getList(filter);
     return reviews;
   }
@@ -72,7 +70,7 @@ export class ReviewsService {
       }
 
       if (keyParam === 'userId') {
-        prev['user._id'] = valueParam;
+        prev['userId'] = valueParam;
       }
 
       return prev;

@@ -33,3 +33,11 @@ export interface IOrder {
   // адреса доставки (може відрізнятися від адреси залогіненого користувача)
   deliveryAddress: Address;
 }
+
+export enum Filter {
+  EMAIL = 'email',
+}
+
+export type Params = {
+  email?: string;
+};

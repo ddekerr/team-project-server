@@ -13,8 +13,8 @@ type PersonalAddress = {
 
 export type Address = {
   city: string;
-  postalOperator: string;
-  postalDepartment: string;
+  postalOperator?: string;
+  postalDepartment?: string;
   personalAddress?: PersonalAddress;
 };
 
