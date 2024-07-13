@@ -25,7 +25,7 @@ import { RateDto } from './dto/rate.dto';
 import { Actions, EntityType } from 'types';
 
 import { ApiResponse } from 'helpers/ApiResponse';
-import { Params, Rating } from './types';
+import { Params, Rating, TotalProducts } from './types';
 import { MongooseIdValidationPipe } from './dto/mongoID.dto';
 import {
   ApiAddImageProduct,
@@ -81,7 +81,7 @@ export class ProductsController {
   // #################### GET PRODUCTS LIST ####################
   @Get()
   @ApiGetProductList()
-  async getList(@Query() params: Params): Promise<ApiResponse<ProductDocument[]>> {
+  async getList(@Query() params: Params): Promise<ApiResponse<TotalProducts>> {
     const page = +params.page || 1;
     const products = await this.productsService.getList(params, page);
     return new ApiResponse(Actions.GET_LIST, EntityType.PRODUCT, products);
