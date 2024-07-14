@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { OrdersService } from './orders.service';
@@ -27,8 +27,8 @@ export class OrdersController {
   // #################### GET ORDER LIST ####################
   @Get()
   @ApiGetListOrder()
-  async getList(): Promise<ApiResponse<OrderDocument[]>> {
-    const orders = await this.ordersService.getList();
+  async getList(@Query() params): Promise<ApiResponse<OrderDocument[]>> {
+    const orders = await this.ordersService.getList(params);
     return new ApiResponse(Actions.GET_LIST, EntityType.ORDERS, orders);
   }
 
