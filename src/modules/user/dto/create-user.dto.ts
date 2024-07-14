@@ -53,7 +53,6 @@ export class AddressDto {
   //@IsNotEmpty({ message: validationMessage.USER_CITY_EMPTY_MSG })
   readonly postalDepartment?: string;
 
-
   @ApiProperty()
   @ValidateNested()
   @Type(() => PersonalAddressDto)
