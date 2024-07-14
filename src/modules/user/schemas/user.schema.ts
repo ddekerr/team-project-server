@@ -13,8 +13,8 @@ type PersonalAddress = {
 
 export type Address = {
   city: string;
-  postalOperator: string;
-  postalDepartment: string;
+  postalOperator?: string;
+  postalDepartment?: string;
   personalAddress?: PersonalAddress;
 };
 
@@ -48,8 +48,8 @@ export class User {
   @Prop({
     type: {
       city: String,
-      postalOperator: String,
-      postalDepartment: String,
+      postalOperator: { type: String, required: false, _id: false },
+      postalDepartment: { type: String, required: false, _id: false },
       personalAddress: {
         type: {
           street: String,
