@@ -61,6 +61,7 @@ export class OrdersService {
     // formated product to save in order table
     const products = filteredProducts.map((product) => {
       const quantity = dto.products.find(({ productId }) => {
+        product.productId = productId;
         return product._id.equals(productId);
       }).quantity;
       return { ...product, quantity };
