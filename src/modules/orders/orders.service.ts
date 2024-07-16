@@ -34,16 +34,22 @@ export class OrdersService {
     });
   }
 
-  //#################### SEND MAIL ####################
-  private async sendMail(to: string, subject: string, infoOrder: { orderCode: number; orderStatus: string }) {
-    const mailOptions = {
-      from: `"TechStop" <${process.env.GMAIL}>`, // від кого
-      to, // до кого
-      subject: 'Зміна статусу замовлення', // тема
-      text: `Вітаю, замовлення ${infoOrder.orderCode} змінило статус на ${infoOrder.orderStatus}`, // текст
-    };
-
-    return await this.transporter.sendMail(mailOptions);
+  private formationMessage(operation: string, recipientsMail: string, infoOrder) {
+    if (operation === 'CREATE') {
+      return {
+        from: `"TechStop" <${process.env.GMAIL}>`, // від кого
+        to: recipientsMail, // до кого
+        subject: 'Замовлення на TechStop', // тема
+        text: `Вітаю, ми прийняли ваше замовлення під номером:${infoOrder.orderCode}. Дякую!`, // текст}
+      };
+    } else if (operation === 'UPDATE') {
+      return {
+        from: `"TechStop" <${process.env.GMAIL}>`, // від кого
+        to: recipientsMail, // до кого
+        subject: 'Зміна статусу замовлення', // тема
+        text: `Вітаю, замовлення ${infoOrder.orderCode} змінило статус на ${infoOrder.orderStatus}`, // текст}
+      };
+    }
   }
 
   // #################### CREATE NEW ORDER ####################
@@ -72,6 +78,11 @@ export class OrdersService {
     }
 
     const order = await this.ordersRepository.create({ ...dto, orderCode, products });
+
+    const infoMail = this.formationMessage('CREATE', order.email, { orderCode });
+
+    await this.transporter.sendMail(infoMail);
+
     return order;
   }
 
@@ -112,7 +123,8 @@ export class OrdersService {
     if ('orderStatus' in dto) {
       const order = await this.getOneByOrderCode(orderCode);
       if (dto.orderStatus != order.orderStatus) {
-        this.sendMail(order.email, 'Зміна статусу', { orderCode, orderStatus: dto.orderStatus });
+        const infoMail = this.formationMessage('UPDATE', order.email, { orderCode, orderStatus: dto.orderStatus });
+        await this.transporter.sendMail(infoMail);
       }
     }
     return await this.ordersRepository.update({ orderCode }, dto);
