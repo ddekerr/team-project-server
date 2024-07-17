@@ -6,6 +6,7 @@ export type OrderedProduct = {
   price: number;
   poster: string;
   quantity: number;
+  productId:string;
 };
 
 export type Recepient = {

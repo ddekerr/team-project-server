@@ -61,6 +61,7 @@ export class Order {
           poster: String,
           quantity: Number,
           id: Number,
+          productId: String,
         },
       },
     ],
