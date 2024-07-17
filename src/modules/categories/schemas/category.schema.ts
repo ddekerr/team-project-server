@@ -19,6 +19,9 @@ export class Category {
 
   @Prop({ required: false, type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }], default: [] })
   children?: Category[];
+
+  @Prop({ required: false, type: Number, default: null })
+  order?: number;
 }
 
 export const CategorySchema = SchemaFactory.createForClass(Category);

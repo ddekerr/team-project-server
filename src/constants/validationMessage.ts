@@ -82,6 +82,9 @@ export default {
   CATEGORY_ICON_EMPTY_MSG: 'Category icon must not be empty',
   CATEGORY_ICON_STRING_MSG: 'Category icon must be a string',
 
+  CATEGORY_ORDER_EMPTY_MSG: 'Category icon must not be empty',
+  CATEGORY_ORDER_NUMBER_MSG: 'Category icon must be a number',
+
   // orders fields validation
   ORDER_CUSTOMER_PHONE_MSG: 'Customer`s phone must be in the correct format',
   ORDER_CUSTOMER_PHONE_EMPTY_MSG: 'Customer`s e-mail must not be empty',

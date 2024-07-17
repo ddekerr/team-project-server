@@ -46,6 +46,7 @@ export class CategoriesRepository {
   async getList(entityFilterQuery: FilterQuery<CategoryDocument>): Promise<CategoryDocument[]> {
     return await this.categoriesModel
       .find(entityFilterQuery)
+      .sort({ order: 1 })
       .select(this.selectedFields)
       .populate({
         path: 'children',

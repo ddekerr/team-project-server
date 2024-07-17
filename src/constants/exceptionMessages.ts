@@ -35,5 +35,5 @@ export default {
 
   //image
   LIMIT_ADD_NEW_IMAGE: 'Exceeded the limit for adding images to the product',
-  NOT_FOUND_IMAGE_BY_IDIMAGE:'The product does not have an image for this ID'
+  NOT_FOUND_IMAGE_BY_IDIMAGE: 'The product does not have an image for this ID',
 };

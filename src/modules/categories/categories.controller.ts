@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/commo
 import { ApiTags } from '@nestjs/swagger';
 
 import { CategoriesService } from './categories.service';
-import { Category, CategoryDocument } from './schemas/category.schema';
+import { CategoryDocument } from './schemas/category.schema';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 
@@ -10,7 +10,12 @@ import { Actions, EntityType } from 'types';
 import { ResponseCategory } from './types';
 
 import { ApiResponse } from 'helpers/ApiResponse';
-import { ApiCreateCategory, ApiDeleteCategory, ApiGetListCategory, ApiUpdateCategory } from './helpers/ApiCategories.documentation';
+import {
+  ApiCreateCategory,
+  ApiDeleteCategory,
+  ApiGetListCategory,
+  ApiUpdateCategory,
+} from './helpers/ApiCategories.documentation';
 
 @ApiTags('Categories')
 @Controller('api/categories')
