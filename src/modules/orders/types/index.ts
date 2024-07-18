@@ -6,7 +6,8 @@ export type OrderedProduct = {
   price: number;
   poster: string;
   quantity: number;
-  productId:string;
+  productId: string;
+  inStock: boolean;
 };
 
 export type Recepient = {
