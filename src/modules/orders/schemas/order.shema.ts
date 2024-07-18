@@ -61,7 +61,6 @@ export class Order {
           quantity: Number,
           id: Number,
           productId: String,
-          inStock: Boolean,
         },
       },
     ],
